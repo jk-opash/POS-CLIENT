@@ -10,12 +10,12 @@ import Tabs from '../components/ui/Tabs';
 
 function SettingRow({ label, description, children }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '14px 0', borderBottom: '1px solid var(--color-border)' }}>
-      <div style={{ flex: 1, paddingRight: 24 }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 12, padding: '14px 0', borderBottom: '1px solid var(--color-border)' }}>
+      <div style={{ flex: '1 1 200px', minWidth: 0, paddingRight: 16 }}>
         <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: 3 }}>{label}</div>
         {description && <div style={{ fontSize: 12, color: 'var(--color-text-muted)' }}>{description}</div>}
       </div>
-      <div style={{ flexShrink: 0 }}>{children}</div>
+      <div style={{ flex: '0 0 auto', maxWidth: '100%' }}>{children}</div>
     </div>
   );
 }
@@ -77,21 +77,21 @@ export default function SettingsPage() {
                 <div style={{ fontSize: 12, color: 'var(--color-text-muted)', marginBottom: 16 }}>Appears on receipts and invoices</div>
 
                 <SettingRow label="Restaurant Name" description="Shown on all bills and receipts">
-                  <input className="input" value={settings.restaurantName} onChange={e => set('restaurantName', e.target.value)} style={{ width: 240 }} />
+                  <input className="input" value={settings.restaurantName} onChange={e => set('restaurantName', e.target.value)} style={{ width: '100%', minWidth: 240 }} />
                 </SettingRow>
                 <SettingRow label="Address" description="Full address for invoices">
-                  <textarea className="input" rows={2} value={settings.address} onChange={e => set('address', e.target.value)} style={{ width: 280, resize: 'none' }} />
+                  <textarea className="input" rows={2} value={settings.address} onChange={e => set('address', e.target.value)} style={{ width: '100%', minWidth: 240, resize: 'none' }} />
                 </SettingRow>
                 <SettingRow label="Phone" description="Contact number on receipts">
-                  <input className="input" value={settings.phone} onChange={e => set('phone', e.target.value)} style={{ width: 200 }} />
+                  <input className="input" value={settings.phone} onChange={e => set('phone', e.target.value)} style={{ width: '100%', minWidth: 200 }} />
                 </SettingRow>
                 <SettingRow label="Currency Symbol" description="Used on all bills">
-                  <select className="input select" value={settings.currency} onChange={e => set('currency', e.target.value)} style={{ width: 80 }}>
+                  <select className="input select" value={settings.currency} onChange={e => set('currency', e.target.value)} style={{ width: 100 }}>
                     {['₹', '$', '€', '£'].map(c => <option key={c}>{c}</option>)}
                   </select>
                 </SettingRow>
                 <SettingRow label="Timezone" description="For date/time on reports">
-                  <select className="input select" value={settings.timezone} onChange={e => set('timezone', e.target.value)} style={{ width: 220 }}>
+                  <select className="input select" value={settings.timezone} onChange={e => set('timezone', e.target.value)} style={{ width: '100%', minWidth: 200 }}>
                     <option>Asia/Kolkata</option>
                     <option>Asia/Mumbai</option>
                     <option>UTC</option>

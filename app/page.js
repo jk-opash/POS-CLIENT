@@ -49,16 +49,16 @@ export default function DashboardPage() {
         <Topbar onMenuClick={() => setCollapsed((c) => !c)} />
         <main className="flex-1 overflow-y-auto p-8">
           {/* Header */}
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-[22px] font-black text-slate-800 m-0 tracking-tight">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 md:mb-8">
+            <h1 className="text-[20px] md:text-[22px] font-black text-slate-800 m-0 tracking-tight">
               Outlets Statistics
             </h1>
-            <div className="flex gap-3 items-center">
-              <button className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors">
-                📤 Export Data
+            <div className="flex flex-wrap gap-2 md:gap-3 items-center">
+              <button className="px-3 md:px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors">
+                📤 Export
               </button>
-              <button className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors">
-                ⊞ Create Zone
+              <button className="px-3 md:px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors">
+                ⊞ Zone
               </button>
               <select className="bg-white border border-slate-200 text-slate-700 px-3 py-2 rounded-lg text-sm font-bold shadow-sm outline-none focus:ring-2 focus:ring-blue-100">
                 <option>Today</option>
@@ -69,9 +69,9 @@ export default function DashboardPage() {
           </div>
 
           {/* Main Content Area */}
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-6 md:gap-8">
             {/* KPIs Grid */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <StatCard
                 label="Total Sales"
                 value={fmt(totalSales)}
@@ -129,17 +129,17 @@ export default function DashboardPage() {
 
             <OnlineOrdersWidget onlineSales={onlineSales} />
 
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
               <ExpensesWidget />
               <OrderStatisticsWidget />
             </div>
 
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
               <RevenueLeakageWidget />
               <ProductsWidget />
             </div>
 
-            <div className="grid grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               <DiscountWidget />
               <TotalSalesBreakdownWidget />
               <TaxesWidget />

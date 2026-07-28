@@ -107,7 +107,7 @@ export default function OrdersPage() {
         <main style={{ flex: 1, overflowY: 'auto', padding: '20px 24px' }}>
 
           {/* Status pipeline */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 20 }}>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
             {STATUS_PIPELINE.map(s => (
               <div key={s} style={{
                 background: 'var(--color-surface)', border: `1px solid ${STATUS_COLORS[s]}33`,

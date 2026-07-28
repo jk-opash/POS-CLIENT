@@ -20,7 +20,7 @@ function StaffModal({ member, onSave, onClose }) {
   return (
     <Modal isOpen={true} onClose={onClose} title={member ? 'Edit Staff Member' : 'Add Staff Member'}>
       <form onSubmit={e => { e.preventDefault(); onSave(form); onClose(); }} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <label style={{ fontSize: 12, color: 'var(--color-text-secondary)', display: 'block', marginBottom: 5 }}>Full Name *</label>
               <input className="input" value={form.name} onChange={e => set('name', e.target.value)} required placeholder="Rajan Verma" />
@@ -32,7 +32,7 @@ function StaffModal({ member, onSave, onClose }) {
               </select>
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <label style={{ fontSize: 12, color: 'var(--color-text-secondary)', display: 'block', marginBottom: 5 }}>Phone</label>
               <input className="input" value={form.phone} onChange={e => set('phone', e.target.value)} placeholder="9876543210" />
@@ -42,7 +42,7 @@ function StaffModal({ member, onSave, onClose }) {
               <input className="input" type="email" value={form.email} onChange={e => set('email', e.target.value)} />
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <label style={{ fontSize: 12, color: 'var(--color-text-secondary)', display: 'block', marginBottom: 5 }}>4-Digit PIN</label>
               <input className="input" type="password" maxLength={4} value={form.pin} onChange={e => set('pin', e.target.value)} placeholder="••••" />

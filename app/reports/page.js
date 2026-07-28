@@ -143,7 +143,7 @@ export default function ReportsPage() {
               </div>
 
               {/* Order type cards */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 20 }}>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
                 {byType.map(t => (
                   <div key={t.type} className="card">
                     <div style={{ fontSize: 11, color: 'var(--color-text-muted)', textTransform: 'capitalize', marginBottom: 8 }}>
@@ -178,7 +178,7 @@ export default function ReportsPage() {
           {/* ITEMS TAB */}
           {tab === 'items' && (
             <div className="animate-fade-in">
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* Top sellers */}
                 <div className="card">
                   <div className="section-header" style={{ marginBottom: 14 }}>
@@ -264,7 +264,7 @@ export default function ReportsPage() {
                   ))}
                 </div>
                 <div className="divider" />
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginTop: 4 }}>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-1">
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ fontSize: 13, color: 'var(--color-text-muted)', marginBottom: 4 }}>Peak Hour</div>
                     <div style={{ fontSize: 16, fontWeight: 700, color: '#ff6b35' }}>{hours.reduce((m, h) => h.orders > m.orders ? h : m).hour}</div>
