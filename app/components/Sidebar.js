@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useOutlet } from "./Providers";
 import {
   LayoutDashboard,
@@ -102,6 +102,23 @@ export default function Sidebar({ collapsed, onToggle }) {
   const pathname = usePathname();
   const { selectedOutlet } = useOutlet();
   const [expandedMenus, setExpandedMenus] = useState({});
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const handler = (e) => setIsMobile(e.matches);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsMobile(mq.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  // On mobile, collapsed=false means CLOSED (default state), collapsed=true means OPEN.
+  const handleLinkClick = () => {
+    if (isMobile && collapsed) {
+      onToggle();
+    }
+  };
 
   const NAV_ITEMS =
     selectedOutlet === "ALL" ? NAV_ITEMS_ALL : NAV_ITEMS_SPECIFIC;
@@ -114,169 +131,197 @@ export default function Sidebar({ collapsed, onToggle }) {
   };
 
   return (
-    <aside
-      style={{
-        width: collapsed ? 72 : 260,
-        minWidth: collapsed ? 72 : 260,
-        background: "var(--color-sidebar-bg)",
-        borderRight: "1px solid rgba(255, 255, 255, 0.05)",
-        display: "flex",
-        flexDirection: "column",
-        height: "100vh",
-        position: "sticky",
-        top: 0,
-        transition:
-          "width 0.3s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-        overflow: "hidden",
-        zIndex: 50,
-      }}
-    >
-      {/* Brand Header */}
-      <div
-        style={{
-          height: 64,
-          padding: "0 16px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: collapsed ? "center" : "space-between",
-          borderBottom: "1px solid rgba(255,255,255,0.05)",
-        }}
-      >
-        {!collapsed && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: 8,
-                background:
-                  "linear-gradient(135deg, var(--color-accent), #60a5fa)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "#fff",
-                fontWeight: 800,
-                fontSize: 16,
-              }}
-            >
-              P
-            </div>
-            <span
-              style={{
-                color: "#fff",
-                fontWeight: 700,
-                fontSize: 16,
-                whiteSpace: "nowrap",
-              }}
-            >
-              POS Manager
-            </span>
-          </div>
-        )}
-        <button
+    <>
+      {/* Mobile overlay backdrop */}
+      {isMobile && collapsed && (
+        <div
           onClick={onToggle}
           style={{
-            background: "transparent",
-            border: "none",
-            cursor: "pointer",
-            color: "var(--color-sidebar-text)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 4,
-            borderRadius: 6,
-            transition: "background 0.2s, color 0.2s",
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.5)",
+            zIndex: 49,
+            backdropFilter: "blur(2px)",
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(255,255,255,0.1)";
-            e.currentTarget.style.color = "#fff";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.color = "var(--color-sidebar-text)";
-          }}
-        >
-          {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
-        </button>
-      </div>
-
-      {/* Navigation Links */}
-      <nav style={{ flex: 1, overflowY: "auto", padding: "16px 12px" }}>
-        {NAV_ITEMS.map((item) => (
-          <NavItem
-            key={item.href}
-            item={item}
-            isActive={isActive(item.href)}
-            collapsed={collapsed}
-            isExpanded={expandedMenus[item.label]}
-            onToggle={() => toggleSubmenu(item.label)}
-            pathname={pathname}
-          />
-        ))}
-      </nav>
-
-      {/* Footer User Profile (Optional) */}
-      {!collapsed && (
+        />
+      )}
+      <aside
+        style={{
+          width: isMobile ? 260 : collapsed ? 72 : 260,
+          minWidth: isMobile ? 260 : collapsed ? 72 : 260,
+          background: "var(--color-sidebar-bg)",
+          borderRight: "1px solid rgba(255, 255, 255, 0.05)",
+          display: "flex",
+          flexDirection: "column",
+          height: "100vh",
+          position: isMobile ? "fixed" : "sticky",
+          top: 0,
+          left: 0,
+          transform: isMobile
+            ? collapsed
+              ? "translateX(0)"
+              : "translateX(-100%)"
+            : "none",
+          transition:
+            "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+          overflow: "hidden",
+          zIndex: 50,
+        }}
+      >
+        {/* Brand Header */}
         <div
           style={{
-            padding: "16px",
-            borderTop: "1px solid rgba(255,255,255,0.05)",
+            height: 64,
+            padding: "0 16px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: !isMobile && collapsed ? "center" : "space-between",
+            borderBottom: "1px solid rgba(255,255,255,0.05)",
           }}
         >
-          <div
+          {!isMobile && collapsed ? null : (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                overflow: "hidden",
+              }}
+            >
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 8,
+                  background:
+                    "linear-gradient(135deg, var(--color-accent), #60a5fa)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#fff",
+                  fontWeight: 800,
+                  fontSize: 16,
+                }}
+              >
+                P
+              </div>
+              <span
+                style={{
+                  color: "#fff",
+                  fontWeight: 700,
+                  fontSize: 16,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                POS Manager
+              </span>
+            </div>
+          )}
+          <button
+            onClick={onToggle}
             style={{
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+              color: "var(--color-sidebar-text)",
               display: "flex",
               alignItems: "center",
-              gap: 12,
-              padding: "8px",
-              borderRadius: 8,
-              background: "rgba(255,255,255,0.03)",
+              justifyContent: "center",
+              padding: 4,
+              borderRadius: 6,
+              transition: "background 0.2s, color 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(255,255,255,0.1)";
+              e.currentTarget.style.color = "#fff";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.color = "var(--color-sidebar-text)";
+            }}
+          >
+            {!isMobile && collapsed ? (
+              <ChevronRight size={18} />
+            ) : (
+              <ChevronLeft size={18} />
+            )}
+          </button>
+        </div>
+
+        {/* Navigation Links */}
+        <nav style={{ flex: 1, overflowY: "auto", padding: "16px 12px" }}>
+          {NAV_ITEMS.map((item) => (
+            <NavItem
+              key={item.href}
+              item={item}
+              isActive={isActive(item.href)}
+              collapsed={!isMobile && collapsed}
+              isExpanded={expandedMenus[item.label]}
+              onToggle={() => toggleSubmenu(item.label)}
+              pathname={pathname}
+              onClick={handleLinkClick}
+            />
+          ))}
+        </nav>
+
+        {/* Footer User Profile (Optional) */}
+        {!isMobile && collapsed ? null : (
+          <div
+            style={{
+              padding: "16px",
+              borderTop: "1px solid rgba(255,255,255,0.05)",
             }}
           >
             <div
               style={{
-                width: 36,
-                height: 36,
-                borderRadius: 99,
-                background: "#334155",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
-                color: "#fff",
-                fontSize: 14,
-                fontWeight: 600,
+                gap: 12,
+                padding: "8px",
+                borderRadius: 8,
+                background: "rgba(255,255,255,0.03)",
               }}
             >
-              AD
-            </div>
-            <div style={{ flex: 1, overflow: "hidden" }}>
               <div
                 style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 99,
+                  background: "#334155",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   color: "#fff",
-                  fontSize: 13,
+                  fontSize: 14,
                   fontWeight: 600,
-                  whiteSpace: "nowrap",
-                  textOverflow: "ellipsis",
-                  overflow: "hidden",
                 }}
               >
-                Admin User
+                AD
               </div>
-              <div style={{ color: "var(--color-sidebar-text)", fontSize: 11 }}>
-                Manager
+              <div style={{ flex: 1, overflow: "hidden" }}>
+                <div
+                  style={{
+                    color: "#fff",
+                    fontSize: 13,
+                    fontWeight: 600,
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                  }}
+                >
+                  Admin User
+                </div>
+                <div
+                  style={{ color: "var(--color-sidebar-text)", fontSize: 11 }}
+                >
+                  Manager
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
-    </aside>
+        )}
+      </aside>
+    </>
   );
 }
 
@@ -287,6 +332,7 @@ function NavItem({
   isExpanded,
   onToggle,
   pathname,
+  onClick,
 }) {
   const Icon = item.icon;
   const hasSubmenu = item.submenu && item.submenu.length > 0;
@@ -409,6 +455,7 @@ function NavItem({
         <Link
           href={item.href}
           style={{ textDecoration: "none", display: "block" }}
+          onClick={onClick}
         >
           {content}
         </Link>
@@ -434,6 +481,7 @@ function NavItem({
                 key={subItem.href}
                 href={subItem.href}
                 style={{ textDecoration: "none", display: "block" }}
+                onClick={onClick}
               >
                 <div
                   style={{

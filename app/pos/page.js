@@ -108,10 +108,10 @@ export default function POSPage() {
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(c => !c)} />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
         <Topbar onMenuClick={() => setCollapsed(c => !c)} />
-        <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+        <div className="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
 
           {/* ── Left: Menu ───────────────────────── */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', borderRight: '1px solid var(--color-border)' }}>
+          <div className="flex-1 flex flex-col overflow-hidden md:border-r border-slate-200" style={{ minHeight: '50vh' }}>
             {/* Category tabs */}
             <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--color-border)', display: 'flex', gap: 6, flexWrap: 'wrap', background: 'var(--color-surface2)' }}>
               <Button size="sm" variant={activeCategory === 'all' ? 'accent' : 'surface'} onClick={() => setActiveCategory('all')}>All</Button>
@@ -143,7 +143,7 @@ export default function POSPage() {
           </div>
 
           {/* ── Right: Cart ──────────────────────── */}
-          <div style={{ width: 320, display: 'flex', flexDirection: 'column', background: 'var(--color-surface2)', borderLeft: '1px solid var(--color-border)' }}>
+          <div className="w-full md:w-[320px] flex flex-col shrink-0 border-t md:border-t-0 md:border-l border-slate-200" style={{ background: 'var(--color-surface2)', minHeight: '50vh' }}>
             {/* Order type */}
             <div style={{ padding: '12px 14px', borderBottom: '1px solid var(--color-border)' }}>
               <Tabs 

@@ -19,7 +19,8 @@ import {
   TrendingUp,
   Receipt,
   FileSpreadsheet,
-  RefreshCcw
+  RefreshCcw,
+  X
 } from "lucide-react";
 
 // --- MOCK DATA ---
@@ -52,6 +53,7 @@ function fmt(n) {
 export default function DynamicReportsPage() {
   const [collapsed, setCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState("data"); // 'data' or 'visual'
+  const [showBuilder, setShowBuilder] = useState(true);
   
   // Calculate Summaries
   const totalOrders = MOCK_DATA.length;
@@ -65,19 +67,25 @@ export default function DynamicReportsPage() {
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         <Topbar onMenuClick={() => setCollapsed((c) => !c)} />
         
-        <main className="flex-1 flex overflow-hidden">
+        <main className="flex-1 flex flex-col lg:flex-row overflow-hidden">
           
           {/* LEFT SIDEBAR: Configuration Panel */}
-          <div className="w-[320px] bg-white border-r border-slate-200 flex flex-col overflow-hidden shrink-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-10">
-            <div className="p-6 border-b border-slate-100">
-              <h2 className="text-lg font-black text-slate-800 tracking-tight flex items-center gap-2">
-                <Filter size={18} className="text-blue-500" />
-                Report Builder
-              </h2>
-              <p className="text-xs text-slate-500 font-medium mt-1">Configure your custom report parameters.</p>
+          {showBuilder && (
+          <div className="w-full lg:w-[320px] lg:h-full h-auto max-h-[50vh] lg:max-h-full bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col shrink-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-10 overflow-hidden transition-all duration-300">
+            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-black text-slate-800 tracking-tight flex items-center gap-2">
+                  <Filter size={18} className="text-blue-500" />
+                  Report Builder
+                </h2>
+                <p className="text-xs text-slate-500 font-medium mt-1">Configure your custom report parameters.</p>
+              </div>
+              <button onClick={() => setShowBuilder(false)} className="lg:hidden p-2 -mr-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
+                <X size={20} />
+              </button>
             </div>
             
-            <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-8">
+            <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-8 custom-scrollbar">
               
               {/* Data Source */}
               <div>
@@ -155,12 +163,13 @@ export default function DynamicReportsPage() {
               </button>
             </div>
           </div>
+          )}
 
           {/* MAIN PANE: Report Preview */}
           <div className="flex-1 flex flex-col overflow-hidden bg-slate-50 relative">
             
             {/* Top Toolbar */}
-            <div className="px-8 py-6 flex items-center justify-between z-10 relative">
+            <div className="px-4 lg:px-8 py-6 flex flex-col xl:flex-row xl:items-center justify-between z-10 relative gap-4">
               <div>
                 <h1 className="text-[22px] font-black text-slate-800 m-0 tracking-tight mb-1">
                   Custom Sales Report
@@ -172,8 +181,15 @@ export default function DynamicReportsPage() {
                 </div>
               </div>
               
-              <div className="flex items-center gap-3">
-                <div className="bg-slate-200/50 p-1 rounded-xl flex mr-2">
+              <div className="flex flex-wrap items-center gap-3">
+                <button 
+                  onClick={() => setShowBuilder(!showBuilder)} 
+                  className={`flex items-center gap-2 px-4 py-2.5 border rounded-xl text-sm font-bold shadow-sm transition-colors ${showBuilder ? 'bg-slate-100 border-slate-200 text-slate-600 hover:bg-slate-200' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'}`}
+                >
+                  <Filter size={16} className={showBuilder ? "text-slate-500" : "text-blue-500"} /> 
+                  <span className="hidden sm:inline">{showBuilder ? "Hide Builder" : "Show Builder"}</span>
+                </button>
+                <div className="bg-slate-200/50 p-1 rounded-xl flex">
                   <button onClick={() => setActiveTab('data')} className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-all ${activeTab === 'data' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>Data Table</button>
                   <button onClick={() => setActiveTab('visual')} className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-all ${activeTab === 'visual' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>Visuals</button>
                 </div>
@@ -190,10 +206,10 @@ export default function DynamicReportsPage() {
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-8 pb-12">
+            <div className="flex-1 overflow-y-auto px-4 lg:px-8 pb-12">
               
               {/* KPI Summary Cards */}
-              <div className="grid grid-cols-4 gap-6 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 gap-4 lg:gap-6 mb-8">
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 relative overflow-hidden">
                   <div className="absolute top-0 right-0 p-6 opacity-5"><Receipt size={64}/></div>
                   <div className="text-sm font-bold text-slate-500 mb-2 relative z-10">Total Orders</div>
@@ -219,8 +235,8 @@ export default function DynamicReportsPage() {
               {activeTab === 'data' && (
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col">
                   {/* Table Header/Search */}
-                  <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                    <div className="relative w-64">
+                  <div className="px-6 py-4 border-b border-slate-100 flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-slate-50/50">
+                    <div className="relative w-full sm:w-64">
                       <Search size={16} className="absolute left-3 top-2.5 text-slate-400" />
                       <input 
                         type="text" 
