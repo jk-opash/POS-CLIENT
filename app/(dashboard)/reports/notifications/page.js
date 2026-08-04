@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Sidebar from "../../components/Sidebar";
-import Topbar from "../../components/Topbar";
+import Sidebar from "../../../components/Sidebar";
+import Topbar from "../../../components/Topbar";
 import {
   Mail,
   MessageSquare,
@@ -92,7 +92,8 @@ export default function ReportNotifications() {
                   Automated Report Alerts
                 </h1>
                 <p className="text-slate-500 text-xs font-medium mt-0.5">
-                  Schedule automated reports and alerts via Email, SMS, WhatsApp, and Push Notifications.
+                  Schedule automated reports and alerts via Email, SMS,
+                  WhatsApp, and Push Notifications.
                 </p>
               </div>
               <button className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-md shadow-emerald-500/20 hover:bg-emerald-600 transition-colors">
