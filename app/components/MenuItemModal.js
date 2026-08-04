@@ -1,255 +1,596 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { useMenu, useInventory } from './Providers';
+import React, { useState, useEffect } from "react";
+import {
+  X,
+  Check,
+  Upload,
+  Trash2,
+  X as XIcon,
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+} from "lucide-react";
+import { useSelector } from "react-redux";
 
 export default function MenuItemModal({ item, onClose, onSave }) {
-  const { categories, addonGroups } = useMenu();
-  const { inventory } = useInventory();
-  
-  const [activeTab, setActiveTab] = useState('basic');
+  const { categories } = useSelector((state) => state.category);
+  const [step, setStep] = useState(1);
+
   const [formData, setFormData] = useState({
-    name: '',
-    categoryId: categories[0]?.id || '',
-    price: '',
-    takeawayPrice: '',
-    tax: 5,
-    vegetarian: true,
-    spicy: 0,
-    available: true,
-    variants: [],
-    addonGroups: [],
-    recipe: [],
-    timeAvailability: null,
+    name: "",
+    categoryId: "",
+    subCategoryId: "",
+    foodType: "Veg",
     image: null,
+    price: "",
+    variants: [],
+    spiceLevelEnabled: false,
+    addonCategories: [],
   });
 
   useEffect(() => {
     if (item) {
       setFormData({
-        ...item,
+        name: item.name || "",
+        categoryId: item.categoryId || item.category_id || "",
+        subCategoryId: item.subCategoryId || item.sub_category || "",
+        foodType: item.food_type || (item.vegetarian ? "Veg" : "Non-Veg"),
+        image: item.image_url || null,
+        price: item.price || item.base_price || "",
         variants: item.variants || [],
-        addonGroups: item.addonGroups || [],
-        recipe: item.recipe || [],
-        timeAvailability: item.timeAvailability || null,
+        spiceLevelEnabled: item.spice_level_enabled || false,
+        addonCategories: item.addon_categories || item.addonGroups || [],
       });
+    } else if (categories && categories.length > 0) {
+      setFormData((prev) => ({ ...prev, categoryId: categories[0].id }));
     }
-  }, [item]);
+  }, [item, categories]);
 
-  const tabs = [
-    { id: 'basic', label: 'Basic Info' },
-    { id: 'pricing', label: 'Pricing & Variants' },
-    { id: 'modifiers', label: 'Modifiers' },
-    { id: 'inventory', label: 'Recipe Link' },
-    { id: 'settings', label: 'Settings' },
-  ];
+  const handleNext = () => setStep((s) => Math.min(3, s + 1));
+  const handleBack = () => setStep((s) => Math.max(1, s - 1));
 
-  const handleSave = () => {
-    onSave({ ...formData, price: Number(formData.price), takeawayPrice: Number(formData.takeawayPrice), tax: Number(formData.tax) });
+  const handleSubmit = () => {
+    onSave({
+      name: formData.name,
+      category_id: formData.categoryId,
+      sub_category: formData.subCategoryId,
+      food_type: formData.foodType,
+      image_url: formData.image,
+      base_price: Number(formData.price),
+      variants: formData.variants,
+      spice_level_enabled: formData.spiceLevelEnabled,
+      addon_categories: formData.addonCategories,
+      vegetarian: formData.foodType === "Veg" || formData.foodType === "Jain",
+    });
   };
 
+  const steps = [
+    { num: 1, title: "Basic Info" },
+    { num: 2, title: "Pricing & Variants" },
+    { num: 3, title: "Add-ons & Options" },
+  ];
+
+  const foodTypes = [
+    "Veg",
+    "Non-Veg",
+    "Egg",
+    "Vegan",
+    "Jain",
+    "Dessert",
+    "Beverage",
+  ];
+
+  const addVariant = () =>
+    setFormData((prev) => ({
+      ...prev,
+      variants: [...prev.variants, { name: "", price: "" }],
+    }));
+  const updateVariant = (index, field, value) => {
+    setFormData((prev) => {
+      const newVariants = [...prev.variants];
+      newVariants[index][field] = value;
+      return { ...prev, variants: newVariants };
+    });
+  };
+  const removeVariant = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      variants: prev.variants.filter((_, i) => i !== index),
+    }));
+  };
+
+  const addAddonCategory = () => {
+    setFormData((prev) => ({
+      ...prev,
+      addonCategories: [
+        ...prev.addonCategories,
+        { name: "", minSelection: 0, maxSelection: 1, options: [] },
+      ],
+    }));
+  };
+  const updateAddonCategory = (catIndex, field, value) => {
+    setFormData((prev) => {
+      const newCats = [...prev.addonCategories];
+      newCats[catIndex][field] = value;
+      return { ...prev, addonCategories: newCats };
+    });
+  };
+  const removeAddonCategory = (catIndex) => {
+    setFormData((prev) => ({
+      ...prev,
+      addonCategories: prev.addonCategories.filter((_, i) => i !== catIndex),
+    }));
+  };
+
+  const addAddonOption = (catIndex) => {
+    setFormData((prev) => {
+      const newCats = [...prev.addonCategories];
+      newCats[catIndex].options.push({ name: "", price: "" });
+      return { ...prev, addonCategories: newCats };
+    });
+  };
+  const updateAddonOption = (catIndex, optIndex, field, value) => {
+    setFormData((prev) => {
+      const newCats = [...prev.addonCategories];
+      newCats[catIndex].options[optIndex][field] = value;
+      return { ...prev, addonCategories: newCats };
+    });
+  };
+  const removeAddonOption = (catIndex, optIndex) => {
+    setFormData((prev) => {
+      const newCats = [...prev.addonCategories];
+      newCats[catIndex].options = newCats[catIndex].options.filter(
+        (_, i) => i !== optIndex,
+      );
+      return { ...prev, addonCategories: newCats };
+    });
+  };
+
+  const selectedCategory = categories.find((c) => c.id === formData.categoryId);
+  const subCategories = selectedCategory?.sub_categories || [];
+
   return (
-    <div style={{
-      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-      background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100
-    }}>
-      <div className="card animate-scale-in" style={{ width: 800, maxWidth: '95vw', height: '85vh', display: 'flex', flexDirection: 'column', padding: 0 }}>
+    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex justify-center items-start pt-[5vh] z-50 overflow-y-auto">
+      <div className="bg-white w-[880px] max-w-[95vw] rounded-2xl shadow-2xl flex flex-col mb-[5vh] relative shrink-0">
         {/* Header */}
-        <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2 style={{ margin: 0, fontSize: 18, color: 'var(--color-text-primary)' }}>{item ? 'Edit Menu Item' : 'New Menu Item'}</h2>
-          <button className="btn btn-surface" onClick={onClose} style={{ padding: '4px 12px' }}>✕</button>
+        <div className="px-6 py-5 flex justify-between items-start border-b border-slate-100">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900">
+              {item ? "Edit Menu Item" : "Create New Menu Item"}
+            </h2>
+            <p className="text-sm text-slate-600 font-medium mt-1">
+              Step {step} of 3: {steps[step - 1].title}
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 transition-colors"
+          >
+            <X size={18} />
+          </button>
         </div>
 
-        <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
-          {/* Sidebar Tabs */}
-          <div style={{ width: 200, borderRight: '1px solid var(--color-border)', padding: 16, display: 'flex', flexDirection: 'column', gap: 4 }}>
-            {tabs.map(t => (
-              <button
-                key={t.id}
-                onClick={() => setActiveTab(t.id)}
-                style={{
-                  background: activeTab === t.id ? 'var(--color-accent)' : 'transparent',
-                  color: activeTab === t.id ? '#fff' : 'var(--color-text-secondary)',
-                  border: 'none', padding: '10px 16px', borderRadius: 8,
-                  textAlign: 'left', cursor: 'pointer', fontSize: 14, fontWeight: 500,
-                  transition: 'all 0.2s'
-                }}
-              >
-                {t.label}
-              </button>
-            ))}
+        <div className="flex flex-1 overflow-hidden border-b border-slate-100">
+          {/* Side Stepper */}
+          <div className="w-[240px] bg-slate-50 border-r border-slate-100 p-6 flex flex-col gap-2 shrink-0">
+            {steps.map((s, i) => {
+              const isCompleted = step > s.num;
+              const isCurrent = step === s.num;
+
+              return (
+                <button
+                  key={s.num}
+                  onClick={() => setStep(s.num)}
+                  className={`w-full text-left flex items-start gap-3 p-3 rounded-xl transition-all duration-200 ${
+                    isCurrent
+                      ? "bg-white shadow-sm border border-slate-200/60"
+                      : "hover:bg-slate-200/50 border border-transparent"
+                  }`}
+                >
+                  <div
+                    className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold transition-colors mt-0.5 ${
+                      isCompleted || isCurrent
+                        ? "bg-[#10B981] text-white shadow-sm"
+                        : "bg-slate-200 text-slate-400"
+                    }`}
+                  >
+                    {isCompleted ? <Check size={14} strokeWidth={3} /> : s.num}
+                  </div>
+                  <div className="flex flex-col">
+                    <span
+                      className={`text-sm font-bold transition-colors ${
+                        isCompleted || isCurrent
+                          ? "text-slate-900"
+                          : "text-slate-500"
+                      }`}
+                    >
+                      {s.title}
+                    </span>
+                    <span className="text-[10px] font-medium text-slate-400 mt-0.5">
+                      {isCompleted
+                        ? "Completed"
+                        : isCurrent
+                          ? "In Progress"
+                          : "Pending"}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
 
           {/* Content Area */}
-          <div style={{ flex: 1, padding: 24, overflowY: 'auto' }}>
-            {activeTab === 'basic' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <div>
-                  <label className="input-label">Item Name</label>
-                  <input className="input" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
-                </div>
-                <div>
-                  <label className="input-label">Category</label>
-                  <select className="input select" value={formData.categoryId} onChange={e => setFormData({ ...formData, categoryId: e.target.value })}>
-                    {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                  </select>
-                </div>
-                <div style={{ display: 'flex', gap: 16 }}>
-                  <div style={{ flex: 1 }}>
-                    <label className="input-label">Dietary Type</label>
-                    <select className="input select" value={formData.vegetarian ? 'veg' : 'nonveg'} onChange={e => setFormData({ ...formData, vegetarian: e.target.value === 'veg' })}>
-                      <option value="veg">🟢 Vegetarian</option>
-                      <option value="nonveg">🔴 Non-Vegetarian</option>
-                    </select>
+          <div className="flex-1 overflow-y-auto max-h-[60vh] p-8">
+              {step === 1 && (
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-bold text-slate-900 mb-1.5">
+                      Menu Item Name *
+                    </label>
+                    <input
+                      className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 placeholder:text-slate-400 font-medium transition-colors bg-white"
+                      placeholder="e.g. Masala Dosa"
+                      value={formData.name}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
+                    />
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <label className="input-label">Spice Level (0-3)</label>
-                    <input type="number" min="0" max="3" className="input" value={formData.spicy} onChange={e => setFormData({ ...formData, spicy: Number(e.target.value) })} />
-                  </div>
-                </div>
-                <div>
-                  <label className="input-label">Image URL (Optional)</label>
-                  <input className="input" placeholder="https://..." value={formData.image || ''} onChange={e => setFormData({ ...formData, image: e.target.value })} />
-                </div>
-              </div>
-            )}
 
-            {activeTab === 'pricing' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <div style={{ display: 'flex', gap: 16 }}>
-                  <div style={{ flex: 1 }}>
-                    <label className="input-label">Default Price (₹)</label>
-                    <input type="number" className="input" value={formData.price} onChange={e => setFormData({ ...formData, price: e.target.value })} />
+                  <div className="flex gap-4">
+                    <div className="flex-1">
+                      <label className="block text-sm font-bold text-slate-900 mb-1.5">
+                        Category
+                      </label>
+                      <select
+                        className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 font-medium appearance-none bg-white transition-colors cursor-pointer"
+                        value={formData.categoryId}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            categoryId: e.target.value,
+                          })
+                        }
+                      >
+                        <option value="" disabled>
+                          Select Category
+                        </option>
+                        {categories.map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex-1">
+                      <label className="block text-sm font-bold text-slate-900 mb-1.5">
+                        Sub Category
+                      </label>
+                      <select
+                        className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 font-medium appearance-none bg-white transition-colors cursor-pointer"
+                        value={formData.subCategoryId}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            subCategoryId: e.target.value,
+                          })
+                        }
+                      >
+                        <option value="" disabled>
+                          Select Sub Category
+                        </option>
+                        {[{ name: "NA" }, ...subCategories].map((sub, idx) => (
+                          <option key={sub.id || idx} value={sub.id}>
+                            {sub.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <label className="input-label">Takeaway Price (₹)</label>
-                    <input type="number" className="input" value={formData.takeawayPrice} onChange={e => setFormData({ ...formData, takeawayPrice: e.target.value })} />
+
+                  <div>
+                    <label className="block text-sm font-bold text-slate-900 mb-1.5">
+                      Food Type
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {foodTypes.map((type) => (
+                        <button
+                          key={type}
+                          onClick={() =>
+                            setFormData({ ...formData, foodType: type })
+                          }
+                          className={`px-5 py-2 rounded-xl text-sm font-bold transition-colors ${
+                            formData.foodType === type
+                              ? "bg-emerald-50 text-emerald-600 border border-emerald-500"
+                              : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+                          }`}
+                        >
+                          {type}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-bold text-slate-900 mb-1.5">
+                      Item Image
+                    </label>
+                    <div className="border-2 border-dashed border-slate-200 rounded-xl p-8 flex flex-col items-center justify-center text-slate-500 cursor-pointer hover:bg-slate-50 transition-colors bg-[#F8FAFC]">
+                      <Upload size={24} className="mb-2 text-slate-600" />
+                      <span className="text-sm font-bold text-slate-700">
+                        Click to upload image
+                      </span>
+                    </div>
                   </div>
                 </div>
-                <div>
-                  <label className="input-label">Tax Slab (%)</label>
-                  <select className="input select" value={formData.tax} onChange={e => setFormData({ ...formData, tax: Number(e.target.value) })}>
-                    <option value={0}>0% GST</option>
-                    <option value={5}>5% GST</option>
-                    <option value={12}>12% GST</option>
-                    <option value={18}>18% GST</option>
-                  </select>
-                </div>
-                
-                <div className="divider" style={{ margin: '16px 0' }} />
-                
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                    <label className="input-label" style={{ margin: 0 }}>Variants (e.g., Half/Full)</label>
-                    <button className="btn btn-surface" style={{ fontSize: 12, padding: '4px 10px' }} onClick={() => setFormData({ ...formData, variants: [...formData.variants, { name: '', price: 0 }] })}>+ Add Variant</button>
+              )}
+
+              {step === 2 && (
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-bold text-slate-900 mb-1.5">
+                      Base Selling Price (₹) *
+                    </label>
+                    <input
+                      type="number"
+                      className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 placeholder:text-slate-400 font-medium transition-colors bg-white"
+                      placeholder="0.00"
+                      value={formData.price}
+                      onChange={(e) =>
+                        setFormData({ ...formData, price: e.target.value })
+                      }
+                    />
                   </div>
-                  {formData.variants.length === 0 ? (
-                    <div style={{ color: 'var(--color-text-secondary)', fontSize: 13, background: 'var(--color-surface2)', padding: 16, borderRadius: 8, textAlign: 'center' }}>No variants configured. Default price will be used.</div>
-                  ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                      {formData.variants.map((v, i) => (
-                        <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                          <input className="input" placeholder="Name (e.g. Half)" value={v.name} onChange={e => { const nv = [...formData.variants]; nv[i].name = e.target.value; setFormData({ ...formData, variants: nv }); }} />
-                          <input type="number" className="input" placeholder="Price" value={v.price} onChange={e => { const nv = [...formData.variants]; nv[i].price = Number(e.target.value); setFormData({ ...formData, variants: nv }); }} />
-                          <button className="btn btn-surface" onClick={() => setFormData({ ...formData, variants: formData.variants.filter((_, idx) => idx !== i) })}>✕</button>
+
+                  <div>
+                    <label className="block text-sm font-bold text-slate-900 mb-0.5">
+                      Variants (Optional)
+                    </label>
+                    <p className="text-xs font-medium text-slate-500 mb-4">
+                      E.g., Half/Full, Small/Large. Variant prices will override
+                      the base price in the POS.
+                    </p>
+
+                    <div className="space-y-3">
+                      {formData.variants.map((variant, index) => (
+                        <div key={index} className="flex items-center gap-3">
+                          <input
+                            className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 placeholder:text-slate-400 font-medium transition-colors bg-white"
+                            placeholder="Variant Name"
+                            value={variant.name}
+                            onChange={(e) =>
+                              updateVariant(index, "name", e.target.value)
+                            }
+                          />
+                          <input
+                            type="number"
+                            className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 placeholder:text-slate-400 font-medium transition-colors bg-white"
+                            placeholder="Price (₹)"
+                            value={variant.price}
+                            onChange={(e) =>
+                              updateVariant(index, "price", e.target.value)
+                            }
+                          />
+                          <button
+                            onClick={() => removeVariant(index)}
+                            className="p-2.5 text-red-500 hover:bg-red-50 rounded-xl transition-colors shrink-0"
+                          >
+                            <XIcon size={18} strokeWidth={2.5} />
+                          </button>
                         </div>
                       ))}
                     </div>
-                  )}
-                </div>
-              </div>
-            )}
 
-            {activeTab === 'modifiers' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <p style={{ color: 'var(--color-text-secondary)', fontSize: 13, margin: '0 0 8px 0' }}>Assign Add-on groups (like "Choice of Crust" or "Extra Toppings") to this item.</p>
-                {addonGroups.map(group => (
-                  <label key={group.id} style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'var(--color-surface2)', padding: 12, borderRadius: 8, cursor: 'pointer', border: '1px solid var(--color-border)' }}>
-                    <input 
-                      type="checkbox" 
-                      style={{ accentColor: 'var(--color-accent)', width: 18, height: 18 }} 
-                      checked={formData.addonGroups.includes(group.id)}
-                      onChange={e => {
-                        if (e.target.checked) setFormData({ ...formData, addonGroups: [...formData.addonGroups, group.id] });
-                        else setFormData({ ...formData, addonGroups: formData.addonGroups.filter(id => id !== group.id) });
-                      }}
-                    />
+                    <button
+                      onClick={addVariant}
+                      className="mt-4 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full text-sm font-bold text-slate-800 hover:bg-slate-50 transition-colors"
+                    >
+                      <Plus size={16} strokeWidth={3} /> Add Variant
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {step === 3 && (
+                <div className="space-y-6">
+                  {/* Enable Spice Level Toggle */}
+                  <div className="bg-[#F8FAFC] border border-slate-200 rounded-xl p-4 flex items-center justify-between">
                     <div>
-                      <div style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>{group.name}</div>
-                      <div style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>{group.multiSelect ? 'Multi-select' : 'Single-select'} • {group.options.length} options</div>
+                      <h4 className="text-sm font-bold text-slate-900">
+                        Enable Spice Level?
+                      </h4>
+                      <p className="text-xs font-medium text-slate-500 mt-0.5">
+                        Allows the customer to choose spice level (Mild, Medium,
+                        Spicy, etc.)
+                      </p>
                     </div>
-                  </label>
-                ))}
-              </div>
-            )}
-
-            {activeTab === 'inventory' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <p style={{ color: '#9ca3af', fontSize: 13, margin: '0 0 8px 0' }}>Link raw materials to auto-deduct from inventory when this item is sold.</p>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <label className="input-label" style={{ margin: 0 }}>Recipe Materials</label>
-                  <button className="btn btn-surface" style={{ fontSize: 12, padding: '4px 10px' }} onClick={() => setFormData({ ...formData, recipe: [...formData.recipe, { inventoryId: inventory[0]?.id, qty: 0 }] })}>+ Add Material</button>
-                </div>
-                {formData.recipe.length === 0 ? (
-                  <div style={{ color: 'var(--color-text-secondary)', fontSize: 13, background: 'var(--color-surface2)', padding: 16, borderRadius: 8, textAlign: 'center' }}>No recipe configured.</div>
-                ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                    {formData.recipe.map((r, i) => (
-                      <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                        <select className="input select" value={r.inventoryId} onChange={e => { const nr = [...formData.recipe]; nr[i].inventoryId = e.target.value; setFormData({ ...formData, recipe: nr }); }}>
-                          {inventory.map(inv => <option key={inv.id} value={inv.id}>{inv.name} ({inv.unit})</option>)}
-                        </select>
-                        <input type="number" step="0.01" className="input" placeholder="Qty" value={r.qty} onChange={e => { const nr = [...formData.recipe]; nr[i].qty = Number(e.target.value); setFormData({ ...formData, recipe: nr }); }} style={{ width: 100 }} />
-                        <span style={{ color: 'var(--color-text-secondary)', fontSize: 13, width: 40 }}>{inventory.find(inv => inv.id === r.inventoryId)?.unit}</span>
-                        <button className="btn btn-surface" onClick={() => setFormData({ ...formData, recipe: formData.recipe.filter((_, idx) => idx !== i) })}>✕</button>
-                      </div>
-                    ))}
+                    <button
+                      className={`relative w-12 h-6 rounded-full transition-colors ${formData.spiceLevelEnabled ? "bg-[#10B981]" : "bg-slate-200"}`}
+                      onClick={() =>
+                        setFormData({
+                          ...formData,
+                          spiceLevelEnabled: !formData.spiceLevelEnabled,
+                        })
+                      }
+                    >
+                      <span
+                        className={`absolute top-0.5 left-0.5 bg-white w-5 h-5 rounded-full transition-transform shadow-sm ${formData.spiceLevelEnabled ? "translate-x-6" : "translate-x-0"}`}
+                      />
+                    </button>
                   </div>
-                )}
-              </div>
-            )}
 
-            {activeTab === 'settings' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }}>
-                  <input type="checkbox" style={{ accentColor: 'var(--color-accent)', width: 20, height: 20 }} checked={formData.available} onChange={e => setFormData({ ...formData, available: e.target.checked })} />
+                  {/* Custom Add-on Categories */}
                   <div>
-                    <div style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>Currently Available</div>
-                    <div style={{ color: 'var(--color-text-secondary)', fontSize: 13 }}>Uncheck to "86" (hide) this item immediately across all platforms.</div>
-                  </div>
-                </label>
-                
-                <div className="divider" />
-                
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                    <input type="checkbox" style={{ accentColor: 'var(--color-accent)', width: 20, height: 20 }} checked={formData.timeAvailability !== null} onChange={e => setFormData({ ...formData, timeAvailability: e.target.checked ? { days: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], hours: ['09:00', '12:00'] } : null })} />
-                    <div style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>Time-based Availability</div>
-                  </div>
-                  {formData.timeAvailability && (
-                    <div style={{ background: 'var(--color-surface2)', padding: 16, borderRadius: 8, display: 'flex', flexDirection: 'column', gap: 12, border: '1px solid var(--color-border)' }}>
-                      <div>
-                        <label className="input-label">Active Hours</label>
-                        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                          <input type="time" className="input" value={formData.timeAvailability.hours[0]} onChange={e => setFormData({ ...formData, timeAvailability: { ...formData.timeAvailability, hours: [e.target.value, formData.timeAvailability.hours[1]] } })} />
-                          <span style={{ color: 'var(--color-text-secondary)' }}>to</span>
-                          <input type="time" className="input" value={formData.timeAvailability.hours[1]} onChange={e => setFormData({ ...formData, timeAvailability: { ...formData.timeAvailability, hours: [formData.timeAvailability.hours[0], e.target.value] } })} />
+                    <h4 className="text-sm font-bold text-slate-900">
+                      Custom Add-on Categories
+                    </h4>
+                    <p className="text-xs font-medium text-slate-500 mt-0.5 mb-4">
+                      Build specific add-on groups for this item (e.g. "Choice
+                      of Bread", "Extra Toppings").
+                    </p>
+
+                    <div className="space-y-4">
+                      {formData.addonCategories.map((cat, catIdx) => (
+                        <div
+                          key={catIdx}
+                          className="bg-[#F8FAFC] border border-slate-200 rounded-xl p-4"
+                        >
+                          {/* Category Header */}
+                          <div className="flex items-center gap-3 mb-4">
+                            <input
+                              className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 placeholder:text-slate-400 font-medium transition-colors bg-white"
+                              placeholder="Category Name (e.g. Extra Toppings)"
+                              value={cat.name}
+                              onChange={(e) =>
+                                updateAddonCategory(
+                                  catIdx,
+                                  "name",
+                                  e.target.value,
+                                )
+                              }
+                            />
+                            <button
+                              onClick={() => removeAddonCategory(catIdx)}
+                              className="p-2.5 text-red-500 bg-red-50 hover:bg-red-100 rounded-xl transition-colors shrink-0"
+                            >
+                              <Trash2 size={18} strokeWidth={2.5} />
+                            </button>
+                          </div>
+
+                          {/* Min/Max Selection */}
+                          <div className="flex gap-4 mb-4">
+                            <div className="flex-1">
+                              <label className="block text-xs font-semibold text-slate-600 mb-1.5">
+                                Min Selection
+                              </label>
+                              <input
+                                type="number"
+                                className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 font-medium transition-colors bg-white"
+                                value={cat.minSelection}
+                                onChange={(e) =>
+                                  updateAddonCategory(
+                                    catIdx,
+                                    "minSelection",
+                                    Number(e.target.value),
+                                  )
+                                }
+                              />
+                            </div>
+                            <div className="flex-1">
+                              <label className="block text-xs font-semibold text-slate-600 mb-1.5">
+                                Max Selection
+                              </label>
+                              <input
+                                type="number"
+                                className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 font-medium transition-colors bg-white"
+                                value={cat.maxSelection}
+                                onChange={(e) =>
+                                  updateAddonCategory(
+                                    catIdx,
+                                    "maxSelection",
+                                    Number(e.target.value),
+                                  )
+                                }
+                              />
+                            </div>
+                          </div>
+
+                          {/* Options */}
+                          <div className="space-y-3">
+                            {cat.options.map((opt, optIdx) => (
+                              <div
+                                key={optIdx}
+                                className="flex items-center gap-3"
+                              >
+                                <input
+                                  className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 placeholder:text-slate-400 font-medium transition-colors bg-white"
+                                  placeholder="Add-on Name"
+                                  value={opt.name}
+                                  onChange={(e) =>
+                                    updateAddonOption(
+                                      catIdx,
+                                      optIdx,
+                                      "name",
+                                      e.target.value,
+                                    )
+                                  }
+                                />
+                                <input
+                                  type="number"
+                                  className="w-1/3 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 placeholder:text-slate-400 font-medium transition-colors bg-white"
+                                  placeholder="Price (₹)"
+                                  value={opt.price}
+                                  onChange={(e) =>
+                                    updateAddonOption(
+                                      catIdx,
+                                      optIdx,
+                                      "price",
+                                      e.target.value,
+                                    )
+                                  }
+                                />
+                                <button
+                                  onClick={() =>
+                                    removeAddonOption(catIdx, optIdx)
+                                  }
+                                  className="p-2.5 text-red-500 hover:bg-red-50 rounded-xl transition-colors shrink-0"
+                                >
+                                  <XIcon size={18} strokeWidth={2.5} />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+
+                          <button
+                            onClick={() => addAddonOption(catIdx)}
+                            className="mt-4 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full text-sm font-bold text-slate-800 hover:bg-slate-50 transition-colors shadow-sm"
+                          >
+                            <Plus size={16} strokeWidth={3} /> Add Option
+                          </button>
                         </div>
-                      </div>
+                      ))}
                     </div>
-                  )}
+
+                    <button
+                      onClick={addAddonCategory}
+                      className="mt-4 flex items-center justify-center gap-2 px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-bold text-slate-800 hover:bg-slate-50 transition-colors shadow-sm"
+                    >
+                      <Plus size={16} strokeWidth={3} /> Create Add-on Category
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div
+            className={`px-6 py-5 flex items-center ${step === 1 ? "justify-end" : "justify-between"} bg-white rounded-b-2xl`}
+          >
+            {step > 1 && (
+              <button
+                onClick={handleBack}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                <ChevronLeft size={16} strokeWidth={2.5} /> Back
+              </button>
+            )}
+
+            {step < 3 ? (
+              <button
+                onClick={handleNext}
+                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#1e293b] text-white text-sm font-bold hover:bg-slate-800 shadow-sm transition-colors ml-auto"
+              >
+                Next Step <ChevronRight size={16} strokeWidth={2.5} />
+              </button>
+            ) : (
+              <button
+                onClick={handleSubmit}
+                className="px-6 py-3 rounded-xl bg-[#1e293b] text-white text-sm font-bold hover:bg-slate-800 shadow-sm transition-colors ml-auto"
+              >
+                Create Menu Item
+              </button>
             )}
           </div>
-        </div>
-
-        {/* Footer */}
-        <div style={{ padding: '16px 24px', borderTop: '1px solid var(--color-border)', display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
-          <button className="btn btn-surface" onClick={onClose}>Cancel</button>
-          <button className="btn btn-primary" onClick={handleSave}>Save Menu Item</button>
-        </div>
       </div>
     </div>
   );
