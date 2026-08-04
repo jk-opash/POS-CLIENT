@@ -1,39 +1,44 @@
-import Card from "../ui/Card";
+import Card, { CardHeader, CardTitle } from "../ui/Card";
 import { RefreshCcw } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Cell } from 'recharts';
 
 export default function TotalSalesBreakdownWidget() {
+  const data = [
+    { label: "Cash", val: 18472.5, color: "#38bdf8" },
+    { label: "Card", val: 12250.0, color: "#3b82f6" },
+    { label: "Wallet", val: 2718.0, color: "#10b981" },
+    { label: "Due", val: 0, color: "#e2e8f0" },
+    { label: "Other", val: 0, color: "#e2e8f0" },
+    { label: "Paid", val: 12450.0, color: "#f59e0b" },
+    { label: "COD", val: 0, color: "#e2e8f0" },
+  ];
+
   return (
-    <Card
-      title="Total Sales Breakdown"
-      action={
+    <Card padding="md" className="flex flex-col">
+      <CardHeader className="flex flex-row justify-between items-center mb-6">
+        <CardTitle>Total Sales Breakdown</CardTitle>
         <div className="flex items-center gap-2">
-          <select className="bg-slate-50 text-xs px-2 h-7 border border-slate-200 rounded-md text-slate-700 outline-none focus:ring-2 focus:ring-blue-100">
+          <select className="bg-white text-xs px-3 h-8 border border-brand-border rounded-lg text-brand-dark font-medium outline-none focus:ring-2 focus:ring-brand-primary/20 shadow-sm">
             <option>Today</option>
+            <option>Yesterday</option>
+            <option>This Week</option>
           </select>
-          <button className="bg-slate-50 border border-slate-200 text-slate-500 rounded-md w-7 h-7 flex items-center justify-center hover:bg-slate-100 transition-colors">
+          <button className="bg-white border border-brand-border text-brand-muted rounded-lg w-8 h-8 flex items-center justify-center hover:bg-brand-light hover:text-brand-dark transition-colors shadow-sm">
             <RefreshCcw size={14} />
           </button>
         </div>
-      }
-    >
-      <div className="text-center mb-6">
-        <span className="text-sm text-slate-500 font-medium">Total: </span>
-        <span className="text-xl text-slate-800 font-bold ml-1">₹ 45,890.50</span>
+      </CardHeader>
+      
+      <div className="text-center mb-4">
+        <span className="text-sm text-brand-muted font-semibold uppercase tracking-wider">Total: </span>
+        <span className="text-2xl text-brand-dark font-black ml-1">₹ 45,890.50</span>
       </div>
-      <div className="h-64 mt-4 -ml-4">
+      
+      <div className="h-64 mt-2 -ml-4 flex-1">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart 
             layout="vertical" 
-            data={[
-              { label: "Cash", val: 18472.5, color: "#38bdf8" },
-              { label: "Card", val: 12250.0, color: "#3b82f6" },
-              { label: "Wallet", val: 2718.0, color: "#34d399" },
-              { label: "Due", val: 0, color: "#e2e8f0" },
-              { label: "Other", val: 0, color: "#e2e8f0" },
-              { label: "Paid", val: 12450.0, color: "#fbbf24" },
-              { label: "COD", val: 0, color: "#e2e8f0" },
-            ]}
+            data={data}
             margin={{ top: 0, right: 30, left: 30, bottom: 0 }}
           >
             <XAxis type="number" hide />
@@ -42,23 +47,29 @@ export default function TotalSalesBreakdownWidget() {
               dataKey="label" 
               axisLine={false} 
               tickLine={false} 
-              tick={{ fill: '#64748b', fontSize: 11, fontWeight: 'bold' }} 
+              tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }} 
             />
             <Tooltip 
               cursor={{ fill: '#f8fafc' }}
-              contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: 12 }}
-              formatter={(value) => `₹ ${value.toLocaleString()}`}
+              content={({ active, payload, label }) => {
+                if (active && payload && payload.length) {
+                  return (
+                    <div className="rounded-xl border border-brand-border bg-white/90 backdrop-blur-md p-3 shadow-[var(--shadow-glass-hover)]">
+                      <div className="flex items-center gap-3">
+                        <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: payload[0].payload.color }}></div>
+                        <span className="text-sm font-semibold text-brand-dark">{label}</span>
+                        <span className="font-bold ml-2" style={{ color: payload[0].payload.color }}>
+                          ₹{payload[0].value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                }
+                return null;
+              }}
             />
-            <Bar dataKey="val" radius={[0, 4, 4, 0]} barSize={16}>
-              {[
-                { label: "Cash", val: 18472.5, color: "#38bdf8" },
-                { label: "Card", val: 12250.0, color: "#3b82f6" },
-                { label: "Wallet", val: 2718.0, color: "#34d399" },
-                { label: "Due", val: 0, color: "#e2e8f0" },
-                { label: "Other", val: 0, color: "#e2e8f0" },
-                { label: "Paid", val: 12450.0, color: "#fbbf24" },
-                { label: "COD", val: 0, color: "#e2e8f0" },
-              ].map((entry, index) => (
+            <Bar dataKey="val" radius={[0, 6, 6, 0]} barSize={14}>
+              {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Bar>
