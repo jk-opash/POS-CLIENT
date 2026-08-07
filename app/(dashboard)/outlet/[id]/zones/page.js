@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from "react";
-import Sidebar from '../../../../components/Sidebar';
-import Topbar from '../../../../components/Topbar';
+import Sidebar from "../../../../components/Sidebar";
+import Topbar from "../../../../components/Topbar";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
 import {
@@ -15,8 +15,8 @@ import {
   updateTable,
   deleteTable as deleteTableAPI,
   clearZoneState,
-} from '../../../../store/slices/zoneSlice';
-import { fetchBranches } from '../../../../store/slices/branchSlice';
+} from "../../../../store/slices/zoneSlice";
+import { fetchBranches } from "../../../../store/slices/branchSlice";
 import {
   ArrowLeft,
   ZoomIn,
@@ -32,6 +32,7 @@ import {
   RotateCw,
   MapPin,
   AlertCircle,
+  Eye,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -48,19 +49,194 @@ function TableWidget({
   onClick,
   onMouseDown,
 }) {
-  const isOccupied = table.status === "Occupied";
-  const isReserved = table.status === "Reserved";
+  const hasOrder =
+    table.order &&
+    (Array.isArray(table.order)
+      ? table.order.length > 0
+      : Object.keys(table.order).length > 0);
+  const isOccupied = table.status === "Occupied" || hasOrder;
+  const isReserved = table.status === "Reserved" && !hasOrder;
+  const isAvailable =
+    (!table.status || table.status === "Available") && !hasOrder;
 
-  const colors = isOccupied
-    ? { bg: "#EFF6FF", border: "#2563EB", text: "#1D4ED8" }
-    : isReserved
-      ? { bg: "#FFF1F2", border: "#E11D48", text: "#BE123C" }
-      : { bg: "#FFFFFF", border: "#10B981", text: "#065F46" };
+  const isCircle = table.shape === "circle" || table.shape === "round";
+  const isSquare = table.shape === "square";
+  const isOval = table.shape === "oval";
 
-  const isCircle = table.shape === "circle" || table.shape === "oval";
-  const isRect = table.shape === "rectangle";
-  const w = isRect ? 128 : 80;
-  const h = 80;
+  let containerWidth = 80;
+  let bodyHeight = 60;
+  let borderRadius = 12;
+
+  // Derive span dynamically from capacity if not explicitly provided
+  const span =
+    table.span || (table.capacity >= 12 ? 3 : table.capacity >= 6 ? 2 : 1);
+  // Use the table's span to scale up the UI dynamically
+  const spanScale = Math.max(0, span - 1);
+
+  if (isSquare || isCircle) {
+    // Square/circle grows symmetrically
+    containerWidth = 80 + spanScale * 40;
+    bodyHeight = containerWidth;
+  } else {
+    // Rectangle/oval grows mainly in width
+    containerWidth = 80 + spanScale * 100;
+    bodyHeight = 60;
+  }
+
+  if (isCircle || isOval) {
+    borderRadius = 1000;
+  }
+
+  // Determine text and background colors based on status
+  let textColor = "#1e293b"; // textPrimary
+  let bgColor = "#ffffff";
+  let borderColor = "#e2e8f0"; // border
+  let chairColor = "#ffffff";
+  let chairBorderColor = "#e2e8f0";
+
+  if (isOccupied) {
+    textColor = "#3b82f6";
+    bgColor = "#eff6ff";
+    borderColor = "#3b82f6";
+    chairColor = "#3b82f6";
+    chairBorderColor = "#3b82f6";
+  } else if (isReserved) {
+    textColor = "#ef4444";
+    bgColor = "#fef2f2";
+    borderColor = "#ef4444";
+    chairColor = "#ef4444";
+    chairBorderColor = "#ef4444";
+  }
+
+  const chairsPerRow = Math.ceil(table.capacity / 2);
+  const chairArray = Array.from({ length: chairsPerRow });
+
+  const renderChairs = () => (
+    <div className="flex gap-3 my-1">
+      {chairArray.map((_, i) => (
+        <div
+          key={i}
+          style={{
+            width: 24,
+            height: 8,
+            backgroundColor: chairColor,
+            borderColor: chairBorderColor,
+            borderWidth: 1,
+            borderRadius: 4,
+            boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+          }}
+        />
+      ))}
+    </div>
+  );
+
+  const renderRadialChairs = () => {
+    const chairCount = table.capacity;
+    const tableRadius = containerWidth / 2;
+    const radius = tableRadius + 14;
+
+    return (
+      <div className="absolute inset-0 flex items-center justify-center -z-10 pointer-events-none">
+        {Array.from({ length: chairCount }).map((_, i) => {
+          const angle = (i * 2 * Math.PI) / chairCount - Math.PI / 2;
+          const x = radius * Math.cos(angle);
+          const y = radius * Math.sin(angle);
+          const rotation = (angle * 180) / Math.PI + 90;
+
+          return (
+            <div
+              key={i}
+              className="absolute"
+              style={{
+                width: 24,
+                height: 8,
+                backgroundColor: chairColor,
+                borderColor: chairBorderColor,
+                borderWidth: 1,
+                borderRadius: 4,
+                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                transform: `translate(${x}px, ${y}px) rotate(${rotation}deg)`,
+              }}
+            />
+          );
+        })}
+      </div>
+    );
+  };
+
+  const renderSquareChairs = () => {
+    const count = table.capacity;
+    const topCount = Math.ceil(count / 4);
+    const rightCount = Math.ceil((count - topCount) / 3);
+    const bottomCount = Math.ceil((count - topCount - rightCount) / 2);
+    const leftCount = count - topCount - rightCount - bottomCount;
+
+    const halfWidth = containerWidth / 2;
+    const offset = halfWidth + 14;
+
+    const renderSide = (sideCount, side) => {
+      if (sideCount === 0) return null;
+
+      return Array.from({ length: sideCount }).map((_, i) => {
+        const fraction = sideCount === 1 ? 0.5 : i / (sideCount - 1);
+        const sideLength = Math.max(0, containerWidth - 36);
+        const pos = (fraction - 0.5) * sideLength;
+
+        let x = 0,
+          y = 0,
+          rotation = 0;
+
+        switch (side) {
+          case "top":
+            x = pos;
+            y = -offset;
+            rotation = 0;
+            break;
+          case "right":
+            x = offset;
+            y = pos;
+            rotation = 90;
+            break;
+          case "bottom":
+            x = -pos;
+            y = offset;
+            rotation = 180;
+            break;
+          case "left":
+            x = -offset;
+            y = -pos;
+            rotation = 270;
+            break;
+        }
+
+        return (
+          <div
+            key={`${side}-${i}`}
+            className="absolute"
+            style={{
+              width: 24,
+              height: 8,
+              backgroundColor: chairColor,
+              borderColor: chairBorderColor,
+              borderWidth: 1,
+              borderRadius: 4,
+              boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+              transform: `translate(${x}px, ${y}px) rotate(${rotation}deg)`,
+            }}
+          />
+        );
+      });
+    };
+
+    return (
+      <div className="absolute inset-0 flex items-center justify-center -z-10 pointer-events-none">
+        {renderSide(topCount, "top")}
+        {renderSide(rightCount, "right")}
+        {renderSide(bottomCount, "bottom")}
+        {renderSide(leftCount, "left")}
+      </div>
+    );
+  };
 
   return (
     <div
@@ -72,101 +248,51 @@ function TableWidget({
         top: table.position_y || 0,
         transform: `rotate(${table.rotation || 0}deg)`,
         zIndex: isEditMode ? 10 : 1,
+        width: containerWidth,
+        height: isCircle || isSquare ? containerWidth : undefined,
       }}
     >
-      {isRect && (
-        <div className="flex gap-2 mb-1">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div
-              key={i}
-              style={{
-                width: 22,
-                height: 8,
-                borderRadius: 4,
-                background: colors.border,
-              }}
-            />
-          ))}
-        </div>
-      )}
+      {/* Top Chairs (Rect/Oval only) */}
+      {!(isCircle || isSquare) && renderChairs()}
+
+      {/* Table Body */}
       <div
-        className={`flex flex-col items-center justify-center shadow-md border-2 ${isMergeSelected ? "ring-4 ring-blue-400 ring-offset-2 ring-offset-slate-50" : ""} ${isEditMode && !isMergeMode ? "ring-2 ring-emerald-500 ring-offset-2 ring-offset-slate-50" : ""}`}
+        className={`flex items-center justify-center shadow-md border-[1.5px] ${isMergeSelected ? "ring-4 ring-blue-400 ring-offset-2 ring-offset-slate-50" : ""} ${isEditMode && !isMergeMode ? "ring-2 ring-emerald-500 ring-offset-2 ring-offset-slate-50" : ""}`}
         style={{
-          width: w,
-          height: h,
-          background: colors.bg,
-          borderColor: colors.border,
-          borderRadius: isCircle ? 9999 : 12,
+          width: "100%",
+          height: bodyHeight,
+          background: bgColor,
+          borderColor: borderColor,
+          borderRadius: borderRadius,
+          flexDirection: isOccupied ? "row" : "column",
+          gap: isOccupied ? 6 : 0,
         }}
       >
-        <span className="font-black text-base" style={{ color: colors.text }}>
+        <span className="font-bold text-[16px]" style={{ color: textColor }}>
           {table.name}
         </span>
-        <span
-          className="text-[10px] font-semibold"
-          style={{ color: colors.text }}
-        >
-          {table.capacity}P
-        </span>
-        {isMergeSelected && (
-          <div className="absolute -top-1 -right-1 bg-blue-500 rounded-full w-5 h-5 flex items-center justify-center shadow-lg">
-            <Check size={10} color="white" />
-          </div>
-        )}
+        {isOccupied && <Eye size={18} color={textColor} />}
       </div>
-      {isRect && (
-        <div className="flex gap-2 mt-1">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div
-              key={i}
-              style={{
-                width: 22,
-                height: 8,
-                borderRadius: 4,
-                background: colors.border,
-              }}
-            />
-          ))}
+
+      {/* Bottom Chairs (Rect/Oval only) */}
+      {!(isCircle || isSquare) && renderChairs()}
+
+      {/* Radial Chairs (Circle only) */}
+      {isCircle && renderRadialChairs()}
+
+      {/* Square Chairs (Square only) */}
+      {isSquare && renderSquareChairs()}
+
+      {isMergeSelected && (
+        <div className="absolute -top-1 -right-1 bg-blue-500 rounded-full w-5 h-5 flex items-center justify-center shadow-lg z-20">
+          <Check size={10} color="white" />
         </div>
       )}
-      {!isRect && (
-        <>
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex gap-2">
-            {Array.from({ length: Math.ceil(table.capacity / 2) }).map(
-              (_, i) => (
-                <div
-                  key={i}
-                  style={{
-                    width: 16,
-                    height: 8,
-                    borderRadius: 4,
-                    background: colors.border,
-                  }}
-                />
-              ),
-            )}
-          </div>
-          <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-            {Array.from({ length: Math.floor(table.capacity / 2) }).map(
-              (_, i) => (
-                <div
-                  key={i}
-                  style={{
-                    width: 16,
-                    height: 8,
-                    borderRadius: 4,
-                    background: colors.border,
-                  }}
-                />
-              ),
-            )}
-          </div>
-        </>
-      )}
+
       {isEditMode && !isMergeMode && (
         <>
           <div
-            className="absolute -top-3 -right-3 bg-emerald-500 rounded-full w-7 h-7 flex items-center justify-center shadow-md cursor-pointer hover:bg-emerald-600 z-10"
+            className="absolute -top-3 -right-3 bg-emerald-500 rounded-full w-7 h-7 flex items-center justify-center shadow-md cursor-pointer hover:bg-emerald-600 z-20"
             onClick={(e) => {
               e.stopPropagation();
               onClick("rotate");
@@ -175,7 +301,7 @@ function TableWidget({
             <RotateCw size={13} color="white" />
           </div>
           <div
-            className="absolute -top-3 -left-3 bg-blue-500 rounded-full w-7 h-7 flex items-center justify-center shadow-md cursor-pointer hover:bg-blue-600 z-10"
+            className="absolute -top-3 -left-3 bg-blue-500 rounded-full w-7 h-7 flex items-center justify-center shadow-md cursor-pointer hover:bg-blue-600 z-20"
             onClick={(e) => {
               e.stopPropagation();
               onClick("edit");
@@ -262,7 +388,6 @@ export default function ZonesPage() {
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [zoom, setZoom] = useState(1);
-  const [pan, setPan] = useState({ x: 0, y: 0 });
 
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showActionModal, setShowActionModal] = useState(false);
@@ -276,10 +401,9 @@ export default function ZonesPage() {
   const [editCapacity, setEditCapacity] = useState(4);
   const [editShape, setEditShape] = useState("square");
 
-  // Drag & Pan Logic
+  // Drag Logic
   const dragTable = useRef(null);
-  const dragStart = useRef({ mx: 0, my: 0, tx: 0, ty: 0, px: 0, py: 0 });
-  const isDraggingView = useRef(false);
+  const dragStart = useRef({ mx: 0, my: 0, tx: 0, ty: 0 });
 
   const [localTables, setLocalTables] = useState([]);
   useEffect(() => {
@@ -298,18 +422,17 @@ export default function ZonesPage() {
     e.stopPropagation();
   };
 
-  const onCanvasMouseDown = (e) => {
-    if (isEditMode) return;
-    isDraggingView.current = true;
-    dragStart.current = { mx: e.clientX, my: e.clientY, px: pan.x, py: pan.y };
-  };
-
   const onMouseMove = (e) => {
     if (dragTable.current) {
       const dx = (e.clientX - dragStart.current.mx) / zoom;
       const dy = (e.clientY - dragStart.current.my) / zoom;
-      const snappedX = Math.round((dragStart.current.tx + dx) / 25) * 25;
-      const snappedY = Math.round((dragStart.current.ty + dy) / 25) * 25;
+      let snappedX = Math.round((dragStart.current.tx + dx) / 25) * 25;
+      let snappedY = Math.round((dragStart.current.ty + dy) / 25) * 25;
+
+      // Restrict dragging within 1000x1000 area
+      snappedX = Math.max(0, Math.min(snappedX, 1000));
+      snappedY = Math.max(0, Math.min(snappedY, 1000));
+
       setLocalTables((prev) =>
         prev.map((t) =>
           t.id === dragTable.current
@@ -317,10 +440,6 @@ export default function ZonesPage() {
             : t,
         ),
       );
-    } else if (isDraggingView.current) {
-      const dx = e.clientX - dragStart.current.mx;
-      const dy = e.clientY - dragStart.current.my;
-      setPan({ x: dragStart.current.px + dx, y: dragStart.current.py + dy });
     }
   };
 
@@ -337,14 +456,12 @@ export default function ZonesPage() {
       }
     }
     dragTable.current = null;
-    isDraggingView.current = false;
   };
 
   const handleZoomIn = () => setZoom((z) => Math.min(z + 0.2, 2.5));
   const handleZoomOut = () => setZoom((z) => Math.max(z - 0.2, 0.3));
   const handleResetZoom = () => {
     setZoom(1);
-    setPan({ x: 0, y: 0 });
   };
 
   const handleTableClick = async (table, action) => {
@@ -621,37 +738,44 @@ export default function ZonesPage() {
         </div>
 
         {/* Canvas */}
-        <div
-          className={`flex-1 overflow-hidden relative ${isDraggingView.current ? "cursor-grabbing" : "cursor-grab"}`}
-          onMouseDown={onCanvasMouseDown}
-          style={{
-            backgroundImage: "radial-gradient(#cbd5e1 1px, transparent 1px)",
-            backgroundSize: `${40 * zoom}px ${40 * zoom}px`,
-            backgroundColor: "#f8fafc",
-            backgroundPosition: `${pan.x}px ${pan.y}px`,
-          }}
-        >
+        <div className="flex-1 overflow-auto bg-[#f8fafc] relative">
           {activeZone ? (
             <div
-              className="absolute"
               style={{
-                transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
-                transformOrigin: "0 0",
-                width: "100%",
-                height: "100%",
+                width: 1000 * zoom,
+                height: 1000 * zoom,
+                backgroundImage:
+                  "radial-gradient(#cbd5e1 1px, transparent 1px)",
+                backgroundSize: `${40 * zoom}px ${40 * zoom}px`,
+                position: "relative",
               }}
             >
-              {localTables.map((table) => (
-                <TableWidget
-                  key={table.id}
-                  table={table}
-                  isEditMode={isEditMode}
-                  isMergeMode={isMergeMode}
-                  isMergeSelected={mergeSelection.includes(table.id)}
-                  onClick={(action) => handleTableClick(table, action)}
-                  onMouseDown={(e) => onTableMouseDown(e, table)}
+              <div
+                className="absolute top-0 left-0"
+                style={{
+                  transform: `scale(${zoom})`,
+                  transformOrigin: "0 0",
+                  width: 1000,
+                  height: 1000,
+                }}
+              >
+                {/* Floor boundary to show 1000x1000 area limit */}
+                <div
+                  className="absolute border-2 border-dashed border-slate-300 bg-white/40 pointer-events-none"
+                  style={{ width: 1000, height: 1000, top: 0, left: 0 }}
                 />
-              ))}
+                {localTables.map((table) => (
+                  <TableWidget
+                    key={table.id}
+                    table={table}
+                    isEditMode={isEditMode}
+                    isMergeMode={isMergeMode}
+                    isMergeSelected={mergeSelection.includes(table.id)}
+                    onClick={(action) => handleTableClick(table, action)}
+                    onMouseDown={(e) => onTableMouseDown(e, table)}
+                  />
+                ))}
+              </div>
             </div>
           ) : (
             <div className="flex h-full items-center justify-center">
