@@ -8,6 +8,7 @@ import { fetchMenuItems, createMenuItem, updateMenuItem, deleteMenuItem } from "
 import { fetchCategories, createCategory } from "../../store/slices/categorySlice";
 import { fetchBranches } from "../../store/slices/branchSlice";
 import MenuItemModal from "../../components/MenuItemModal";
+import DeleteConfirmModal from "../inventory/components/DeleteConfirmModal";
 import { Plus, Building2 } from "lucide-react";
 
 import ItemsTabFilters from "./components/ItemsTabFilters";
@@ -68,6 +69,7 @@ export default function MenuPage() {
   // Modals
   const [showItemModal, setShowItemModal] = useState(false);
   const [editItem, setEditItem] = useState(null);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   const handleSaveItem = (item) => {
     if (editItem) {
@@ -98,9 +100,14 @@ export default function MenuPage() {
     }
   };
 
-  const handleDeleteItem = (id) => {
-    if (window.confirm("Are you sure you want to delete this menu item?")) {
-      dispatch(deleteMenuItem(id));
+  const handleDeleteItem = (item) => {
+    setItemToDelete(item);
+  };
+
+  const confirmDelete = () => {
+    if (itemToDelete) {
+      dispatch(deleteMenuItem(itemToDelete.id));
+      setItemToDelete(null);
     }
   };
 
@@ -246,6 +253,12 @@ export default function MenuPage() {
           onClose={() => setShowItemModal(false)}
         />
       )}
+      
+      <DeleteConfirmModal
+        item={itemToDelete}
+        onConfirm={confirmDelete}
+        onClose={() => setItemToDelete(null)}
+      />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { Tag, Edit2, Trash2, Layers, Loader2, Plus, X } from "lucide-react";
 import PosAdminBadge from "../components/PosAdminBadge";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories, createCategory, updateCategory, deleteCategory } from "../../../store/slices/categorySlice";
+import DeleteConfirmModal from "../../inventory/components/DeleteConfirmModal";
 
 export default function CategoriesTab({ branchId }) {
   const dispatch = useDispatch();
@@ -22,6 +23,8 @@ export default function CategoriesTab({ branchId }) {
   const [editingSubcategoryIndex, setEditingSubcategoryIndex] = useState(null);
   const [editSubcategoryName, setEditSubcategoryName] = useState("");
 
+  const [itemToDelete, setItemToDelete] = useState(null);
+
   // CATEGORY HANDLERS
   const handleCreateCategory = () => {
     if (!newCategoryName.trim()) return;
@@ -37,14 +40,9 @@ export default function CategoriesTab({ branchId }) {
     setEditCategoryName("");
   };
 
-  const handleDeleteCategory = (e, id) => {
+  const handleDeleteCategory = (e, cat) => {
     e.stopPropagation();
-    if (!window.confirm("Are you sure you want to delete this category?")) return;
-    dispatch(deleteCategory(id)).then((res) => {
-      if (res.meta.requestStatus === 'fulfilled' && selectedCategoryTabId === id) {
-        setSelectedCategoryTabId(null);
-      }
-    });
+    setItemToDelete({ type: 'category', id: cat.id, name: cat.name });
   };
 
   // SUBCATEGORY HANDLERS
@@ -66,9 +64,30 @@ export default function CategoriesTab({ branchId }) {
   };
 
   const handleDeleteSubcategory = (category, subIndex) => {
-    if (!window.confirm("Are you sure you want to delete this subcategory?")) return;
-    const newSubcategories = category.sub_categories.filter((_, idx) => idx !== subIndex);
-    dispatch(updateCategory({ id: category.id, data: { sub_categories: newSubcategories } }));
+    setItemToDelete({ 
+      type: 'subcategory', 
+      category, 
+      subIndex, 
+      name: category.sub_categories[subIndex].name 
+    });
+  };
+
+  const confirmDelete = () => {
+    if (!itemToDelete) return;
+
+    if (itemToDelete.type === 'category') {
+      dispatch(deleteCategory(itemToDelete.id)).then((res) => {
+        if (res.meta.requestStatus === 'fulfilled' && selectedCategoryTabId === itemToDelete.id) {
+          setSelectedCategoryTabId(null);
+        }
+      });
+    } else if (itemToDelete.type === 'subcategory') {
+      const { category, subIndex } = itemToDelete;
+      const newSubcategories = category.sub_categories.filter((_, idx) => idx !== subIndex);
+      dispatch(updateCategory({ id: category.id, data: { sub_categories: newSubcategories } }));
+    }
+
+    setItemToDelete(null);
   };
 
   return (
@@ -183,7 +202,7 @@ export default function CategoriesTab({ branchId }) {
                         <Edit2 size={13} />
                       </button>
                       <button 
-                        onClick={(e) => handleDeleteCategory(e, cat.id)}
+                        onClick={(e) => handleDeleteCategory(e, cat)}
                         className="text-slate-400 hover:text-red-600 hover:bg-red-50 p-1.5 rounded-lg transition-colors"
                       >
                         <Trash2 size={13} />
@@ -346,6 +365,12 @@ export default function CategoriesTab({ branchId }) {
           );
         })()}
       </div>
+
+      <DeleteConfirmModal
+        item={itemToDelete}
+        onConfirm={confirmDelete}
+        onClose={() => setItemToDelete(null)}
+      />
     </div>
   );
 }

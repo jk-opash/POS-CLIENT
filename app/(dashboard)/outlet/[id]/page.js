@@ -50,6 +50,9 @@ function EditBranchModal({ branch, onClose, onSave }) {
     status: branch?.status || "Operational",
     capacity: branch?.capacity || "",
     tables_count: branch?.tables_count || "",
+    tax_jurisdiction: branch?.tax_jurisdiction || "",
+    tax_registration: branch?.tax_registration || "",
+    tax_percentage: branch?.tax_percentage || "",
   });
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
@@ -176,6 +179,43 @@ function EditBranchModal({ branch, onClose, onSave }) {
               onChange={(e) =>
                 set("tables_count", parseInt(e.target.value) || "")
               }
+            />
+          </div>
+          <div>
+            <label className="text-xs text-slate-500 block mb-1">
+              Tax Jurisdiction
+            </label>
+            <input
+              className="input"
+              value={form.tax_jurisdiction}
+              onChange={(e) => set("tax_jurisdiction", e.target.value)}
+              placeholder="e.g. State / National"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-slate-500 block mb-1">
+              Tax Registration No.
+            </label>
+            <input
+              className="input"
+              value={form.tax_registration}
+              onChange={(e) => set("tax_registration", e.target.value)}
+              placeholder="e.g. GSTIN/VAT"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-slate-500 block mb-1">
+              Tax Rate (%)
+            </label>
+            <input
+              className="input"
+              type="number"
+              step="0.01"
+              value={form.tax_percentage}
+              onChange={(e) =>
+                set("tax_percentage", parseFloat(e.target.value) || "")
+              }
+              placeholder="e.g. 5.00"
             />
           </div>
         </div>
