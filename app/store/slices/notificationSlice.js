@@ -130,9 +130,13 @@ const notificationSlice = createSlice({
         }
 
         state.items = fetchedItems;
-        state.unreadCount = state.items.filter(
-          (item) => !item.read && !item.is_read,
-        ).length;
+        if (action.payload && action.payload.unreadCount !== undefined) {
+          state.unreadCount = action.payload.unreadCount;
+        } else {
+          state.unreadCount = state.items.filter(
+            (item) => !item.isRead && !item.read && !item.is_read,
+          ).length;
+        }
       })
       .addCase(fetchNotifications.rejected, (state, action) => {
         state.loading = false;
@@ -142,7 +146,8 @@ const notificationSlice = createSlice({
       .addCase(markAsRead.fulfilled, (state, action) => {
         const id = action.meta.arg;
         const notification = state.items.find((item) => item.id === id);
-        if (notification && !notification.read && !notification.is_read) {
+        if (notification && !notification.isRead && !notification.read && !notification.is_read) {
+          notification.isRead = true;
           notification.read = true;
           notification.is_read = true;
           state.unreadCount = Math.max(0, state.unreadCount - 1);
@@ -151,6 +156,7 @@ const notificationSlice = createSlice({
       // Mark all as read
       .addCase(markAllAsRead.fulfilled, (state) => {
         state.items.forEach((item) => {
+          item.isRead = true;
           item.read = true;
           item.is_read = true;
         });

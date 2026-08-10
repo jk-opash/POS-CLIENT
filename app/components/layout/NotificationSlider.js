@@ -142,7 +142,7 @@ export function NotificationSlider({ isOpen, onClose }) {
               ) : (
                 <div className="divide-y divide-slate-100/60">
                   {notifications.map((notification, index) => {
-                    const isRead = notification.read || notification.is_read;
+                    const isRead = notification.isRead || notification.read || notification.is_read;
                     return (
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}

@@ -119,7 +119,7 @@ export function Header({ onMenuClick }) {
                 >
                   {user?.businesses?.[0]?.subscription_plan?.plan?.replace(
                     "_",
-                    " "
+                    " ",
                   ) || "Pro Plan"}
                 </Badge>
               </div>
@@ -207,8 +207,6 @@ export function Header({ onMenuClick }) {
                 </span>
               )}
             </button>
-
-
           </div>
         </div>
       </header>
