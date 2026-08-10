@@ -21,7 +21,7 @@ export const NAV_ITEMS = [
     icon: Receipt,
     submenu: [
       { href: "/pos", label: "All Orders" },
-      { href: "/pos/online", label: "Online Orders" },
+      // { href: "/pos/online", label: "Online Orders" },
       { href: "/pos/kot", label: "KOT" },
     ],
   },
