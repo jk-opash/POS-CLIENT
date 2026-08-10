@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDashboardAnalytics } from "../store/slices/analyticsSlice";
 
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
@@ -9,7 +11,6 @@ import StatCard from "../components/ui/StatCard";
 
 import ExpensesWidget from "../components/dashboard/ExpensesWidget";
 import OrderStatisticsWidget from "../components/dashboard/OrderStatisticsWidget";
-import RevenueLeakageWidget from "../components/dashboard/RevenueLeakageWidget";
 import DiscountWidget from "../components/dashboard/DiscountWidget";
 import TaxesWidget from "../components/dashboard/TaxesWidget";
 import OutletStatisticsWidget from "../components/dashboard/OutletStatisticsWidget";
@@ -39,11 +40,21 @@ export default function DashboardPage() {
   const [collapsed, setCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
 
-  // TODO: Fetch orders from Redux store once orderSlice is implemented
-  const totalSales = 0;
-  const netSales = 0;
-  const onlineSales = 0;
-  const numOrders = 0;
+  const dispatch = useDispatch();
+  const { stats, loading } = useSelector((state) => state.analytics);
+
+  useEffect(() => {
+    dispatch(fetchDashboardAnalytics());
+  }, [dispatch]);
+
+  const totalSales = stats?.totalSales || 0;
+  const netSales = stats?.netSales || 0;
+  const onlineSales = stats?.onlineSales || 0;
+  const numOrders = stats?.numOrders || 0;
+  const cashCollection = stats?.cashCollection || 0;
+  const expenses = stats?.totalExpenses || 0;
+  const taxes = stats?.taxes || 0;
+  const discounts = stats?.discounts || 0;
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50">
@@ -144,8 +155,8 @@ export default function DashboardPage() {
 
                     <StatCard
                       label="Cash Collection"
-                      value={fmt(totalSales - onlineSales)}
-                      subtext="72.77% of total sales"
+                      value={fmt(cashCollection)}
+                      subtext="Cash payments received"
                       icon={<Banknote size={16} />}
                     />
 
@@ -173,7 +184,7 @@ export default function DashboardPage() {
 
                     <StatCard
                       label="Expenses"
-                      value="0.00"
+                      value={fmt(expenses)}
                       subtext="Expenses recorded"
                       icon={<Wallet size={16} />}
                       isGrey
@@ -181,7 +192,7 @@ export default function DashboardPage() {
 
                     <StatCard
                       label="Taxes"
-                      value={fmt(totalSales * 0.05)}
+                      value={fmt(taxes)}
                       subtext="Taxes recorded"
                       icon={<ScrollText size={16} />}
                       isGrey
@@ -189,8 +200,8 @@ export default function DashboardPage() {
 
                     <StatCard
                       label="Discounts"
-                      value="0.00"
-                      subtext="0% of total sales"
+                      value={fmt(discounts)}
+                      subtext="Discounts given"
                       icon={<Tag size={16} />}
                       isGrey
                     />
@@ -218,10 +229,7 @@ export default function DashboardPage() {
               <div className="space-y-6">
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                   <ExpensesWidget />
-                  <RevenueLeakageWidget />
-                </div>
 
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                   <DiscountWidget />
                   <TaxesWidget />
                 </div>

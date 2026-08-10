@@ -1,7 +1,12 @@
-import Card from "../ui/Card";
+import Card, { CardHeader, CardTitle } from "../ui/Card";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchDashboardAnalytics } from "../../store/slices/analyticsSlice";
 import { PhoneCall, FileText } from "lucide-react";
 
 export default function SupportWidget() {
+  const [timeRange, setTimeRange] = useState("");
+  const dispatch = useDispatch();
   return (
     <div className="flex flex-col gap-6 h-full">
       <Card padding="p-6" className="text-center flex flex-col items-center justify-center bg-gradient-to-br from-white to-slate-50">
@@ -21,14 +26,25 @@ export default function SupportWidget() {
         </div>
       </Card>
       
-      <Card
-        title="Reconciliation"
-        action={
-          <select className="bg-slate-50 text-xs px-2 h-7 border border-slate-200 rounded-md text-slate-700 outline-none focus:ring-2 focus:ring-blue-100">
-            <option>Today</option>
+      <Card padding="md">
+        <CardHeader className="flex flex-row justify-between items-center mb-4">
+          <CardTitle>Reconciliation</CardTitle>
+          <select 
+            value={timeRange}
+            onChange={(e) => {
+              const range = e.target.value;
+              setTimeRange(range);
+              dispatch(fetchDashboardAnalytics({ timeRange: range }));
+            }}
+            className="bg-slate-50 text-xs px-2 h-7 border border-slate-200 rounded-md text-slate-700 outline-none focus:ring-2 focus:ring-blue-100"
+          >
+            <option value="">All Time</option>
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+            <option value="year">This Year</option>
           </select>
-        }
-      >
+        </CardHeader>
         <div className="flex-1 flex flex-col items-center justify-center text-center py-8">
           <FileText size={48} className="text-slate-200 mb-4" strokeWidth={1.5} />
           <div className="text-sm max-w-[200px] text-slate-500 font-medium leading-relaxed">

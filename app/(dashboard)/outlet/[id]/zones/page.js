@@ -551,8 +551,14 @@ export default function ZonesPage() {
     for (const ot of tbl.merged_tables) {
       await dispatch(
         createTable({
-          ...ot,
-          id: undefined,
+          name: ot.name,
+          capacity: ot.capacity,
+          shape: ot.shape || "rectangle",
+          position_x: ot.position_x || ot.x || 0,
+          position_y: ot.position_y || ot.y || 0,
+          status: "Available",
+          rotation: ot.rotation || 0,
+          is_active: ot.is_active !== undefined ? ot.is_active : true,
           zone_id: activeZone.id,
           branch_id: branchId,
         }),

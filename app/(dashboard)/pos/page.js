@@ -1,544 +1,253 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchAllOrders } from "../../store/slices/orderSlice";
+import { fetchBranches } from "../../store/slices/branchSlice";
+import {
+  RefreshCcw,
+  CheckCircle,
+  Building2,
+  UtensilsCrossed,
+  Store,
+} from "lucide-react";
 import Sidebar from "../../components/Sidebar";
 import Topbar from "../../components/Topbar";
-import Button from "../../components/ui/Button";
 import Tabs from "../../components/ui/Tabs";
-
-function POSItem({ item, onAdd }) {
-  return (
-    <button
-      onClick={() => onAdd(item)}
-      style={{
-        background: "var(--color-surface)",
-        border: "1px solid var(--color-border)",
-        borderRadius: 12,
-        padding: "12px",
-        cursor: "pointer",
-        textAlign: "left",
-        transition: "all 0.15s",
-        display: "flex",
-        flexDirection: "column",
-        gap: 6,
-        opacity: item.available ? 1 : 0.4,
-        width: "100%",
-      }}
-      disabled={!item.available}
-      onMouseEnter={(e) =>
-        item.available &&
-        (e.currentTarget.style.borderColor = "var(--color-accent)")
-      }
-      onMouseLeave={(e) =>
-        (e.currentTarget.style.borderColor = "var(--color-border)")
-      }
-    >
-      <div style={{ display: "flex", gap: 5, alignItems: "center" }}>
-        <span
-          style={{
-            display: "inline-block",
-            width: 7,
-            height: 7,
-            borderRadius: 1,
-            border: `2px solid ${item.vegetarian ? "var(--color-emerald)" : "var(--color-rose)"}`,
-            flexShrink: 0,
-          }}
-        />
-        <span
-          style={{
-            fontSize: 13,
-            fontWeight: 600,
-            color: "var(--color-text-primary)",
-            lineHeight: 1.3,
-          }}
-        >
-          {item.name}
-        </span>
-      </div>
-      <div
-        style={{ fontSize: 14, fontWeight: 800, color: "var(--color-accent)" }}
-      >
-        ₹{item.price}
-      </div>
-      {!item.available && (
-        <div
-          style={{
-            fontSize: 9,
-            fontWeight: 700,
-            color: "var(--color-error)",
-            letterSpacing: "0.8px",
-          }}
-        >
-          86'd
-        </div>
-      )}
-    </button>
-  );
-}
+import PosAdminBadge from "../menu/components/PosAdminBadge";
 
 export default function POSPage() {
+  const dispatch = useDispatch();
   const [collapsed, setCollapsed] = useState(false);
+  const [selectedBranchId, setSelectedBranchId] = useState("");
+  const [activeFilter, setActiveFilter] = useState("All");
 
-  const [cart, setCart] = useState([]);
-  const [activeCategory, setActiveCategory] = useState("all");
-  const [search, setSearch] = useState("");
-  const [orderType, setOrderType] = useState("dine-in");
+  const { user } = useSelector((state) => state.auth || {});
+  const { currentBranch, branches } = useSelector((state) => state.branch || {});
+  const { allOrders, loading } = useSelector((state) => state.order || {});
 
-  // --- MOCK DATA FOR MISSING CONTEXTS ---
-  const [categories] = useState([
-    { id: "c1", name: "Starters" },
-    { id: "c2", name: "Main Course" },
-    { id: "c3", name: "Beverages" }
-  ]);
-  const [items] = useState([
-    { id: "m1", name: "Paneer Tikka", price: 250, categoryId: "c1", available: true, vegetarian: true },
-    { id: "m2", name: "Chicken Biryani", price: 350, categoryId: "c2", available: true, vegetarian: false },
-    { id: "m3", name: "Mango Lassi", price: 120, categoryId: "c3", available: true, vegetarian: true },
-    { id: "m4", name: "Tandoori Roti", price: 30, categoryId: "c2", available: true, vegetarian: true }
-  ]);
-  const [tables] = useState([
-    { id: "t1", label: "Table 1", status: "free" },
-    { id: "t2", label: "Table 2", status: "occupied" },
-    { id: "t3", label: "Table 3", status: "free" }
-  ]);
-  const [settings] = useState({ gstEnabled: true, taxRate: 5 });
-  const [orders, setOrders] = useState([]);
-  
-  const addOrder = (order) => setOrders([...orders, { id: `ORD-${Date.now()}`, ...order }]);
+  const activeBranch =
+    branches?.find((b) => b.id === selectedBranchId) ||
+    currentBranch ||
+    (branches && branches.length > 0 ? branches[0] : null);
 
-  const [customerName, setCustomerName] = useState("");
-  const [selectedTable, setSelectedTable] = useState("");
-  const [discount, setDiscount] = useState(0);
-  const [paymentMethod, setPaymentMethod] = useState("cash");
-  // ----------------------------------------
-  const [showCheckout, setShowCheckout] = useState(false);
-  const [lastOrder, setLastOrder] = useState(null);
+  useEffect(() => {
+    if (user?.businesses?.[0]?.id && (!branches || branches.length === 0)) {
+      dispatch(fetchBranches(user.businesses[0].id));
+    }
+  }, [user, branches, dispatch]);
 
-  const addToCart = (item) => {
-    setCart((c) => {
-      const existing = c.find((x) => x.id === item.id);
-      if (existing)
-        return c.map((x) => (x.id === item.id ? { ...x, qty: x.qty + 1 } : x));
-      return [...c, { ...item, qty: 1, note: "" }];
-    });
+  const fetchOrders = () => {
+    if (activeBranch?.id) {
+      dispatch(fetchAllOrders(activeBranch.id));
+    }
   };
 
-  const updateQty = (id, delta) => {
-    setCart((c) =>
-      c
-        .map((x) =>
-          x.id === id ? { ...x, qty: Math.max(0, x.qty + delta) } : x,
-        )
-        .filter((x) => x.qty > 0),
-    );
-  };
+  useEffect(() => {
+    fetchOrders();
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchOrders, 30000);
+    return () => clearInterval(interval);
+  }, [activeBranch]);
 
-  const clearCart = () => {
-    setCart([]);
-    setCustomerName("");
-    setSelectedTable("");
-    setDiscount(0);
-  };
+  // POS-NEW logic formatting and filtering
+  const formattedOrders = (allOrders || []).map((o) => {
+    const orderDate = new Date(o.created_at || new Date());
 
-  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const taxAmt = settings.gstEnabled
-    ? Math.round(subtotal * (settings.taxRate / 100))
-    : 0;
-  const discountAmt = Math.round(subtotal * (discount / 100));
-  const total = subtotal + taxAmt - discountAmt;
+    let items = [];
+    try {
+      const raw = o.running_order || o.cart_items;
+      items = typeof raw === "string" ? JSON.parse(raw) : raw;
+      if (items && !Array.isArray(items) && Array.isArray(items.items)) {
+        items = items.items;
+      }
+    } catch (e) {}
+    
+    const mappedItems = Array.isArray(items) ? items : [];
 
-  const filteredItems = items.filter((item) => {
-    if (activeCategory !== "all" && item.categoryId !== activeCategory)
-      return false;
-    if (search && !item.name.toLowerCase().includes(search.toLowerCase()))
-      return false;
-    return true;
+    return {
+      ...o,
+      orderType: (o.order_type === "Dine-in" ? "Dine In" : o.order_type) || "Takeaway",
+      tableLabel: o.table?.name || (o.table_id ? `Table ${o.table_id}` : o.order_type || "Takeaway"),
+      mappedItems,
+    };
   });
 
-  const handlePlaceOrder = () => {
-    if (cart.length === 0) return;
-    const table = tables.find((t) => t.id === selectedTable);
-    const order = {
-      type: orderType,
-      tableId: selectedTable || null,
-      tableName: table?.label || null,
-      customerName: customerName || "Walk-in",
-      items: cart.map((i) => ({
-        menuId: i.id,
-        name: i.name,
-        qty: i.qty,
-        price: i.price,
-      })),
-      subtotal,
-      tax: taxAmt,
-      discount: discountAmt,
-      total,
-      paymentMethod,
-      status: "received",
-    };
-    addOrder(order);
-    setLastOrder(order);
-    clearCart();
-    setShowCheckout(false);
-    alert(`✅ Order placed! Total: ₹${total}`);
-  };
-
-  const freeTables = tables.filter((t) => t.status === "free");
+  const filteredOrders = formattedOrders.filter((o) => {
+    if (activeFilter === "All") return true;
+    if (activeFilter === "Dine In" && o.orderType === "Dine In") return true;
+    if (activeFilter === "Takeaway" && o.orderType === "Takeaway") return true;
+    return false;
+  });
 
   return (
-    <div
-      style={{
-        display: "flex",
-        height: "100vh",
-        background: "var(--color-bg)",
-        overflow: "hidden",
-      }}
-    >
+    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans">
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-          minWidth: 0,
-        }}
-      >
+
+      <div className="flex-1 flex flex-col overflow-hidden relative min-w-0">
         <Topbar onMenuClick={() => setCollapsed((c) => !c)} />
-        <div className="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
-          {/* ── Left: Menu ───────────────────────── */}
-          <div
-            className="flex-1 flex flex-col overflow-hidden md:border-r border-slate-200"
-            style={{ minHeight: "50vh" }}
-          >
-            {/* Category tabs */}
-            <div
-              style={{
-                padding: "10px 16px",
-                borderBottom: "1px solid var(--color-border)",
-                display: "flex",
-                gap: 6,
-                flexWrap: "wrap",
-                background: "var(--color-surface2)",
-              }}
-            >
-              <Button
-                size="sm"
-                variant={activeCategory === "all" ? "accent" : "surface"}
-                onClick={() => setActiveCategory("all")}
-              >
-                All
-              </Button>
-              {categories.map((cat) => (
-                <Button
-                  key={cat.id}
-                  size="sm"
-                  variant={activeCategory === cat.id ? "accent" : "surface"}
-                  style={{
-                    borderColor:
-                      activeCategory !== cat.id ? cat.color + "33" : undefined,
-                  }}
-                  onClick={() => setActiveCategory(cat.id)}
-                >
-                  {cat.name}
-                </Button>
-              ))}
+
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-5">
+          {/* Header & Global Actions */}
+          <div className="flex flex-col gap-4 sm:flex-row justify-between items-start sm:items-center">
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900">
+                Branch Orders
+              </h2>
+              <p className="mt-1 text-sm text-slate-500">
+                View all historical and active orders for the branch.
+              </p>
             </div>
 
-            {/* Search */}
-            <div
-              style={{
-                padding: "8px 16px",
-                background: "var(--color-surface2)",
-              }}
-            >
-              <input
-                className="input"
-                placeholder="🔍 Search menu..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-
-            {/* Items grid */}
-            <div style={{ flex: 1, overflowY: "auto", padding: 16 }}>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
-                  gap: 10,
-                }}
-              >
-                {filteredItems.map((item) => (
-                  <POSItem key={item.id} item={item} onAdd={addToCart} />
-                ))}
-              </div>
-              {filteredItems.length === 0 && (
-                <div
-                  style={{
-                    textAlign: "center",
-                    padding: "60px",
-                    color: "var(--color-text-muted)",
-                  }}
-                >
-                  No items
+            <div className="flex items-center gap-3 flex-wrap">
+              {/* Branch Selector */}
+              {branches && branches.length > 0 && (
+                <div className="relative flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 shadow-sm">
+                  <Building2 size={14} className="text-slate-500 shrink-0" />
+                  <select
+                    value={activeBranch?.id || ""}
+                    onChange={(e) => setSelectedBranchId(e.target.value)}
+                    className="text-sm font-semibold text-slate-700 outline-none bg-transparent cursor-pointer pr-2"
+                  >
+                    {branches.map((b) => (
+                      <option key={b.id} value={b.id}>
+                        {b.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               )}
+
+              <button
+                onClick={fetchOrders}
+                className="px-4 py-2 text-xs font-bold rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2"
+              >
+                <RefreshCcw
+                  size={16}
+                  className={loading ? "animate-spin" : ""}
+                />
+                Refresh
+              </button>
             </div>
           </div>
 
-          {/* ── Right: Cart ──────────────────────── */}
-          <div
-            className="w-full md:w-[320px] flex flex-col shrink-0 border-t md:border-t-0 md:border-l border-slate-200"
-            style={{ background: "var(--color-surface2)", minHeight: "50vh" }}
-          >
-            {/* Order type */}
-            <div
-              style={{
-                padding: "12px 14px",
-                borderBottom: "1px solid var(--color-border)",
-              }}
-            >
-              <Tabs
-                tabs={[
-                  { id: "dine-in", label: "🪑 dine-in" },
-                  { id: "takeaway", label: "📦 takeaway" },
-                  { id: "delivery", label: "🛵 delivery" },
-                ]}
-                activeTab={orderType}
-                onChange={setOrderType}
-                className="mb-2"
-                style={{ marginBottom: 10 }}
-              />
-              {orderType === "dine-in" && (
-                <select
-                  className="input select"
-                  value={selectedTable}
-                  onChange={(e) => setSelectedTable(e.target.value)}
-                >
-                  <option value="">Select Table</option>
-                  {freeTables.map((t) => (
-                    <option key={t.id} value={t.id}>
-                      {t.label} ({t.seats} seats)
-                    </option>
-                  ))}
-                </select>
-              )}
-              <input
-                className="input"
-                style={{ marginTop: 8 }}
-                placeholder="Customer name (optional)"
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
-              />
-            </div>
-
-            {/* Cart items */}
-            <div style={{ flex: 1, overflowY: "auto", padding: "8px 14px" }}>
-              {cart.length === 0 ? (
-                <div
-                  style={{
-                    textAlign: "center",
-                    padding: "40px 20px",
-                    color: "var(--color-text-muted)",
-                  }}
-                >
-                  <div style={{ fontSize: 32 }}>🛒</div>
-                  <div style={{ marginTop: 8, fontSize: 13 }}>
-                    Cart is empty
-                  </div>
-                </div>
-              ) : (
-                cart.map((item) => (
-                  <div
-                    key={item.id}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 10,
-                      padding: "8px 0",
-                      borderBottom: "1px solid var(--color-border)",
-                    }}
-                  >
-                    <div style={{ flex: 1 }}>
-                      <div
-                        style={{
-                          fontSize: 13,
-                          color: "var(--color-text-primary)",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {item.name}
-                      </div>
-                      <div
-                        style={{
-                          fontSize: 12,
-                          color: "var(--color-accent)",
-                          fontWeight: 600,
-                        }}
-                      >
-                        ₹{item.price * item.qty}
-                      </div>
-                    </div>
-                    <div
-                      style={{ display: "flex", alignItems: "center", gap: 6 }}
-                    >
-                      <Button
-                        size="sm"
-                        variant="surface"
-                        style={{ padding: "2px 8px" }}
-                        onClick={() => updateQty(item.id, -1)}
-                      >
-                        −
-                      </Button>
-                      <span
-                        style={{
-                          fontSize: 14,
-                          fontWeight: 700,
-                          color: "var(--color-text-primary)",
-                          minWidth: 20,
-                          textAlign: "center",
-                        }}
-                      >
-                        {item.qty}
-                      </span>
-                      <Button
-                        size="sm"
-                        variant="surface"
-                        style={{ padding: "2px 8px" }}
-                        onClick={() => updateQty(item.id, 1)}
-                      >
-                        +
-                      </Button>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-
-            {/* Bill summary */}
-            <div
-              style={{
-                padding: "12px 14px",
-                borderTop: "1px solid var(--color-border)",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 6,
-                  marginBottom: 12,
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    fontSize: 13,
-                    color: "var(--color-text-secondary)",
-                  }}
-                >
-                  <span>
-                    Subtotal ({cart.reduce((s, i) => s + i.qty, 0)} items)
-                  </span>
-                  <span>₹{subtotal}</span>
-                </div>
-                {settings.gstEnabled && (
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      fontSize: 12,
-                      color: "var(--color-text-muted)",
-                    }}
-                  >
-                    <span>GST ({settings.taxRate}%)</span>
-                    <span>₹{taxAmt}</span>
-                  </div>
-                )}
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span
-                    style={{ fontSize: 12, color: "var(--color-text-muted)" }}
-                  >
-                    Discount %
-                  </span>
-                  <input
-                    className="input input-sm"
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={discount}
-                    onChange={(e) => setDiscount(Number(e.target.value))}
-                    style={{ width: 60, textAlign: "right" }}
-                  />
-                  {discountAmt > 0 && (
-                    <span
-                      style={{ fontSize: 12, color: "var(--color-emerald)" }}
-                    >
-                      −₹{discountAmt}
-                    </span>
-                  )}
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    fontSize: 16,
-                    fontWeight: 800,
-                    color: "var(--color-text-primary)",
-                    paddingTop: 6,
-                    borderTop: "1px solid var(--color-border)",
-                  }}
-                >
-                  <span>TOTAL</span>
-                  <span style={{ color: "var(--color-accent)" }}>₹{total}</span>
-                </div>
-              </div>
-
-              {/* Payment method */}
-              <div
-                style={{
-                  display: "flex",
-                  gap: 5,
-                  marginBottom: 10,
-                  flexWrap: "wrap",
-                }}
-              >
-                {["Cash", "UPI", "Card"].map((pm) => (
-                  <Button
-                    key={pm}
-                    size="sm"
-                    variant={paymentMethod === pm ? "accent" : "surface"}
-                    style={{ flex: 1 }}
-                    onClick={() => setPaymentMethod(pm)}
-                  >
-                    {pm === "Cash" ? "💵" : pm === "UPI" ? "📲" : "💳"} {pm}
-                  </Button>
-                ))}
-              </div>
-
-              <div style={{ display: "flex", gap: 8 }}>
-                <Button
-                  variant="surface"
-                  style={{ flex: 1 }}
-                  onClick={clearCart}
-                  disabled={cart.length === 0}
-                >
-                  Clear
-                </Button>
-                <Button
-                  variant="accent"
-                  style={{ flex: 2, fontSize: 14 }}
-                  onClick={handlePlaceOrder}
-                  disabled={cart.length === 0}
-                >
-                  Place Order ₹{total}
-                </Button>
-              </div>
-            </div>
+          <div className="flex w-full overflow-x-auto pb-1">
+            <Tabs
+              tabs={[
+                { id: "All", label: "All Orders" },
+                { id: "Dine In", label: "Dine In" },
+                { id: "Takeaway", label: "Takeaway" },
+              ]}
+              activeTab={activeFilter}
+              onChange={setActiveFilter}
+            />
           </div>
-        </div>
+
+          {/* Orders Table CONTENT */}
+          {!activeBranch ? (
+            <div className="flex flex-col items-center justify-center text-slate-500 min-h-[400px] mt-4">
+              <Building2 size={64} className="mb-4 text-slate-200" />
+              <h3 className="text-xl font-bold text-slate-700">
+                No Branch Selected
+              </h3>
+              <p className="text-sm mt-2">
+                Please select a branch to view orders.
+              </p>
+            </div>
+          ) : filteredOrders.length === 0 && !loading ? (
+            <div className="flex flex-col items-center justify-center text-slate-400 min-h-[400px] mt-4">
+              <CheckCircle size={64} className="mb-4 text-emerald-400 opacity-50" />
+              <h3 className="text-xl font-bold text-slate-700">No Orders Found</h3>
+              <p className="text-sm mt-2">There are no orders matching this filter.</p>
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-slate-200/80 bg-white shadow-sm overflow-hidden mt-4">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-black text-slate-400 uppercase tracking-wider">
+                      <th className="py-3.5 px-6">Order ID / Type</th>
+                      <th className="py-3.5 px-4">Customer / Table</th>
+                      <th className="py-3.5 px-4">Items Summary</th>
+                      <th className="py-3.5 px-4">Total</th>
+                      <th className="py-3.5 px-4 text-center">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-sm">
+                    {filteredOrders.map((order) => {
+                      const isTable = !!order.table_id || order.orderType === "Dine In";
+
+                      return (
+                        <tr key={order.id} className="hover:bg-slate-50/60 transition-colors duration-150">
+                          <td className="py-4 px-6">
+                            <div className="flex items-center gap-3">
+                              <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${isTable ? "bg-indigo-50 text-indigo-600" : "bg-amber-50 text-amber-600"}`}>
+                                {isTable ? <UtensilsCrossed size={18} /> : <Store size={18} />}
+                              </div>
+                              <div>
+                                <div className="font-bold text-slate-900">{order.orderType}</div>
+                                <div className="text-xs font-medium text-slate-500 uppercase tracking-wider">#{order.order_number}</div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-4 px-4">
+                            {isTable ? (
+                              <div>
+                                <div className="font-bold text-slate-800">{order.tableLabel}</div>
+                              </div>
+                            ) : (
+                              <div>
+                                <div className="font-bold text-slate-800">{order.customer?.name || order.customer_info?.name || order.customer_name || "Walk-in"}</div>
+                                <div className="text-xs text-slate-500">{order.customer?.phone || order.customer_info?.phone || order.customer_phone || "-"}</div>
+                              </div>
+                            )}
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="group relative flex items-center cursor-default">
+                              <PosAdminBadge variant="purple">
+                                {order.mappedItems.reduce((acc, item) => acc + (item.quantity || item.qty || 1), 0)} Items
+                              </PosAdminBadge>
+                              
+                              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-50 pointer-events-none opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 ease-out">
+                                <div className="bg-gradient-to-br from-violet-500 to-violet-600 text-white text-[11px] font-medium p-3 rounded-xl shadow-[0_10px_25px_-5px_rgba(139,92,246,0.5)] border border-violet-400/50 w-max max-w-[260px] whitespace-pre-wrap text-left leading-relaxed relative">
+                                  {order.mappedItems.length > 0 ? order.mappedItems.map((item) => {
+                                    const qty = item.quantity || item.qty || 1;
+                                    const name = item.product?.name || item.name || item.item_name || "Unknown";
+                                    let text = `${qty}x ${name}`;
+                                    if (item.variant) {
+                                      const vName = typeof item.variant === "string" ? item.variant : item.variant.name || "";
+                                      if (vName) text += ` (${vName})`;
+                                    } else if (item.variants && Array.isArray(item.variants) && item.variants.length > 0) {
+                                      text += ` (${item.variants.map((v) => v.name || v).join(", ")})`;
+                                    }
+                                    if (item.addons && Array.isArray(item.addons) && item.addons.length > 0) {
+                                      const addonText = item.addons.map((a) => a.name).filter(Boolean).join(", ");
+                                      if (addonText) text += `\n  + ${addonText}`;
+                                    }
+                                    const note = item.note || item.notes;
+                                    if (note) text += `\n  * Note: ${note}`;
+                                    return text;
+                                  }).join("\n") : "No items recorded"}
+                                  <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-violet-600 border-b border-r border-violet-400/50 rotate-45"></div>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-4 px-4 font-bold text-slate-700">₹{order.total_amount || order.total || 0}</td>
+                          <td className="py-4 px-4 text-center">
+                            <span className={`inline-flex items-center px-2.5 py-1 text-[11px] font-bold rounded-lg border ${order.status === 'Pending' ? 'bg-amber-50 text-amber-600 border-amber-200' : 'bg-emerald-50 text-emerald-600 border-emerald-200'}`}>
+                              {order.status}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );
