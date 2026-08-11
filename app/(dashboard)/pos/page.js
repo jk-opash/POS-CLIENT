@@ -308,7 +308,7 @@ export default function POSPage() {
                             <span
                               className={`inline-flex items-center px-2.5 py-1 text-[11px] font-bold rounded-lg border ${order.status === "Pending" ? "bg-amber-50 text-amber-600 border-amber-200" : "bg-emerald-50 text-emerald-600 border-emerald-200"}`}
                             >
-                              {order.status}
+                              {order.payment_status}
                             </span>
                           </td>
                         </tr>

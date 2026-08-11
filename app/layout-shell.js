@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Sidebar } from "./components/layout/Sidebar";
 import { Header } from "./components/layout/Header";
 import { useDispatch, useSelector } from "react-redux";
+import SessionConflictModal from "./components/common/SessionConflictModal";
 
 export default function DashboardLayout({ children }) {
   const [mounted, setMounted] = useState(false);
@@ -31,6 +32,7 @@ export default function DashboardLayout({ children }) {
           <div className="w-full h-full max-w-7xl mx-auto">{children}</div>
         </main>
       </div>
+      <SessionConflictModal />
     </div>
   );
 }

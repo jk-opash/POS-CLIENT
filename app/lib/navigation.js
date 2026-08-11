@@ -25,8 +25,18 @@ export const NAV_ITEMS = [
       { href: "/pos/kot", label: "KOT" },
     ],
   },
+  { href: "/outlet", label: "Business Configuration", icon: Settings },
   { href: "/menu", label: "Menu Management", icon: MenuSquare },
   { href: "/inventory", label: "Inventory", icon: Package },
+  {
+    href: "/reports",
+    label: "Reports",
+    icon: BarChart3,
+    submenu: [
+      { href: "/reports/day-end", label: "Day End Summary" },
+      { href: "/reports/other", label: "Other Reports" },
+    ],
+  },
   {
     href: "/invoices",
     label: "Accounting",
@@ -43,16 +53,6 @@ export const NAV_ITEMS = [
       { href: "/invoices/expense", label: "Expense & Withdrawal" },
     ],
   },
-  {
-    href: "/reports",
-    label: "Reports",
-    icon: BarChart3,
-    submenu: [
-      { href: "/reports/day-end", label: "Day End Summary" },
-      { href: "/reports/other", label: "Other Reports" },
-    ],
-  },
-  { href: "/outlet", label: "Business Configuration", icon: Settings },
   { href: "/purchase-orders", label: "Suppliers Hub", icon: Truck },
   { href: "/logs", label: "User Logs", icon: ClipboardList },
   { href: "/help", label: "Help Manual", icon: HelpCircle },
