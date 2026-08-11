@@ -123,6 +123,28 @@ export default function SettingsPage() {
   const { user } = useSelector((state) => state.auth);
   const business = user?.businesses?.[0] || {};
 
+  const [settings, setSettings] = useState({
+    restaurantName: business?.name || "My Restaurant",
+    address: business?.address_line1 || "123 Main St",
+    phone: business?.phone || "+91 9876543210",
+    currency: "INR (₹)",
+    timezone: "Asia/Kolkata",
+    gstEnabled: true,
+    gstin: business?.gstin || "27AADCB2230M1Z2",
+    fssai: "11521044000321",
+    taxRate: 5,
+    serviceChargeEnabled: false,
+    serviceCharge: 10,
+    receiptFooter: "Thank you for visiting! Please come again.",
+    tableService: true,
+    takeaway: true,
+    delivery: true,
+  });
+
+  const updateSettings = (updates) => {
+    setSettings((prev) => ({ ...prev, ...updates }));
+  };
+
   const set = (k, v) => updateSettings({ [k]: v });
 
   const handleSave = () => {

@@ -33,6 +33,8 @@ const initialState = {
   token: typeof window !== 'undefined' ? localStorage.getItem('token') : null,
   loading: false,
   error: null,
+  sessionConflict: false,
+  sessionConflictMessage: '',
 };
 
 const authSlice = createSlice({
@@ -42,6 +44,8 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
+      state.sessionConflict = false;
+      state.sessionConflictMessage = '';
       if (typeof window !== 'undefined') {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -49,6 +53,14 @@ const authSlice = createSlice({
     },
     clearError: (state) => {
       state.error = null;
+    },
+    setSessionConflict: (state, action) => {
+      state.sessionConflict = true;
+      state.sessionConflictMessage = action.payload || 'This account is logged in on multiple devices. Enter your PIN to continue.';
+    },
+    clearSessionConflict: (state) => {
+      state.sessionConflict = false;
+      state.sessionConflictMessage = '';
     }
   },
   extraReducers: (builder) => {
@@ -73,6 +85,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, clearError } = authSlice.actions;
+export const { logout, clearError, setSessionConflict, clearSessionConflict } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -1,20 +1,32 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import Sidebar from '../../../components/Sidebar';
-import Topbar from '../../../components/Topbar';
+import Sidebar from "../../../components/Sidebar";
+import Topbar from "../../../components/Topbar";
 import { useParams, useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchBranchById, updateBranch, deleteBranch } from '../../../store/slices/branchSlice';
+import {
+  fetchBranchById,
+  updateBranch,
+  deleteBranch,
+} from "../../../store/slices/branchSlice";
 import Card, {
   CardHeader,
   CardTitle,
   CardContent,
-} from '../../../components/ui/Card';
-import Badge from '../../../components/ui/Badge';
-import Button from '../../../components/ui/Button';
-import Modal from '../../../components/ui/Modal';
-import { cn } from '../../../lib/utils';
+} from "../../../components/ui/Card";
+import Badge from "../../../components/ui/Badge";
+import Button from "../../../components/ui/Button";
+import Modal from "../../../components/ui/Modal";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "../../../components/ui/Table";
+import { cn } from "../../../lib/utils";
 import {
   Building2,
   MapPin,
@@ -34,6 +46,7 @@ import {
   Landmark,
   FileCheck,
   Maximize,
+  Plus,
 } from "lucide-react";
 
 // Edit Modal Component
@@ -256,7 +269,7 @@ export default function BranchDetailsPage() {
   const dispatch = useDispatch();
   const { id } = params;
 
-    const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("overview");
   const [showEditModal, setShowEditModal] = useState(false);
 
   const { currentBranch, loading, error } = useSelector(
@@ -281,7 +294,11 @@ export default function BranchDetailsPage() {
   };
 
   const handleDeleteBranch = async () => {
-    if (confirm("Are you sure you want to delete this branch? This action cannot be undone.")) {
+    if (
+      confirm(
+        "Are you sure you want to delete this branch? This action cannot be undone.",
+      )
+    ) {
       try {
         await dispatch(deleteBranch(id)).unwrap();
         router.push("/outlet");
@@ -321,13 +338,13 @@ export default function BranchDetailsPage() {
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden font-sans">
-      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(c => !c)} />
+      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-        <Topbar onMenuClick={() => setCollapsed(c => !c)} />
+        <Topbar onMenuClick={() => setCollapsed((c) => !c)} />
         <main className="flex-1 overflow-y-auto px-6 py-6">
-        <div className="space-y-6 pb-12">
+          <div className="space-y-6 pb-12">
             {/* Back Button */}
-            
+
             <div>
               <button
                 onClick={() => router.push("/outlet")}
@@ -530,16 +547,128 @@ export default function BranchDetailsPage() {
                 </div>
               )}
 
-              {activeTab !== "overview" && (
+              {activeTab === "staff" && (
+                <Card padding="none">
+                  <div className="p-5 border-b border-slate-100 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Users className="h-5 w-5 text-indigo-600" />
+                      <h3 className="text-lg font-bold text-slate-900">Staff & Permissions</h3>
+                    </div>
+                    <Button variant="primary" size="sm" onClick={() => router.push('/staff')}>
+                      Manage Staff
+                    </Button>
+                  </div>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Status</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {(() => {
+                        const staffList = b.team_members || b.teamMembers || [];
+                        return staffList.length > 0 ? (
+                          staffList.map((staff, i) => (
+                            <TableRow key={staff.id || i} className="hover:bg-slate-50 transition-colors">
+                              <TableCell className="font-medium text-slate-800">
+                                {staff.name || (staff.first_name ? `${staff.first_name} ${staff.last_name || ""}` : "Unnamed Staff")}
+                              </TableCell>
+                              <TableCell>
+                                <div className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
+                                  {staff.role?.name || staff.role || "Staff"}
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-slate-500">{staff.email || "N/A"}</TableCell>
+                              <TableCell>
+                                <Badge variant={staff.status === "active" || staff.status === "Operational" ? "success" : "secondary"}>
+                                  {staff.status || "Active"}
+                                </Badge>
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        ) : (
+                          <TableRow>
+                            <TableCell colSpan={4} className="text-center py-8">
+                              <div className="flex flex-col items-center justify-center text-slate-500">
+                                <Users className="h-8 w-8 text-slate-300 mb-2" />
+                                <p>No staff members assigned to this branch</p>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })()}
+                    </TableBody>
+                  </Table>
+                </Card>
+              )}
+
+              {activeTab === "settings" && (
                 <Card>
-                  <div className="text-center py-12">
-                    <Settings className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                    <h3 className="text-lg font-medium text-slate-700 capitalize">
-                      {activeTab} coming soon
-                    </h3>
-                    <p className="text-slate-500 text-sm mt-1">
-                      Configure advanced settings for this branch here.
-                    </p>
+                  <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+                    <Settings className="w-5 h-5 text-indigo-600" />
+                    Branch Settings
+                  </h3>
+                  
+                  <div className="space-y-6">
+                    <div>
+                      <h4 className="text-sm font-semibold text-slate-800 mb-3">General Settings</h4>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between p-4 bg-slate-50/50 rounded-lg border border-slate-100">
+                          <div>
+                            <p className="font-medium text-slate-800">Accept Online Orders</p>
+                            <p className="text-xs text-slate-500 mt-1">Allow customers to place orders online for this branch</p>
+                          </div>
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input 
+                              type="checkbox" 
+                              className="sr-only peer" 
+                              checked={b.settings?.acceptOnlineOrders ?? true} 
+                              onChange={(e) => handleSaveBranch({ settings: { ...(b.settings || {}), acceptOnlineOrders: e.target.checked } })}
+                            />
+                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                          </label>
+                        </div>
+                        <div className="flex items-center justify-between p-4 bg-slate-50/50 rounded-lg border border-slate-100">
+                          <div>
+                            <p className="font-medium text-slate-800">Enable Table Booking</p>
+                            <p className="text-xs text-slate-500 mt-1">Allow customers to reserve tables in advance</p>
+                          </div>
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input 
+                              type="checkbox" 
+                              className="sr-only peer" 
+                              checked={b.settings?.enableTableBooking ?? false} 
+                              onChange={(e) => handleSaveBranch({ settings: { ...(b.settings || {}), enableTableBooking: e.target.checked } })}
+                            />
+                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h4 className="text-sm font-semibold text-slate-800 mb-3">Notification Preferences</h4>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between p-4 bg-slate-50/50 rounded-lg border border-slate-100">
+                          <div>
+                            <p className="font-medium text-slate-800">Daily Sales Summary</p>
+                            <p className="text-xs text-slate-500 mt-1">Receive daily email summaries for this branch</p>
+                          </div>
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input 
+                              type="checkbox" 
+                              className="sr-only peer" 
+                              checked={b.settings?.dailySalesSummary ?? true} 
+                              onChange={(e) => handleSaveBranch({ settings: { ...(b.settings || {}), dailySalesSummary: e.target.checked } })}
+                            />
+                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </Card>
               )}

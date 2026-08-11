@@ -23,7 +23,9 @@ export default function POSPage() {
   const [activeFilter, setActiveFilter] = useState("All");
 
   const { user } = useSelector((state) => state.auth || {});
-  const { currentBranch, branches } = useSelector((state) => state.branch || {});
+  const { currentBranch, branches } = useSelector(
+    (state) => state.branch || {},
+  );
   const { allOrders, loading } = useSelector((state) => state.order || {});
 
   const activeBranch =
@@ -62,13 +64,16 @@ export default function POSPage() {
         items = items.items;
       }
     } catch (e) {}
-    
+
     const mappedItems = Array.isArray(items) ? items : [];
 
     return {
       ...o,
-      orderType: (o.order_type === "Dine-in" ? "Dine In" : o.order_type) || "Takeaway",
-      tableLabel: o.table?.name || (o.table_id ? `Table ${o.table_id}` : o.order_type || "Takeaway"),
+      orderType:
+        (o.order_type === "Dine-in" ? "Dine In" : o.order_type) || "Takeaway",
+      tableLabel:
+        o.table?.name ||
+        (o.table_id ? `Table ${o.table_id}` : o.order_type || "Takeaway"),
       mappedItems,
     };
   });
@@ -156,9 +161,16 @@ export default function POSPage() {
             </div>
           ) : filteredOrders.length === 0 && !loading ? (
             <div className="flex flex-col items-center justify-center text-slate-400 min-h-[400px] mt-4">
-              <CheckCircle size={64} className="mb-4 text-emerald-400 opacity-50" />
-              <h3 className="text-xl font-bold text-slate-700">No Orders Found</h3>
-              <p className="text-sm mt-2">There are no orders matching this filter.</p>
+              <CheckCircle
+                size={64}
+                className="mb-4 text-emerald-400 opacity-50"
+              />
+              <h3 className="text-xl font-bold text-slate-700">
+                No Orders Found
+              </h3>
+              <p className="text-sm mt-2">
+                There are no orders matching this filter.
+              </p>
             </div>
           ) : (
             <div className="rounded-2xl border border-slate-200/80 bg-white shadow-sm overflow-hidden mt-4">
@@ -175,68 +187,128 @@ export default function POSPage() {
                   </thead>
                   <tbody className="divide-y divide-slate-100 text-sm">
                     {filteredOrders.map((order) => {
-                      const isTable = !!order.table_id || order.orderType === "Dine In";
+                      const isTable =
+                        !!order.table_id || order.orderType === "Dine In";
 
                       return (
-                        <tr key={order.id} className="hover:bg-slate-50/60 transition-colors duration-150">
+                        <tr
+                          key={order.id}
+                          className="hover:bg-slate-50/60 transition-colors duration-150"
+                        >
                           <td className="py-4 px-6">
                             <div className="flex items-center gap-3">
-                              <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${isTable ? "bg-indigo-50 text-indigo-600" : "bg-amber-50 text-amber-600"}`}>
-                                {isTable ? <UtensilsCrossed size={18} /> : <Store size={18} />}
+                              <div
+                                className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${isTable ? "bg-indigo-50 text-indigo-600" : "bg-amber-50 text-amber-600"}`}
+                              >
+                                {isTable ? (
+                                  <UtensilsCrossed size={18} />
+                                ) : (
+                                  <Store size={18} />
+                                )}
                               </div>
                               <div>
-                                <div className="font-bold text-slate-900">{order.orderType}</div>
-                                <div className="text-xs font-medium text-slate-500 uppercase tracking-wider">#{order.order_number}</div>
+                                <div className="font-bold text-slate-900">
+                                  {order.orderType}
+                                </div>
+                                <div className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+                                  #{order.order_number}
+                                </div>
                               </div>
                             </div>
                           </td>
                           <td className="py-4 px-4">
                             {isTable ? (
                               <div>
-                                <div className="font-bold text-slate-800">{order.tableLabel}</div>
+                                <div className="font-bold text-slate-800">
+                                  {order.tableLabel}
+                                </div>
                               </div>
                             ) : (
                               <div>
-                                <div className="font-bold text-slate-800">{order.customer?.name || order.customer_info?.name || order.customer_name || "Walk-in"}</div>
-                                <div className="text-xs text-slate-500">{order.customer?.phone || order.customer_info?.phone || order.customer_phone || "-"}</div>
+                                <div className="font-bold text-slate-800">
+                                  {order.customer?.name ||
+                                    order.customer_info?.name ||
+                                    order.customer_name ||
+                                    "Walk-in"}
+                                </div>
+                                <div className="text-xs text-slate-500">
+                                  {order.customer?.phone ||
+                                    order.customer_info?.phone ||
+                                    order.customer_phone ||
+                                    "-"}
+                                </div>
                               </div>
                             )}
                           </td>
                           <td className="py-4 px-4">
                             <div className="group relative flex items-center cursor-default">
                               <PosAdminBadge variant="purple">
-                                {order.mappedItems.reduce((acc, item) => acc + (item.quantity || item.qty || 1), 0)} Items
+                                {order.mappedItems.reduce(
+                                  (acc, item) =>
+                                    acc + (item.quantity || item.qty || 1),
+                                  0,
+                                )}{" "}
+                                Items
                               </PosAdminBadge>
-                              
+
                               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-50 pointer-events-none opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 ease-out">
                                 <div className="bg-gradient-to-br from-violet-500 to-violet-600 text-white text-[11px] font-medium p-3 rounded-xl shadow-[0_10px_25px_-5px_rgba(139,92,246,0.5)] border border-violet-400/50 w-max max-w-[260px] whitespace-pre-wrap text-left leading-relaxed relative">
-                                  {order.mappedItems.length > 0 ? order.mappedItems.map((item) => {
-                                    const qty = item.quantity || item.qty || 1;
-                                    const name = item.product?.name || item.name || item.item_name || "Unknown";
-                                    let text = `${qty}x ${name}`;
-                                    if (item.variant) {
-                                      const vName = typeof item.variant === "string" ? item.variant : item.variant.name || "";
-                                      if (vName) text += ` (${vName})`;
-                                    } else if (item.variants && Array.isArray(item.variants) && item.variants.length > 0) {
-                                      text += ` (${item.variants.map((v) => v.name || v).join(", ")})`;
-                                    }
-                                    if (item.addons && Array.isArray(item.addons) && item.addons.length > 0) {
-                                      const addonText = item.addons.map((a) => a.name).filter(Boolean).join(", ");
-                                      if (addonText) text += `\n  + ${addonText}`;
-                                    }
-                                    const note = item.note || item.notes;
-                                    if (note) text += `\n  * Note: ${note}`;
-                                    return text;
-                                  }).join("\n") : "No items recorded"}
+                                  {order.mappedItems.length > 0
+                                    ? order.mappedItems
+                                        .map((item) => {
+                                          const qty =
+                                            item.quantity || item.qty || 1;
+                                          const name =
+                                            item.product?.name ||
+                                            item.name ||
+                                            item.item_name ||
+                                            "Unknown";
+                                          let text = `${qty}x ${name}`;
+                                          if (item.variant) {
+                                            const vName =
+                                              typeof item.variant === "string"
+                                                ? item.variant
+                                                : item.variant.name || "";
+                                            if (vName) text += ` (${vName})`;
+                                          } else if (
+                                            item.variants &&
+                                            Array.isArray(item.variants) &&
+                                            item.variants.length > 0
+                                          ) {
+                                            text += ` (${item.variants.map((v) => v.name || v).join(", ")})`;
+                                          }
+                                          if (
+                                            item.addons &&
+                                            Array.isArray(item.addons) &&
+                                            item.addons.length > 0
+                                          ) {
+                                            const addonText = item.addons
+                                              .map((a) => a.name)
+                                              .filter(Boolean)
+                                              .join(", ");
+                                            if (addonText)
+                                              text += `\n  + ${addonText}`;
+                                          }
+                                          const note = item.note || item.notes;
+                                          if (note)
+                                            text += `\n  * Note: ${note}`;
+                                          return text;
+                                        })
+                                        .join("\n")
+                                    : "No items recorded"}
                                   <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-violet-600 border-b border-r border-violet-400/50 rotate-45"></div>
                                 </div>
                               </div>
                             </div>
                           </td>
-                          <td className="py-4 px-4 font-bold text-slate-700">₹{order.total_amount || order.total || 0}</td>
+                          <td className="py-4 px-4 font-bold text-slate-700">
+                            ₹{order.total_amount || order.total || 0}
+                          </td>
                           <td className="py-4 px-4 text-center">
-                            <span className={`inline-flex items-center px-2.5 py-1 text-[11px] font-bold rounded-lg border ${order.status === 'Pending' ? 'bg-amber-50 text-amber-600 border-amber-200' : 'bg-emerald-50 text-emerald-600 border-emerald-200'}`}>
-                              {order.status}
+                            <span
+                              className={`inline-flex items-center px-2.5 py-1 text-[11px] font-bold rounded-lg border ${order.status === "Pending" ? "bg-amber-50 text-amber-600 border-amber-200" : "bg-emerald-50 text-emerald-600 border-emerald-200"}`}
+                            >
+                              {order.payment_status}
                             </span>
                           </td>
                         </tr>
