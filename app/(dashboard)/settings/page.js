@@ -721,11 +721,9 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans">
-      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
-      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-        <Topbar onMenuClick={() => setCollapsed((c) => !c)} />
-        <main className="flex-1 overflow-y-auto px-6 py-6">
+    <div className="flex flex-col bg-slate-50 font-sans">
+      <div className="flex-1 flex flex-col min-w-0">
+        <main className="flex-1 px-6 py-6">
           <div className="mx-auto">
             <div className="flex flex-col md:flex-row gap-8 pb-12 min-h-[calc(100vh-8rem)]">
               {/* Sidebar Navigation */}

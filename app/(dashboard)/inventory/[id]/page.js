@@ -3,15 +3,22 @@
 import { useState, useCallback, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import Sidebar from '../../../components/Sidebar';
-import Topbar from '../../../components/Topbar';
-import api from '../../../lib/api';
-import { updateInventoryItem, deleteInventoryItem } from '../../../store/slices/inventorySlice';
-import Card, { CardHeader, CardTitle, CardContent } from '../../../components/ui/Card';
-import Badge from '../../../components/ui/Badge';
-import Button from '../../../components/ui/Button';
-import Modal from '../../../components/ui/Modal';
-import { cn } from '../../../lib/utils';
+import Sidebar from "../../../components/Sidebar";
+import Topbar from "../../../components/Topbar";
+import api from "../../../lib/api";
+import {
+  updateInventoryItem,
+  deleteInventoryItem,
+} from "../../../store/slices/inventorySlice";
+import Card, {
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "../../../components/ui/Card";
+import Badge from "../../../components/ui/Badge";
+import Button from "../../../components/ui/Button";
+import Modal from "../../../components/ui/Modal";
+import { cn } from "../../../lib/utils";
 import {
   ChevronLeft,
   Edit,
@@ -25,7 +32,7 @@ import {
   BellRing,
   TrendingUp,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
 } from "lucide-react";
 
 // Edit Item Modal
@@ -53,7 +60,9 @@ function EditItemModal({ item, onClose, onSave }) {
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="text-xs text-slate-500 block mb-1">Item Name *</label>
+            <label className="text-xs text-slate-500 block mb-1">
+              Item Name *
+            </label>
             <input
               className="input"
               value={form.name}
@@ -71,7 +80,9 @@ function EditItemModal({ item, onClose, onSave }) {
             />
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">Category</label>
+            <label className="text-xs text-slate-500 block mb-1">
+              Category
+            </label>
             <input
               className="input"
               value={form.category}
@@ -94,7 +105,9 @@ function EditItemModal({ item, onClose, onSave }) {
             </select>
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">Price (₹)</label>
+            <label className="text-xs text-slate-500 block mb-1">
+              Price (₹)
+            </label>
             <input
               className="input"
               type="number"
@@ -104,7 +117,9 @@ function EditItemModal({ item, onClose, onSave }) {
             />
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">Reorder Level</label>
+            <label className="text-xs text-slate-500 block mb-1">
+              Reorder Level
+            </label>
             <input
               className="input"
               type="number"
@@ -208,8 +223,10 @@ export default function ItemDetailsPage() {
         price: parseFloat(data.price) || 0,
         reorder_level: parseFloat(data.reorderLevel) || 0,
       };
-      const res = await dispatch(updateInventoryItem({ id, data: payload })).unwrap();
-      
+      const res = await dispatch(
+        updateInventoryItem({ id, data: payload }),
+      ).unwrap();
+
       // Update local state to reflect changes immediately
       setItem({
         ...item,
@@ -227,7 +244,11 @@ export default function ItemDetailsPage() {
   };
 
   const handleDeleteItem = async () => {
-    if (confirm("Are you sure you want to delete this inventory item? This action cannot be undone.")) {
+    if (
+      confirm(
+        "Are you sure you want to delete this inventory item? This action cannot be undone.",
+      )
+    ) {
       try {
         await dispatch(deleteInventoryItem(id)).unwrap();
         router.push("/inventory");
@@ -265,13 +286,10 @@ export default function ItemDetailsPage() {
   if (!item) return null;
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans">
-      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(c => !c)} />
-      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-        <Topbar onMenuClick={() => setCollapsed(c => !c)} />
-        <main className="flex-1 overflow-y-auto px-6 py-6">
+    <div className="flex flex-col bg-slate-50 font-sans">
+      <div className="flex-1 flex flex-col min-w-0">
+        <main className="flex-1 px-6 py-6">
           <div className="space-y-6 pb-12">
-            
             {/* Back Button */}
             <div>
               <button
@@ -295,16 +313,19 @@ export default function ItemDetailsPage() {
                       item.status === "Normal"
                         ? "success"
                         : item.status === "Low" || item.status === "Critical"
-                        ? "warning"
-                        : "danger"
+                          ? "warning"
+                          : "danger"
                     }
-                    dot={item.status === "Normal" || item.status === "Out of Stock"}
+                    dot={
+                      item.status === "Normal" || item.status === "Out of Stock"
+                    }
                   >
                     {item.status || "Normal"}
                   </Badge>
                 </div>
                 <p className="mt-1 flex items-center gap-2 text-sm text-slate-500 capitalize">
-                  <Package className="h-4 w-4" /> {item.category || "Uncategorized"}
+                  <Package className="h-4 w-4" />{" "}
+                  {item.category || "Uncategorized"}
                   <span className="text-slate-300">|</span>
                   Created{" "}
                   {item.created_at
@@ -367,30 +388,55 @@ export default function ItemDetailsPage() {
                         Master Information
                       </h3>
                       <div className="space-y-3">
-                        <InfoItem icon={Barcode} label="SKU Code" value={item.sku} />
-                        <InfoItem icon={Tag} label="Category" value={item.category} />
-                        <InfoItem icon={Scale} label="Unit of Measurement" value={item.unit} />
+                        <InfoItem
+                          icon={Barcode}
+                          label="SKU Code"
+                          value={item.sku}
+                        />
+                        <InfoItem
+                          icon={Tag}
+                          label="Category"
+                          value={item.category}
+                        />
+                        <InfoItem
+                          icon={Scale}
+                          label="Unit of Measurement"
+                          value={item.unit}
+                        />
                       </div>
                     </Card>
                   </div>
-                  
+
                   <div className="space-y-6">
                     <Card>
                       <h3 className="text-sm font-bold text-slate-900 mb-4">
                         Pricing & Inventory Levels
                       </h3>
                       <div className="space-y-3">
-                        <InfoItem icon={IndianRupee} label="Unit Price" value={`₹${item.price || item.cost || 0}`} />
-                        <InfoItem icon={BellRing} label="Reorder Level" value={`${item.reorder_level || item.reorderLevel || 0} ${item.unit || 'pcs'}`} />
-                        
+                        <InfoItem
+                          icon={IndianRupee}
+                          label="Unit Price"
+                          value={`₹${item.price || item.cost || 0}`}
+                        />
+                        <InfoItem
+                          icon={BellRing}
+                          label="Reorder Level"
+                          value={`${item.reorder_level || item.reorderLevel || 0} ${item.unit || "pcs"}`}
+                        />
+
                         <div className="flex gap-3 items-start p-4 rounded-lg bg-blue-50/50 border border-blue-100 mt-4">
                           <div className="p-2 bg-white rounded border border-blue-200 text-blue-600 mt-0.5">
                             <TrendingUp className="w-4 h-4" />
                           </div>
                           <div>
-                            <p className="text-xs font-bold text-blue-600/80 mb-0.5 uppercase tracking-wider">Current Stock</p>
+                            <p className="text-xs font-bold text-blue-600/80 mb-0.5 uppercase tracking-wider">
+                              Current Stock
+                            </p>
                             <p className="text-2xl font-black text-slate-900">
-                              {item.in_stock || item.currentStock || 0} <span className="text-sm font-semibold text-slate-500">{item.unit || 'pcs'}</span>
+                              {item.in_stock || item.currentStock || 0}{" "}
+                              <span className="text-sm font-semibold text-slate-500">
+                                {item.unit || "pcs"}
+                              </span>
                             </p>
                           </div>
                         </div>
@@ -416,46 +462,76 @@ export default function ItemDetailsPage() {
                         <tbody className="divide-y divide-slate-100">
                           {loadingLedger ? (
                             <tr>
-                              <td colSpan={4} className="px-6 py-12 text-center text-slate-500">
+                              <td
+                                colSpan={4}
+                                className="px-6 py-12 text-center text-slate-500"
+                              >
                                 <Clock className="w-5 h-5 animate-spin mx-auto mb-2" />
                                 Loading ledger...
                               </td>
                             </tr>
                           ) : ledger.length === 0 ? (
                             <tr>
-                              <td colSpan={4} className="px-6 py-12 text-center text-slate-500">
+                              <td
+                                colSpan={4}
+                                className="px-6 py-12 text-center text-slate-500"
+                              >
                                 No stock movements recorded yet.
                               </td>
                             </tr>
                           ) : (
                             ledger.map((entry) => {
-                              const isPositive = Number(entry.quantity_change) > 0;
+                              const isPositive =
+                                Number(entry.quantity_change) > 0;
                               return (
-                                <tr key={entry.id} className="hover:bg-slate-50/50 transition-colors">
+                                <tr
+                                  key={entry.id}
+                                  className="hover:bg-slate-50/50 transition-colors"
+                                >
                                   <td className="px-6 py-4">
                                     <div className="font-medium text-slate-900">
-                                      {new Date(entry.created_at).toLocaleDateString()}
+                                      {new Date(
+                                        entry.created_at,
+                                      ).toLocaleDateString()}
                                     </div>
                                     <div className="text-xs text-slate-500">
-                                      {new Date(entry.created_at).toLocaleTimeString()}
+                                      {new Date(
+                                        entry.created_at,
+                                      ).toLocaleTimeString()}
                                     </div>
                                   </td>
                                   <td className="px-6 py-4">
-                                    <Badge variant={entry.movement_type === 'ADJUSTMENT' ? 'muted' : entry.movement_type === 'SALE' ? 'danger' : 'success'}>
+                                    <Badge
+                                      variant={
+                                        entry.movement_type === "ADJUSTMENT"
+                                          ? "muted"
+                                          : entry.movement_type === "SALE"
+                                            ? "danger"
+                                            : "success"
+                                      }
+                                    >
                                       {entry.movement_type}
                                     </Badge>
                                   </td>
                                   <td className="px-6 py-4 text-right">
-                                    <div className={cn(
-                                      "inline-flex items-center gap-1 font-bold",
-                                      isPositive ? "text-emerald-600" : "text-red-600"
-                                    )}>
-                                      {isPositive ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
+                                    <div
+                                      className={cn(
+                                        "inline-flex items-center gap-1 font-bold",
+                                        isPositive
+                                          ? "text-emerald-600"
+                                          : "text-red-600",
+                                      )}
+                                    >
+                                      {isPositive ? (
+                                        <ArrowUpRight className="w-4 h-4" />
+                                      ) : (
+                                        <ArrowDownRight className="w-4 h-4" />
+                                      )}
                                       {Math.abs(entry.quantity_change)}
                                     </div>
                                   </td>
                                   <td className="px-6 py-4 text-slate-600">
-                                    {entry.reason || '-'}
+                                    {entry.reason || "-"}
                                   </td>
                                 </tr>
                               );

@@ -8,6 +8,13 @@ import menuItemReducer from "./slices/menuItemSlice";
 import analyticsReducer from "./slices/analyticsSlice";
 import inventoryReducer from "./slices/inventorySlice";
 import orderReducer from "./slices/orderSlice";
+import auditLogReducer from "./slices/auditLogSlice";
+import supplierReducer from "./slices/supplierSlice";
+import utilityBillReducer from "./slices/utilityBillSlice";
+import expenseReducer from "./slices/expenseSlice";
+import withdrawalReducer from "./slices/withdrawalSlice";
+import paymentReducer from "./slices/paymentSlice";
+import reconciliationReducer from "./slices/reconciliationSlice";
 import { socketMiddleware } from "./socketMiddleware";
 
 export const store = configureStore({
@@ -21,6 +28,13 @@ export const store = configureStore({
     analytics: analyticsReducer,
     inventory: inventoryReducer,
     order: orderReducer,
+    auditLog: auditLogReducer,
+    supplier: supplierReducer,
+    utilityBill: utilityBillReducer,
+    expense: expenseReducer,
+    withdrawal: withdrawalReducer,
+    payment: paymentReducer,
+    reconciliation: reconciliationReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(socketMiddleware),

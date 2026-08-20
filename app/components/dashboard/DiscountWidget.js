@@ -2,13 +2,13 @@ import Card, { CardHeader, CardTitle } from "../ui/Card";
 import { useState } from "react";
 import { RefreshCcw } from "lucide-react";
 import {
-  BarChart,
-  Bar,
+  AreaChart,
+  Area,
   ResponsiveContainer,
   Tooltip,
   XAxis,
+  YAxis,
   CartesianGrid,
-  Cell,
 } from "recharts";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchDashboardAnalytics } from "../../store/slices/analyticsSlice";
@@ -19,15 +19,7 @@ export default function DiscountWidget() {
   const { stats } = useSelector((state) => state.analytics);
   const discounts = stats?.discounts || 0;
 
-  const discountByDay = stats?.discountByDay || [
-    { name: "Mon", value: 0 },
-    { name: "Tue", value: 0 },
-    { name: "Wed", value: 0 },
-    { name: "Thu", value: 0 },
-    { name: "Fri", value: 0 },
-    { name: "Sat", value: 0 },
-    { name: "Sun", value: 0 },
-  ];
+  const chartData = stats?.chartData || [];
 
   const handleFilterChange = (e) => {
     const range = e.target.value;
@@ -72,44 +64,77 @@ export default function DiscountWidget() {
       </div>
       <div className="h-64 pt-2 pb-2 mt-4">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            data={discountByDay}
-            margin={{ top: 0, right: 0, left: 0, bottom: 20 }}
+          <AreaChart
+            data={chartData}
+            margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
           >
+            <defs>
+              <linearGradient id="colorDiscount" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#fbbf24" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#fbbf24" stopOpacity={0} />
+              </linearGradient>
+            </defs>
             <CartesianGrid
               strokeDasharray="3 3"
               vertical={false}
-              stroke="#f1f5f9"
+              stroke="#e2e8f0"
             />
             <XAxis
-              dataKey="name"
+              dataKey="date"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#94a3b8", fontSize: 11, dy: 10 }}
+              tick={{ fill: "#64748b", fontSize: 12, fontWeight: 500 }}
+              dy={10}
+            />
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: "#64748b", fontSize: 12, fontWeight: 500 }}
+              tickFormatter={(value) => `₹${(value / 1000).toFixed(0)}k`}
+              dx={-10}
             />
             <Tooltip
-              cursor={{ fill: "#f8fafc" }}
-              contentStyle={{
-                borderRadius: "8px",
-                border: "1px solid #e2e8f0",
-                boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-              }}
-              formatter={(value) => [`₹ ${value}`, "Discount"]}
-              labelStyle={{
-                fontWeight: "bold",
-                color: "#64748b",
-                marginBottom: "4px",
+              content={({ active, payload, label }) => {
+                if (active && payload && payload.length) {
+                  const val =
+                    payload.find((p) => p.dataKey === "discount")?.value || 0;
+                  return (
+                    <div className="rounded-xl border border-brand-border bg-white/90 backdrop-blur-md p-4 shadow-[var(--shadow-glass-hover)]">
+                      <p className="mb-3 text-xs font-bold text-brand-muted uppercase tracking-wider">
+                        {label}
+                      </p>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center justify-between gap-6">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-[#fbbf24]"></div>
+                            <span className="text-sm font-semibold text-brand-dark">
+                              Discount
+                            </span>
+                          </div>
+                          <span className="font-bold text-[#fbbf24]">
+                            ₹
+                            {val.toLocaleString(undefined, {
+                              maximumFractionDigits: 0,
+                            })}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+                return null;
               }}
             />
-            <Bar dataKey="value" radius={[4, 4, 0, 0]} barSize={32}>
-              {discountByDay.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={entry.value > 50 ? "#fbbf24" : "#fef08a"}
-                />
-              ))}
-            </Bar>
-          </BarChart>
+            <Area
+              type="monotone"
+              dataKey="discount"
+              stroke="#fbbf24"
+              strokeWidth={3}
+              fillOpacity={1}
+              fill="url(#colorDiscount)"
+              activeDot={{ r: 6, strokeWidth: 0 }}
+            />
+          </AreaChart>
         </ResponsiveContainer>
       </div>
     </Card>

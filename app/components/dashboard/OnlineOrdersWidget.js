@@ -184,7 +184,6 @@ export default function OnlineOrdersWidget() {
             <Area
               type="monotone"
               dataKey="val3"
-              stackId="1"
               stroke="#f59e0b"
               strokeWidth={3}
               fillOpacity={1}
@@ -194,7 +193,6 @@ export default function OnlineOrdersWidget() {
             <Area
               type="monotone"
               dataKey="val2"
-              stackId="1"
               stroke="#3b82f6"
               strokeWidth={3}
               fillOpacity={1}

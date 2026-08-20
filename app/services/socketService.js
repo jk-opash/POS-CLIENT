@@ -9,7 +9,8 @@ class SocketService {
       this.socket.disconnect();
     }
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
+    const apiUrl =
+      process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api";
     const socketUrl = apiUrl.replace("/api", "");
 
     this.socket = io(socketUrl, {

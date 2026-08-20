@@ -2,22 +2,23 @@
 
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDashboardAnalytics } from "../store/slices/analyticsSlice";
+import { fetchDashboardAnalytics } from "../../store/slices/analyticsSlice";
 
-import Sidebar from "../components/Sidebar";
-import Topbar from "../components/Topbar";
+import Sidebar from "../../components/Sidebar";
+import Topbar from "../../components/Topbar";
 
-import StatCard from "../components/ui/StatCard";
+import StatCard from "../../components/ui/StatCard";
 
-import ExpensesWidget from "../components/dashboard/ExpensesWidget";
-import OrderStatisticsWidget from "../components/dashboard/OrderStatisticsWidget";
-import DiscountWidget from "../components/dashboard/DiscountWidget";
-import TaxesWidget from "../components/dashboard/TaxesWidget";
-import OutletStatisticsWidget from "../components/dashboard/OutletStatisticsWidget";
-import OnlineOrdersWidget from "../components/dashboard/OnlineOrdersWidget";
-import ProductsWidget from "../components/dashboard/ProductsWidget";
+import ExpensesWidget from "../../components/dashboard/ExpensesWidget";
+import OrderStatisticsWidget from "../../components/dashboard/OrderStatisticsWidget";
+import PaymentStatisticsWidget from "../../components/dashboard/PaymentStatisticsWidget";
+import DiscountWidget from "../../components/dashboard/DiscountWidget";
+import TaxesWidget from "../../components/dashboard/TaxesWidget";
+import OutletStatisticsWidget from "../../components/dashboard/OutletStatisticsWidget";
+import OnlineOrdersWidget from "../../components/dashboard/OnlineOrdersWidget";
+import ProductsWidget from "../../components/dashboard/ProductsWidget";
 
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils";
 
 import {
   TrendingUp,
@@ -57,16 +58,9 @@ export default function DashboardPage() {
   const discounts = stats?.discounts || 0;
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50">
-      <Sidebar
-        collapsed={collapsed}
-        onToggle={() => setCollapsed((prev) => !prev)}
-      />
-
-      <div className="flex flex-1 min-w-0 flex-col overflow-hidden">
-        <Topbar onMenuClick={() => setCollapsed((prev) => !prev)} />
-
-        <main className="flex-1 overflow-y-auto px-6 py-6">
+    <div className="flex flex-col bg-slate-50">
+      <div className="flex flex-1 min-w-0 flex-col">
+        <main className="flex-1 px-6 py-6">
           <div className="space-y-6 pb-12">
             {/* Header */}
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -78,22 +72,6 @@ export default function DashboardPage() {
                 <p className="mt-1 text-sm text-brand-muted">
                   Real-time overview of your business performance.
                 </p>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-3">
-                <button className="rounded-lg border border-brand-border bg-white px-4 py-2 text-sm font-bold shadow-sm hover:bg-brand-light">
-                  📤 Export
-                </button>
-
-                <button className="rounded-lg border border-brand-border bg-white px-4 py-2 text-sm font-bold shadow-sm hover:bg-brand-light">
-                  ⊞ Zone
-                </button>
-
-                <select className="rounded-lg border border-brand-border bg-white px-3 py-2 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-primary/20">
-                  <option>Today</option>
-                  <option>Yesterday</option>
-                  <option>This Week</option>
-                </select>
               </div>
             </div>
 
@@ -216,7 +194,7 @@ export default function DashboardPage() {
             {activeTab === "sales" && (
               <div className="space-y-6">
                 <OnlineOrdersWidget onlineSales={onlineSales} />
-
+                <PaymentStatisticsWidget />
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                   <OrderStatisticsWidget />
                   <ProductsWidget />

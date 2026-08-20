@@ -193,11 +193,9 @@ export default function InventoryPage() {
   });
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans">
-      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
-      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-        <Topbar onMenuClick={() => setCollapsed((c) => !c)} />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-5">
+    <div className="flex flex-col bg-slate-50 font-sans">
+      <div className="flex-1 flex flex-col min-w-0">
+        <main className="flex-1 p-4 md:p-6 space-y-4 md:space-y-5">
           {/* Header & Global Actions */}
           <div className="flex flex-col gap-4 sm:flex-row justify-between items-start sm:items-center">
             <div>

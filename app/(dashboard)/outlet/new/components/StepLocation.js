@@ -1,6 +1,6 @@
 import { Mail, Phone, MapPin, Map, Globe } from "lucide-react";
 
-export function StepLocation({ form, updateForm }) {
+export function StepLocation({ form, updateForm, errors = {} }) {
   return (
     <div className="space-y-8 py-2">
       <div className="space-y-5">
@@ -15,6 +15,7 @@ export function StepLocation({ form, updateForm }) {
               value={form.contact}
               onChange={(e) => updateForm("contact", e.target.value)}
             />
+          {errors.contact && <span className="text-red-500 text-xs mt-1 block">{errors.contact}</span>}
           </div>
           <div>
             <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-2">
@@ -27,6 +28,7 @@ export function StepLocation({ form, updateForm }) {
               value={form.email}
               onChange={(e) => updateForm("email", e.target.value)}
             />
+          {errors.email && <span className="text-red-500 text-xs mt-1 block">{errors.email}</span>}
           </div>
         </div>
 
@@ -53,6 +55,7 @@ export function StepLocation({ form, updateForm }) {
               value={form.city}
               onChange={(e) => updateForm("city", e.target.value)}
             />
+          {errors.city && <span className="text-red-500 text-xs mt-1 block">{errors.city}</span>}
           </div>
           <div>
             <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-2">
@@ -64,6 +67,7 @@ export function StepLocation({ form, updateForm }) {
               value={form.state}
               onChange={(e) => updateForm("state", e.target.value)}
             />
+          {errors.state && <span className="text-red-500 text-xs mt-1 block">{errors.state}</span>}
           </div>
           <div>
             <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-2">

@@ -1,400 +1,181 @@
 "use client";
 
-import { useState } from "react";
-import Sidebar from "../../components/Sidebar";
-import Topbar from "../../components/Topbar";
-import Modal from "../../components/ui/Modal";
-import Button from "../../components/ui/Button";
-import Card from "../../components/ui/Card";
-import Badge from "../../components/ui/Badge";
+import { useState, useMemo, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchSuppliers,
+  createSupplier,
+  updateSupplier,
+  deleteSupplier,
+} from "../../store/slices/supplierSlice";
+import { Plus } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
-function SupplierModal({ supplier, onSave, onClose }) {
-  const [form, setForm] = useState(
-    supplier || { name: "", contact: "", phone: "", email: "", category: "" },
-  );
-  const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
-
-  return (
-    <Modal
-      isOpen={true}
-      onClose={onClose}
-      title={supplier ? "Edit Supplier" : "Add Supplier"}
-    >
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSave(form);
-          onClose();
-        }}
-        style={{ display: "flex", flexDirection: "column", gap: 12 }}
-      >
-        <div>
-          <label
-            style={{
-              fontSize: 12,
-              color: "var(--color-text-secondary)",
-              display: "block",
-              marginBottom: 5,
-            }}
-          >
-            Company Name *
-          </label>
-          <input
-            className="input"
-            value={form.name}
-            onChange={(e) => set("name", e.target.value)}
-            required
-            placeholder="Fresh Farms Co."
-          />
-        </div>
-        <div
-          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}
-        >
-          <div>
-            <label
-              style={{
-                fontSize: 12,
-                color: "var(--color-text-secondary)",
-                display: "block",
-                marginBottom: 5,
-              }}
-            >
-              Contact Person
-            </label>
-            <input
-              className="input"
-              value={form.contact}
-              onChange={(e) => set("contact", e.target.value)}
-              placeholder="Vikram Malhotra"
-            />
-          </div>
-          <div>
-            <label
-              style={{
-                fontSize: 12,
-                color: "var(--color-text-secondary)",
-                display: "block",
-                marginBottom: 5,
-              }}
-            >
-              Category
-            </label>
-            <input
-              className="input"
-              value={form.category}
-              onChange={(e) => set("category", e.target.value)}
-              placeholder="Vegetables, Dairy..."
-            />
-          </div>
-        </div>
-        <div
-          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}
-        >
-          <div>
-            <label
-              style={{
-                fontSize: 12,
-                color: "var(--color-text-secondary)",
-                display: "block",
-                marginBottom: 5,
-              }}
-            >
-              Phone
-            </label>
-            <input
-              className="input"
-              value={form.phone}
-              onChange={(e) => set("phone", e.target.value)}
-              placeholder="9876001001"
-            />
-          </div>
-          <div>
-            <label
-              style={{
-                fontSize: 12,
-                color: "var(--color-text-secondary)",
-                display: "block",
-                marginBottom: 5,
-              }}
-            >
-              Email
-            </label>
-            <input
-              className="input"
-              type="email"
-              value={form.email}
-              onChange={(e) => set("email", e.target.value)}
-              placeholder="contact@supplier.in"
-            />
-          </div>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            gap: 8,
-            justifyContent: "flex-end",
-            marginTop: 8,
-          }}
-        >
-          <Button type="button" variant="surface" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit" variant="accent">
-            Save Supplier
-          </Button>
-        </div>
-      </form>
-    </Modal>
-  );
-}
+// Extracted Components
+import SupplierTabFilters from "./components/SupplierTabFilters";
+import SupplierTabTable from "./components/SupplierTabTable";
+import SupplierModal from "./components/SupplierModal";
+import DeleteConfirmModal from "./components/DeleteConfirmModal";
 
 export default function SuppliersPage() {
-  const [collapsed, setCollapsed] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [editSupplier, setEditSupplier] = useState(null);
-  const [search, setSearch] = useState("");
+  const dispatch = useDispatch();
 
-  const filtered = suppliers.filter(
-    (s) =>
-      !search ||
-      s.name.toLowerCase().includes(search.toLowerCase()) ||
-      s.contact.toLowerCase().includes(search.toLowerCase()),
-  );
+  const { user } = useSelector((state) => state.auth);
+  const businessId =
+    user?.businesses?.[0]?.id || user?.businessId || user?.business_id;
 
-  const handleSave = (data) => {
-    if (editSupplier) updateSupplier(editSupplier.id, data);
-    else addSupplier(data);
-    setEditSupplier(null);
+  const { items: suppliers, loading } = useSelector((state) => state.supplier);
+
+  // Fetch on mount
+  useEffect(() => {
+    if (businessId) {
+      dispatch(fetchSuppliers({ businessId }));
+    }
+  }, [businessId, dispatch]);
+
+  const [activeTab, setActiveTab] = useState("suppliers"); // 'suppliers'
+
+  // Filters
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  // Reset pagination on filter change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, statusFilter]);
+
+  const [modalState, setModalState] = useState({
+    visible: false,
+    supplier: null,
+  });
+  const [deleteItem, setDeleteItem] = useState(null);
+
+  const filteredItems = useMemo(() => {
+    return suppliers.filter((item) => {
+      const matchSearch =
+        item.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.contact?.person
+          ?.toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        item.category?.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchStatus =
+        statusFilter === "all" || item.status === statusFilter;
+
+      return matchSearch && matchStatus;
+    });
+  }, [suppliers, searchQuery, statusFilter]);
+
+  // Paginated Items
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage) || 1;
+  const paginatedItems = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return filteredItems.slice(start, start + itemsPerPage);
+  }, [filteredItems, currentPage, itemsPerPage]);
+
+  const handleSaveSupplier = async (data) => {
+    try {
+      if (modalState.supplier) {
+        // Edit
+        await dispatch(
+          updateSupplier({ id: modalState.supplier.id, data }),
+        ).unwrap();
+      } else {
+        // Create
+        await dispatch(
+          createSupplier({ ...data, business_id: businessId }),
+        ).unwrap();
+      }
+      setModalState({ visible: false, supplier: null });
+    } catch (error) {
+      console.error("Failed to save supplier:", error);
+    }
   };
 
-  const totalOutstanding = suppliers.reduce(
-    (s, sup) => s + (sup.outstanding || 0),
-    0,
-  );
-  const totalPurchased = suppliers.reduce(
-    (s, sup) => s + (sup.totalPurchased || 0),
-    0,
-  );
+  const handleConfirmDelete = async () => {
+    if (!deleteItem) return;
+    try {
+      await dispatch(deleteSupplier(deleteItem.id)).unwrap();
+      setDeleteItem(null);
+    } catch (e) {
+      console.error("Failed to archive supplier:", e);
+    }
+  };
+
+  const tabs = [{ id: "suppliers", label: "Suppliers List" }];
 
   return (
-    <div
-      style={{
-        display: "flex",
-        height: "100vh",
-        background: "var(--color-bg)",
-        overflow: "hidden",
-      }}
-    >
-      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-          minWidth: 0,
-        }}
-      >
-        <Topbar onMenuClick={() => setCollapsed((c) => !c)} />
-        <main style={{ flex: 1, overflowY: "auto", padding: "20px 24px" }}>
-          {/* Summary */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-              gap: 12,
-              marginBottom: 20,
-            }}
-          >
-            <Card className="card-sm">
-              <div style={{ fontSize: 22, fontWeight: 700 }}>
-                {suppliers.length}
-              </div>
-              <div
-                style={{
-                  fontSize: 11,
-                  color: "var(--color-text-muted)",
-                  marginTop: 3,
-                }}
-              >
-                Total Suppliers
-              </div>
-            </Card>
-            <Card className="card-sm">
-              <div
-                style={{
-                  fontSize: 18,
-                  fontWeight: 700,
-                  color: "var(--color-amber)",
-                }}
-              >
-                ₹{totalOutstanding.toLocaleString("en-IN")}
-              </div>
-              <div
-                style={{
-                  fontSize: 11,
-                  color: "var(--color-text-muted)",
-                  marginTop: 3,
-                }}
-              >
-                Outstanding Balance
-              </div>
-            </Card>
-            <Card className="card-sm">
-              <div
-                style={{
-                  fontSize: 18,
-                  fontWeight: 700,
-                  color: "var(--color-emerald)",
-                }}
-              >
-                ₹{totalPurchased.toLocaleString("en-IN")}
-              </div>
-              <div
-                style={{
-                  fontSize: 11,
-                  color: "var(--color-text-muted)",
-                  marginTop: 3,
-                }}
-              >
-                Total Purchased
-              </div>
-            </Card>
-          </div>
+    <div className="flex flex-col bg-slate-50 font-sans h-full">
+      <div className="flex-1 flex flex-col overflow-hidden relative min-w-0">
+        <main className="flex-1 p-4 md:p-6 space-y-4 md:space-y-5">
+          {/* Header & Global Actions */}
+          <div className="flex flex-col gap-4 sm:flex-row justify-between items-start sm:items-center">
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900">
+                Suppliers Hub
+              </h2>
+              <p className="mt-1 text-sm text-slate-500">
+                Manage your vendors, contacts, and supply chain.
+              </p>
+            </div>
 
-          {/* Actions */}
-          <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
-            <input
-              className="input"
-              placeholder="Search suppliers..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              style={{ maxWidth: 280 }}
-            />
-            <Button
-              variant="accent"
-              style={{ marginLeft: "auto" }}
-              onClick={() => {
-                setEditSupplier(null);
-                setShowModal(true);
-              }}
-            >
-              + Add Supplier
-            </Button>
-          </div>
-
-          {/* Table */}
-          <Card style={{ padding: 0 }}>
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Supplier</th>
-                  <th>Contact</th>
-                  <th>Category</th>
-                  <th>Phone</th>
-                  <th>Outstanding</th>
-                  <th>Total Purchased</th>
-                  <th>Last Order</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((sup) => (
-                  <tr key={sup.id}>
-                    <td
-                      style={{
-                        fontWeight: 600,
-                        color: "var(--color-text-primary)",
-                      }}
-                    >
-                      {sup.name}
-                    </td>
-                    <td style={{ color: "var(--color-text-secondary)" }}>
-                      {sup.contact}
-                    </td>
-                    <td>
-                      <Badge variant="muted">{sup.category}</Badge>
-                    </td>
-                    <td
-                      style={{
-                        color: "var(--color-text-secondary)",
-                        fontSize: 12,
-                      }}
-                    >
-                      {sup.phone}
-                    </td>
-                    <td
-                      style={{
-                        fontWeight: 600,
-                        color:
-                          sup.outstanding > 0
-                            ? "var(--color-amber)"
-                            : "var(--color-emerald)",
-                      }}
-                    >
-                      ₹{(sup.outstanding || 0).toLocaleString("en-IN")}
-                    </td>
-                    <td style={{ color: "var(--color-text-secondary)" }}>
-                      ₹{(sup.totalPurchased || 0).toLocaleString("en-IN")}
-                    </td>
-                    <td
-                      style={{ color: "var(--color-text-muted)", fontSize: 12 }}
-                    >
-                      {sup.lastOrder || "—"}
-                    </td>
-                    <td>
-                      <div style={{ display: "flex", gap: 6 }}>
-                        <Button
-                          variant="surface"
-                          size="sm"
-                          onClick={() => {
-                            setEditSupplier(sup);
-                            setShowModal(true);
-                          }}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          onClick={() => {
-                            if (confirm("Delete supplier?"))
-                              deleteSupplier(sup.id);
-                          }}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {filtered.length === 0 && (
-              <div
-                style={{
-                  padding: "40px",
-                  textAlign: "center",
-                  color: "var(--color-text-muted)",
-                }}
-              >
-                No suppliers found
-              </div>
+            {activeTab === "suppliers" && (
+              <SupplierTabFilters
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                statusFilter={statusFilter}
+                setStatusFilter={setStatusFilter}
+              />
             )}
-          </Card>
+
+            <div className="flex items-center gap-3 flex-wrap">
+              <button
+                onClick={() => setModalState({ visible: true, supplier: null })}
+                className="px-4 py-2 text-xs font-bold rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2"
+              >
+                <Plus size={16} /> Add Supplier
+              </button>
+            </div>
+          </div>
+
+          {/* Table Area */}
+          <div className="space-y-4 md:space-y-5">
+            {activeTab === "suppliers" && (
+              <SupplierTabTable
+                paginatedItems={paginatedItems}
+                filteredItems={filteredItems}
+                onEdit={(supplier) =>
+                  setModalState({ visible: true, supplier })
+                }
+                onDelete={setDeleteItem}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                totalPages={totalPages}
+                itemsPerPage={itemsPerPage}
+                setItemsPerPage={setItemsPerPage}
+              />
+            )}
+          </div>
         </main>
       </div>
 
-      {showModal && (
-        <SupplierModal
-          supplier={editSupplier}
-          onSave={handleSave}
-          onClose={() => {
-            setShowModal(false);
-            setEditSupplier(null);
-          }}
-        />
-      )}
+      {/* Modals */}
+      <SupplierModal
+        visible={modalState.visible}
+        supplier={modalState.supplier}
+        onClose={() => setModalState({ visible: false, supplier: null })}
+        onSave={handleSaveSupplier}
+      />
+
+      <DeleteConfirmModal
+        item={deleteItem}
+        onConfirm={handleConfirmDelete}
+        onClose={() => setDeleteItem(null)}
+      />
     </div>
   );
 }

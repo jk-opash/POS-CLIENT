@@ -51,6 +51,7 @@ import {
 
 // Edit Modal Component
 function EditBranchModal({ branch, onClose, onSave }) {
+  const [errors, setErrors] = useState({});
   const [form, setForm] = useState({
     name: branch?.name || "",
     code: branch?.code || "",
@@ -70,15 +71,37 @@ function EditBranchModal({ branch, onClose, onSave }) {
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
+  const validateForm = () => {
+    const newErrors = {};
+    if (!form.name?.trim()) newErrors.name = "Branch Name is required";
+    if (!form.code?.trim()) newErrors.code = "Branch Code is required";
+    else if (form.code.length < 2)
+      newErrors.code = "Must be at least 2 characters";
+
+    if (!form.contact?.trim()) newErrors.contact = "Contact is required";
+    else if (!/^\d{10}$/.test(form.contact.replace(/\D/g, "")))
+      newErrors.contact = "Must be 10 digits";
+
+    if (form.email && !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(form.email))
+      newErrors.email = "Invalid email";
+
+    if (!form.address?.trim()) newErrors.address = "Address is required";
+    if (!form.city?.trim()) newErrors.city = "City is required";
+    if (!form.state?.trim()) newErrors.state = "State is required";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+    onSave(form);
+  };
+
   return (
     <Modal isOpen={true} onClose={onClose} title="Edit Branch Profile">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSave(form);
-        }}
-        className="flex flex-col gap-4"
-      >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="text-xs text-slate-500 block mb-1">
@@ -90,6 +113,11 @@ function EditBranchModal({ branch, onClose, onSave }) {
               onChange={(e) => set("name", e.target.value)}
               required
             />
+            {errors.name && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.name}
+              </span>
+            )}
           </div>
           <div>
             <label className="text-xs text-slate-500 block mb-1">
@@ -98,9 +126,14 @@ function EditBranchModal({ branch, onClose, onSave }) {
             <input
               className="input"
               value={form.code}
-              onChange={(e) => set("code", e.target.value)}
               required
+              onChange={(e) => set("code", e.target.value)}
             />
+            {errors.code && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.code}
+              </span>
+            )}
           </div>
           <div>
             <label className="text-xs text-slate-500 block mb-1">Status</label>
@@ -134,6 +167,11 @@ function EditBranchModal({ branch, onClose, onSave }) {
               value={form.contact}
               onChange={(e) => set("contact", e.target.value)}
             />
+            {errors.contact && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.contact}
+              </span>
+            )}
           </div>
           <div>
             <label className="text-xs text-slate-500 block mb-1">
@@ -145,6 +183,11 @@ function EditBranchModal({ branch, onClose, onSave }) {
               value={form.email}
               onChange={(e) => set("email", e.target.value)}
             />
+            {errors.email && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.email}
+              </span>
+            )}
           </div>
           <div className="md:col-span-2">
             <label className="text-xs text-slate-500 block mb-1">Address</label>
@@ -161,6 +204,11 @@ function EditBranchModal({ branch, onClose, onSave }) {
               value={form.city}
               onChange={(e) => set("city", e.target.value)}
             />
+            {errors.city && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.city}
+              </span>
+            )}
           </div>
           <div>
             <label className="text-xs text-slate-500 block mb-1">State</label>
@@ -169,6 +217,11 @@ function EditBranchModal({ branch, onClose, onSave }) {
               value={form.state}
               onChange={(e) => set("state", e.target.value)}
             />
+            {errors.state && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.state}
+              </span>
+            )}
           </div>
           <div>
             <label className="text-xs text-slate-500 block mb-1">
@@ -337,11 +390,9 @@ export default function BranchDetailsPage() {
   if (!b) return null;
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans">
-      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
-      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-        <Topbar onMenuClick={() => setCollapsed((c) => !c)} />
-        <main className="flex-1 overflow-y-auto px-6 py-6">
+    <div className="flex flex-col bg-slate-50 font-sans">
+      <div className="flex-1 flex flex-col min-w-0">
+        <main className="flex-1 px-6 py-6">
           <div className="space-y-6 pb-12">
             {/* Back Button */}
 

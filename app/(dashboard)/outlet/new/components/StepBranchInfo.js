@@ -1,6 +1,6 @@
 import { Store, Hash, Tag, Activity } from "lucide-react";
 
-export function StepBranchInfo({ form, updateForm }) {
+export function StepBranchInfo({ form, updateForm, errors = {} }) {
   return (
     <div className="space-y-8 py-2">
       <div className="space-y-5">
@@ -14,6 +14,7 @@ export function StepBranchInfo({ form, updateForm }) {
             value={form.name}
             onChange={(e) => updateForm("name", e.target.value)}
           />
+          {errors.name && <span className="text-red-500 text-xs mt-1 block">{errors.name}</span>}
         </div>
         
         <div>
@@ -26,6 +27,7 @@ export function StepBranchInfo({ form, updateForm }) {
             value={form.code}
             onChange={(e) => updateForm("code", e.target.value)}
           />
+          {errors.code && <span className="text-red-500 text-xs mt-1 block">{errors.code}</span>}
         </div>
 
         <div className="grid grid-cols-2 gap-4">

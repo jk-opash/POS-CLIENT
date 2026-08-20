@@ -17,7 +17,7 @@ export const fetchTeamMembers = createAsyncThunk(
   {
     condition: (businessId, { getState }) => {
       const { teamMember } = getState();
-      if (teamMember?.loading || teamMember?.hasFetched) {
+      if (teamMember?.loading) {
         return false;
       }
     }
@@ -51,14 +51,42 @@ export const createTeamMember = createAsyncThunk(
 );
 
 export const deleteTeamMember = createAsyncThunk(
-  'teamMember/deleteTeamMember',
+  "teamMember/deleteTeamMember",
   async (id, { rejectWithValue }) => {
     try {
       await api.delete(`/team-member/${id}`);
       return id;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.error || 'Failed to delete team member'
+        error.response?.data?.error || "Failed to delete team member"
+      );
+    }
+  }
+);
+
+export const resetTeamMemberPassword = createAsyncThunk(
+  "teamMembers/resetPassword",
+  async ({ id, newPassword }, { rejectWithValue }) => {
+    try {
+      const response = await api.post(`/team-member/${id}/reset-password`, { newPassword });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.error || "Failed to reset password"
+      );
+    }
+  }
+);
+
+export const resetTeamMemberPin = createAsyncThunk(
+  "teamMembers/resetPin",
+  async ({ id, newPin }, { rejectWithValue }) => {
+    try {
+      const response = await api.post(`/team-member/${id}/reset-pin`, { newPin });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.error || "Failed to reset PIN"
       );
     }
   }

@@ -6,6 +6,7 @@ import { createInventoryItem } from "../../../store/slices/inventorySlice";
 import { uid } from "./helpers";
 
 export default function AddItemModal({ branchId, onClose }) {
+  const [errors, setErrors] = useState({});
   const [form, setForm] = useState({
     name: "",
     sku: `SKU-${Math.floor(Math.random() * 100000)
@@ -112,9 +113,10 @@ export default function AddItemModal({ branchId, onClose }) {
               <input
                 className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-100"
                 value={form.name}
-                onChange={(e) => set("name", e.target.value)}
+                onChange={(e) => set("name", e.target.value)} 
                 placeholder="e.g. Butter Chicken Masala"
               />
+          {errors.name && <span className="text-red-500 text-xs mt-1 block">{errors.name}</span>}
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
@@ -124,9 +126,10 @@ export default function AddItemModal({ branchId, onClose }) {
                 <input
                   className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-slate-400"
                   value={form.sku}
-                  onChange={(e) => set("sku", e.target.value)}
+                  onChange={(e) => set("sku", e.target.value)} 
                   placeholder="e.g. SPI-001"
                 />
+          {errors.sku && <span className="text-red-500 text-xs mt-1 block">{errors.sku}</span>}
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
@@ -171,9 +174,10 @@ export default function AddItemModal({ branchId, onClose }) {
                   type="number"
                   className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-slate-400"
                   value={form.currentStock}
-                  onChange={(e) => set("currentStock", e.target.value)}
+                  onChange={(e) => set("currentStock", e.target.value)} 
                   placeholder="0"
                 />
+          {errors.currentStock && <span className="text-red-500 text-xs mt-1 block">{errors.currentStock}</span>}
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
@@ -185,9 +189,10 @@ export default function AddItemModal({ branchId, onClose }) {
                   type="number"
                   className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-slate-400"
                   value={form.reorderLevel}
-                  onChange={(e) => set("reorderLevel", e.target.value)}
+                  onChange={(e) => set("reorderLevel", e.target.value)} 
                   placeholder="0"
                 />
+          {errors.reorderLevel && <span className="text-red-500 text-xs mt-1 block">{errors.reorderLevel}</span>}
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
@@ -197,9 +202,10 @@ export default function AddItemModal({ branchId, onClose }) {
                   type="number"
                   className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-slate-400"
                   value={form.price}
-                  onChange={(e) => set("price", e.target.value)}
+                  onChange={(e) => set("price", e.target.value)} 
                   placeholder="0.00"
                 />
+          {errors.price && <span className="text-red-500 text-xs mt-1 block">{errors.price}</span>}
               </div>
             </div>
             <div>

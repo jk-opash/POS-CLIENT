@@ -15,6 +15,7 @@ export default function MenuItemModal({ item, onClose, onSave }) {
   const { categories } = useSelector((state) => state.category);
   const [step, setStep] = useState(1);
 
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     name: "",
     categoryId: "",
@@ -148,6 +149,30 @@ export default function MenuItemModal({ item, onClose, onSave }) {
   const selectedCategory = categories.find((c) => c.id === formData.categoryId);
   const subCategories = selectedCategory?.sub_categories || [];
 
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.name?.trim()) newErrors.name = "Item name is required";
+    if (!formData.categoryId) newErrors.categoryId = "Category is required";
+    
+    const parsedPrice = parseFloat(formData.price);
+    if (isNaN(parsedPrice) || parsedPrice < 0) {
+      newErrors.price = "Valid price is required";
+    }
+
+    // Check variant categories
+    if (formData.variantCategories) {
+      formData.variantCategories.forEach((cat, idx) => {
+        if (!cat.name?.trim()) newErrors[`variant_${idx}_name`] = "Category name required";
+        if (cat.minSelection > cat.maxSelection) newErrors[`variant_${idx}_min`] = "Min cannot be > Max";
+        if (cat.minSelection < 0 || cat.maxSelection < 0) newErrors[`variant_${idx}_min`] = "Selection limits must be ≥ 0";
+      });
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   return (
     <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex justify-center items-start pt-[5vh] z-50 overflow-y-auto">
       <div className="bg-white w-[880px] max-w-[95vw] rounded-2xl shadow-2xl flex flex-col mb-[5vh] relative shrink-0">
@@ -176,7 +201,31 @@ export default function MenuItemModal({ item, onClose, onSave }) {
               const isCompleted = step > s.num;
               const isCurrent = step === s.num;
 
-              return (
+            
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.name?.trim()) newErrors.name = "Item name is required";
+    if (!formData.categoryId) newErrors.categoryId = "Category is required";
+    
+    const parsedPrice = parseFloat(formData.price);
+    if (isNaN(parsedPrice) || parsedPrice < 0) {
+      newErrors.price = "Valid price is required";
+    }
+
+    // Check variant categories
+    if (formData.variantCategories) {
+      formData.variantCategories.forEach((cat, idx) => {
+        if (!cat.name?.trim()) newErrors[`variant_${idx}_name`] = "Category name required";
+        if (cat.minSelection > cat.maxSelection) newErrors[`variant_${idx}_min`] = "Min cannot be > Max";
+        if (cat.minSelection < 0 || cat.maxSelection < 0) newErrors[`variant_${idx}_min`] = "Selection limits must be ≥ 0";
+      });
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  return (
                 <button
                   key={s.num}
                   onClick={() => setStep(s.num)}
@@ -234,6 +283,7 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                         setFormData({ ...formData, name: e.target.value })
                       }
                     />
+                      {errors.name && <span className="text-red-500 text-xs mt-1 block">{errors.name}</span>}
                   </div>
 
                   <div className="flex gap-4">
@@ -260,6 +310,7 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                           </option>
                         ))}
                       </select>
+            {errors.categoryId && <span className="text-red-500 text-xs mt-1 block">{errors.categoryId}</span>}
                     </div>
                     <div className="flex-1">
                       <label className="block text-sm font-bold text-slate-900 mb-1.5">
@@ -339,6 +390,7 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                         setFormData({ ...formData, price: e.target.value })
                       }
                     />
+                      {errors.price && <span className="text-red-500 text-xs mt-1 block">{errors.price}</span>}
                   </div>
 
                   <div>
@@ -584,7 +636,7 @@ export default function MenuItemModal({ item, onClose, onSave }) {
               </button>
             ) : (
               <button
-                onClick={handleSubmit}
+                onClick={() => { if (validateForm()) handleSubmit(); }}
                 className="px-6 py-3 rounded-xl bg-[#1e293b] text-white text-sm font-bold hover:bg-slate-800 shadow-sm transition-colors ml-auto"
               >
                 Create Menu Item

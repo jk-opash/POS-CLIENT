@@ -4,8 +4,16 @@ import { useState, useMemo, useEffect } from "react";
 import Sidebar from "../../components/Sidebar";
 import Topbar from "../../components/Topbar";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMenuItems, createMenuItem, updateMenuItem, deleteMenuItem } from "../../store/slices/menuItemSlice";
-import { fetchCategories, createCategory } from "../../store/slices/categorySlice";
+import {
+  fetchMenuItems,
+  createMenuItem,
+  updateMenuItem,
+  deleteMenuItem,
+} from "../../store/slices/menuItemSlice";
+import {
+  fetchCategories,
+  createCategory,
+} from "../../store/slices/categorySlice";
 import { fetchBranches } from "../../store/slices/branchSlice";
 import MenuItemModal from "../../components/MenuItemModal";
 import DeleteConfirmModal from "../inventory/components/DeleteConfirmModal";
@@ -73,9 +81,13 @@ export default function MenuPage() {
 
   const handleSaveItem = (item) => {
     if (editItem) {
-      dispatch(updateMenuItem({ id: editItem.id, data: item })).then(() => dispatch(fetchMenuItems(branchFilter)));
+      dispatch(updateMenuItem({ id: editItem.id, data: item })).then(() =>
+        dispatch(fetchMenuItems(branchFilter)),
+      );
     } else {
-      dispatch(createMenuItem({ ...item, branch_id: branchFilter })).then(() => dispatch(fetchMenuItems(branchFilter)));
+      dispatch(createMenuItem({ ...item, branch_id: branchFilter })).then(() =>
+        dispatch(fetchMenuItems(branchFilter)),
+      );
     }
     setShowItemModal(false);
   };
@@ -90,13 +102,15 @@ export default function MenuPage() {
   };
 
   const toggleAvailable = (id) => {
-    const item = items.find(i => i.id === id);
+    const item = items.find((i) => i.id === id);
     if (item) {
       const newStatus = item.status === "Active" ? "Inactive" : "Active";
-      dispatch(updateMenuItem({
-        id,
-        data: { status: newStatus }
-      })).then(() => dispatch(fetchMenuItems(branchFilter)));
+      dispatch(
+        updateMenuItem({
+          id,
+          data: { status: newStatus },
+        }),
+      ).then(() => dispatch(fetchMenuItems(branchFilter)));
     }
   };
 
@@ -145,12 +159,9 @@ export default function MenuPage() {
   ];
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans">
-      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
+    <div className="flex flex-col bg-slate-50 font-sans">
       <div className="flex-1 flex flex-col overflow-hidden relative min-w-0">
-        <Topbar onMenuClick={() => setCollapsed((c) => !c)} />
-
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-5">
+        <main className="flex-1 p-4 md:p-6 space-y-4 md:space-y-5">
           {/* Header & Global Actions */}
           <div className="flex flex-col gap-4 sm:flex-row justify-between items-start sm:items-center">
             <div>
@@ -173,7 +184,9 @@ export default function MenuPage() {
                   className="text-sm font-semibold text-slate-700 outline-none bg-transparent cursor-pointer pr-2"
                 >
                   {branches?.map((b) => (
-                    <option key={b.id} value={b.id}>{b.name}</option>
+                    <option key={b.id} value={b.id}>
+                      {b.name}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -253,7 +266,7 @@ export default function MenuPage() {
           onClose={() => setShowItemModal(false)}
         />
       )}
-      
+
       <DeleteConfirmModal
         item={itemToDelete}
         onConfirm={confirmDelete}
