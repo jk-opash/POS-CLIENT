@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { loginOwner, clearError } from '../../store/slices/authSlice';
-import Input from '../../components/ui/Input';
-import Button from '../../components/ui/Button';
+import { loginOwner, clearError } from "../../store/slices/authSlice";
+import Input from "../../components/ui/Input";
+import Button from "../../components/ui/Button";
 import { Eye, EyeOff, Zap, Mail, Lock, ShieldCheck } from "lucide-react";
 
 export default function LoginPage() {
@@ -15,19 +15,35 @@ export default function LoginPage() {
   const [email, setEmail] = useState("karthik@dailygrind.co");
   const [password, setPassword] = useState("password123");
   const [showPass, setShowPass] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
 
   const { loading, error } = useSelector((state) => state.auth);
+
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!email.trim()) newErrors.email = "Email is required";
+    else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) newErrors.email = "Invalid email format";
+    
+    if (!password) newErrors.password = "Password is required";
+    
+    setValidationErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     if (error) {
       dispatch(clearError());
     }
+    
+    if (!validateForm()) return;
+
 
     const resultAction = await dispatch(loginOwner({ email, password }));
 
     if (loginOwner.fulfilled.match(resultAction)) {
-      router.push("/");
+      router.push("/dashboard");
     }
   };
 

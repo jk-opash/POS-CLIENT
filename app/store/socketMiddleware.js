@@ -4,7 +4,11 @@ import { fetchCategories } from "./slices/categorySlice";
 import { fetchMenuItems } from "./slices/menuItemSlice";
 import { fetchInventoryItems } from "./slices/inventorySlice";
 import { fetchTeamMembers } from "./slices/teamMemberSlice";
-import { logout, setSessionConflict, clearSessionConflict } from "./slices/authSlice";
+import {
+  logout,
+  setSessionConflict,
+  clearSessionConflict,
+} from "./slices/authSlice";
 
 export const socketMiddleware = (store) => (next) => (action) => {
   // Pass the action down first so state gets updated
@@ -21,7 +25,10 @@ export const socketMiddleware = (store) => (next) => (action) => {
     // Use restaurant_id or branch_id for the socket connection based on the user's role
     // Since this is an admin POS-CLIENT, they might monitor the entire restaurant or a specific branch.
     // For now, let's use the active branch ID if available, otherwise fallback to their primary branch or restaurant ID
-    const branchId = state.branch?.activeBranch?.id || currentUser?.branch_id || currentUser?.restaurant_id;
+    const branchId =
+      state.branch?.activeBranch?.id ||
+      currentUser?.branch_id ||
+      currentUser?.restaurant_id;
 
     if (currentToken) {
       socketService.connect(branchId, currentToken);
@@ -44,9 +51,17 @@ export const socketMiddleware = (store) => (next) => (action) => {
         });
 
         // Optional: Add listeners for team members if needed
-        // socketService.on("teamMemberChanged", () => {
-        //   store.dispatch(fetchTeamMembers(branchId));
-        // });
+        socketService.on("teamMemberChanged", () => {
+          const currentState = store.getState();
+          const authUser = currentState.auth?.user;
+          const userBusinessId =
+            authUser?.businesses?.[0]?.id ||
+            authUser?.business_id ||
+            authUser?.restaurant_id;
+          if (userBusinessId) {
+            store.dispatch(fetchTeamMembers(userBusinessId));
+          }
+        });
       }
 
       // Session Conflict Management
@@ -68,7 +83,10 @@ export const socketMiddleware = (store) => (next) => (action) => {
         store.dispatch(logout());
         if (typeof window !== "undefined") {
           setTimeout(() => {
-            alert(data?.message || "Session expired. You were logged in from another device.");
+            alert(
+              data?.message ||
+                "Session expired. You were logged in from another device.",
+            );
           }, 500);
         }
       });

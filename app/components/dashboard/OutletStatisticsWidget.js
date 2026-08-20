@@ -57,13 +57,13 @@ export default function OutletStatisticsWidget() {
             <TableCell className="font-bold">Total</TableCell>
             <TableCell className="font-semibold">{totalOrders}</TableCell>
             <TableCell className="font-semibold">
-              {Number(totalSales).toFixed(2)}
+              {Number(totalSales || 0).toFixed(2)}
             </TableCell>
             <TableCell className="font-semibold">
-              {Number(totalTax).toFixed(2)}
+              {Number(totalTax || 0).toFixed(2)}
             </TableCell>
             <TableCell className="font-semibold">
-              {Number(totalDiscount).toFixed(2)}
+              {Number(totalDiscount || 0).toFixed(2)}
             </TableCell>
             <TableCell className="font-semibold">0.00</TableCell>
           </TableRow>
@@ -85,19 +85,19 @@ export default function OutletStatisticsWidget() {
                   />
                 </TableCell>
                 <TableCell className="text-brand-muted font-medium">
-                  {branchStat.numOrders}
+                  {branchStat.numOrders || 0}
                 </TableCell>
                 <TableCell className="text-brand-muted font-medium">
-                  {Number(branchStat.totalSales).toFixed(2)}
+                  {Number(branchStat.totalSales || 0).toFixed(2)}
                 </TableCell>
                 <TableCell className="text-brand-muted font-medium">
-                  {Number(branchStat.totalTax).toFixed(2)}
+                  {Number(branchStat.totalTax || 0).toFixed(2)}
                 </TableCell>
                 <TableCell className="text-brand-muted font-medium">
-                  {Number(branchStat.totalDiscount).toFixed(2)}
+                  {Number(branchStat.totalDiscount || 0).toFixed(2)}
                 </TableCell>
                 <TableCell className="text-brand-muted font-medium">
-                  {Number(branchStat.totalWaivedOff).toFixed(2)}
+                  {Number(branchStat.totalWaivedOff || 0).toFixed(2)}
                 </TableCell>
               </TableRow>
             );

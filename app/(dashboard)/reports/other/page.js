@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Sidebar from "../../../components/Sidebar";
 import Topbar from "../../../components/Topbar";
 import {
@@ -80,8 +81,8 @@ const REPORT_CATEGORIES = [
     reports: [
       {
         id: "r6",
-        name: "Consumption Report",
-        desc: "Raw material and ingredient usage calculated from recipe data.",
+        name: "Expense Report",
+        desc: "Show all the expense records done from the outlets",
         icon: Package,
         color: "text-indigo-600",
         bg: "bg-indigo-50 border-indigo-100",
@@ -99,6 +100,7 @@ const REPORT_CATEGORIES = [
 ];
 
 export default function OtherReports() {
+  const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedCat, setSelectedCat] = useState("all");
@@ -116,12 +118,9 @@ export default function OtherReports() {
   });
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans">
-      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
+    <div className="flex flex-col bg-slate-50 font-sans">
       <div className="flex-1 flex flex-col overflow-hidden relative min-w-0">
-        <Topbar onMenuClick={() => setCollapsed((c) => !c)} />
-
-        <main className="flex-1 overflow-y-auto p-6 md:p-8">
+        <main className="flex-1 p-6 md:p-8">
           <div className="max-w-7xl mx-auto space-y-8">
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -133,7 +132,8 @@ export default function OtherReports() {
                   </span>
                 </h1>
                 <p className="text-slate-500 font-medium mt-1">
-                  Access specialized operational, financial, and inventory reports.
+                  Access specialized operational, financial, and inventory
+                  reports.
                 </p>
               </div>
               <button className="flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white font-bold rounded-xl text-sm hover:bg-slate-800 transition-all shadow-md active:scale-95">
@@ -185,7 +185,9 @@ export default function OtherReports() {
               {filteredCategories.length === 0 ? (
                 <div className="bg-white rounded-3xl p-12 text-center border border-slate-200">
                   <FileText size={48} className="mx-auto mb-3 text-slate-300" />
-                  <h3 className="text-lg font-bold text-slate-700">No reports found</h3>
+                  <h3 className="text-lg font-bold text-slate-700">
+                    No reports found
+                  </h3>
                   <p className="text-sm text-slate-400 mt-1">
                     Try adjusting your search query or selected category.
                   </p>
@@ -208,6 +210,23 @@ export default function OtherReports() {
                           key={report.id}
                           whileHover={{ y: -3 }}
                           transition={{ duration: 0.15 }}
+                          onClick={() => {
+                            if (report.id === "r1") {
+                              router.push("/reports/other/item-wise");
+                            } else if (report.id === "r2") {
+                              router.push("/reports/other/tax-liability");
+                            } else if (report.id === "r3") {
+                              router.push("/reports/other/discounts-voids");
+                            } else if (report.id === "r5") {
+                              router.push("/reports/other/hourly-trends");
+                            } else if (report.id === "r7") {
+                              router.push("/reports/other/stock-variance");
+                            } else if (report.id === "r4") {
+                              router.push("/reports/other/staff-performance");
+                            } else if (report.id === "r6") {
+                              router.push("/reports/other/expense");
+                            }
+                          }}
                           className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-lg hover:border-slate-300 transition-all cursor-pointer group flex flex-col justify-between"
                         >
                           <div>

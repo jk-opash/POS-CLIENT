@@ -1,7 +1,15 @@
 import Card, { CardHeader, CardTitle } from "../ui/Card";
 import { useState } from "react";
 import { RefreshCcw } from "lucide-react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import {
+  AreaChart,
+  Area,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+} from "recharts";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchDashboardAnalytics } from "../../store/slices/analyticsSlice";
 
@@ -10,6 +18,8 @@ export default function TaxesWidget() {
   const dispatch = useDispatch();
   const { stats } = useSelector((state) => state.analytics);
   const taxes = stats?.taxes || 0;
+
+  const chartData = stats?.chartData || [];
 
   const handleFilterChange = (e) => {
     const range = e.target.value;
@@ -22,7 +32,7 @@ export default function TaxesWidget() {
       <CardHeader className="flex flex-row justify-between items-center mb-4">
         <CardTitle>Taxes</CardTitle>
         <div className="flex items-center gap-2">
-          <select 
+          <select
             value={timeRange}
             onChange={handleFilterChange}
             className="bg-slate-50 text-xs px-2 h-7 border border-slate-200 rounded-md text-slate-700 outline-none focus:ring-2 focus:ring-blue-100"
@@ -33,7 +43,7 @@ export default function TaxesWidget() {
             <option value="month">This Month</option>
             <option value="year">This Year</option>
           </select>
-          <button 
+          <button
             onClick={() => {
               setTimeRange("");
               dispatch(fetchDashboardAnalytics({}));
@@ -45,46 +55,87 @@ export default function TaxesWidget() {
         </div>
       </CardHeader>
       <div className="text-center mb-6">
-        <span className="text-sm text-slate-500 font-medium">Taxes: </span>
-        <span className="text-xl text-slate-800 font-bold ml-1">₹ {taxes.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+        <span className="text-sm text-slate-500 font-medium">
+          Total Taxes:{" "}
+        </span>
+        <span className="text-xl text-slate-800 font-bold ml-1">
+          ₹ {taxes.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
+        </span>
       </div>
-      <div className="h-64 mt-4 relative">
+      <div className="h-64 pt-2 pb-2 mt-4">
         <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={[
-                { name: "Taxes", value: taxes, color: "#fbbf24" }
-              ]}
-              cx="50%"
-              cy="50%"
-              innerRadius={65}
-              outerRadius={85}
-              dataKey="value"
-              stroke="none"
-              paddingAngle={5}
-            >
-              {
-                [
-                  { name: "Taxes", value: taxes, color: "#fbbf24" }
-                ].map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))
-              }
-            </Pie>
-            <Tooltip 
-              contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: 12 }}
-              formatter={(value) => `₹ ${value.toLocaleString()}`}
+          <AreaChart
+            data={chartData}
+            margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
+          >
+            <defs>
+              <linearGradient id="colorTax" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid
+              strokeDasharray="3 3"
+              vertical={false}
+              stroke="#e2e8f0"
             />
-          </PieChart>
+            <XAxis
+              dataKey="date"
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: "#64748b", fontSize: 12, fontWeight: 500 }}
+              dy={10}
+            />
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: "#64748b", fontSize: 12, fontWeight: 500 }}
+              tickFormatter={(value) => `₹${(value / 1000).toFixed(0)}k`}
+              dx={-10}
+            />
+            <Tooltip
+              content={({ active, payload, label }) => {
+                if (active && payload && payload.length) {
+                  const val =
+                    payload.find((p) => p.dataKey === "tax")?.value || 0;
+                  return (
+                    <div className="rounded-xl border border-brand-border bg-white/90 backdrop-blur-md p-4 shadow-[var(--shadow-glass-hover)]">
+                      <p className="mb-3 text-xs font-bold text-brand-muted uppercase tracking-wider">
+                        {label}
+                      </p>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center justify-between gap-6">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-[#8b5cf6]"></div>
+                            <span className="text-sm font-semibold text-brand-dark">
+                              Tax
+                            </span>
+                          </div>
+                          <span className="font-bold text-[#8b5cf6]">
+                            ₹
+                            {val.toLocaleString(undefined, {
+                              maximumFractionDigits: 0,
+                            })}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+                return null;
+              }}
+            />
+            <Area
+              type="monotone"
+              dataKey="tax"
+              stroke="#8b5cf6"
+              strokeWidth={3}
+              fillOpacity={1}
+              fill="url(#colorTax)"
+              activeDot={{ r: 6, strokeWidth: 0 }}
+            />
+          </AreaChart>
         </ResponsiveContainer>
-        
-        {/* Custom Legend */}
-        <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-6">
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-amber-400"></span>
-            <span className="text-xs text-slate-500 font-bold">Taxes</span>
-          </div>
-        </div>
       </div>
     </Card>
   );

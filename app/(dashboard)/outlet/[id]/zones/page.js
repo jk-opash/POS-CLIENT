@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from "react";
-import Sidebar from "../../../../components/Sidebar";
-import Topbar from "../../../../components/Topbar";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
 import {
@@ -397,6 +395,7 @@ export default function ZonesPage() {
   const [mergeSelection, setMergeSelection] = useState([]);
   const [detailsModalMode, setDetailsModalMode] = useState("add");
 
+  const [tableErrors, setTableErrors] = useState({});
   const [editName, setEditName] = useState("");
   const [editCapacity, setEditCapacity] = useState(4);
   const [editShape, setEditShape] = useState("square");
@@ -488,6 +487,7 @@ export default function ZonesPage() {
         setEditName(table.name);
         setEditCapacity(table.capacity);
         setEditShape(table.shape || "square");
+        setTableErrors({});
         setDetailsModalMode("edit");
         setActiveTable(table);
         setShowDetailsModal(true);
@@ -499,6 +499,7 @@ export default function ZonesPage() {
   };
 
   const openAddModal = () => {
+    setTableErrors({});
     setEditName(`T${tables.length + 1}`);
     setEditCapacity(4);
     setEditShape("square");
@@ -508,6 +509,16 @@ export default function ZonesPage() {
   };
 
   const saveTableDetails = async () => {
+    const errors = {};
+    if (!editName.trim()) errors.name = "Table name is required";
+    if (!editCapacity || editCapacity < 1)
+      errors.capacity = "Capacity must be at least 1";
+
+    if (Object.keys(errors).length > 0) {
+      setTableErrors(errors);
+      return;
+    }
+
     if (detailsModalMode === "add") {
       await dispatch(
         createTable({
@@ -598,7 +609,7 @@ export default function ZonesPage() {
 
   return (
     <div
-      className="flex h-screen bg-slate-50/50 font-sans overflow-hidden"
+      className="flex h-[calc(100vh-73px)] bg-slate-50/50 font-sans overflow-hidden"
       onMouseMove={onMouseMove}
       onMouseUp={onMouseUp}
       onMouseLeave={onMouseUp}
@@ -964,6 +975,11 @@ export default function ZonesPage() {
                       placeholder="e.g. A12"
                       className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
                     />
+                    {tableErrors.name && (
+                      <span className="text-red-500 text-xs mt-1 block">
+                        {tableErrors.name}
+                      </span>
+                    )}
                   </div>
                   <div>
                     <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 block">

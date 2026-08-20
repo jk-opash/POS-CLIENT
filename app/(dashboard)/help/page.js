@@ -190,22 +190,20 @@ export default function HelpPage() {
   );
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans">
-      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
-
-      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-        <Topbar onMenuClick={() => setCollapsed((c) => !c)} />
-
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-5">
+    <div className="flex flex-col bg-slate-50 font-sans">
+      <div className="flex-1 flex flex-col min-w-0">
+        <main className="flex-1 p-4 md:p-6 space-y-4 md:space-y-5">
           {/* Header */}
           <div className="flex flex-col gap-4 sm:flex-row justify-between items-start sm:items-center">
             <div>
-              <h2 className="text-2xl font-bold text-slate-900">Help & Support</h2>
+              <h2 className="text-2xl font-bold text-slate-900">
+                Help & Support
+              </h2>
               <p className="mt-1 text-sm text-slate-500">
                 Search our knowledge base, read guides, or contact support.
               </p>
             </div>
-            
+
             <button className="px-4 py-2 text-xs font-bold rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2">
               <Ticket size={16} /> New Support Ticket
             </button>
@@ -233,7 +231,10 @@ export default function HelpPage() {
             {/* Search Bar */}
             <div className="flex items-center pb-2 md:pb-0 pr-2 w-full md:w-auto shrink-0">
               <div className="relative w-full md:w-64">
-                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Search
+                  size={16}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                />
                 <input
                   type="text"
                   placeholder="Search help..."
@@ -260,7 +261,9 @@ export default function HelpPage() {
                       className="group p-5 rounded-2xl border border-slate-100 hover:border-indigo-200 hover:shadow-md transition-all cursor-pointer flex flex-col gap-4 bg-slate-50/50 hover:bg-indigo-50/10"
                     >
                       <div className="flex items-center gap-4">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${topic.bg} ${topic.color} ${topic.border} border`}>
+                        <div
+                          className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${topic.bg} ${topic.color} ${topic.border} border`}
+                        >
                           <topic.icon size={24} strokeWidth={2.5} />
                         </div>
                         <div>
@@ -272,9 +275,7 @@ export default function HelpPage() {
                           </span>
                         </div>
                       </div>
-                      <p className="text-slate-500 text-sm">
-                        {topic.desc}
-                      </p>
+                      <p className="text-slate-500 text-sm">{topic.desc}</p>
                     </div>
                   ))}
                 </div>
@@ -285,14 +286,20 @@ export default function HelpPage() {
             {activeTab === "faqs" && (
               <div className="bg-white p-6 rounded-b-2xl md:rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-                  <LifeBuoy size={20} className="text-indigo-500" /> Frequently Asked Questions
+                  <LifeBuoy size={20} className="text-indigo-500" /> Frequently
+                  Asked Questions
                 </h3>
                 <div className="space-y-3 max-w-4xl">
                   {filteredFaqs.length > 0 ? (
                     filteredFaqs.map((faq) => (
-                      <div key={faq.id} className="border border-slate-100 rounded-2xl overflow-hidden bg-slate-50/50">
+                      <div
+                        key={faq.id}
+                        className="border border-slate-100 rounded-2xl overflow-hidden bg-slate-50/50"
+                      >
                         <button
-                          onClick={() => setActiveFaq(activeFaq === faq.id ? null : faq.id)}
+                          onClick={() =>
+                            setActiveFaq(activeFaq === faq.id ? null : faq.id)
+                          }
                           className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-slate-100 transition-colors"
                         >
                           <div>
@@ -344,7 +351,8 @@ export default function HelpPage() {
                 {/* Contact Options */}
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                   <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-                    <MessageCircle size={20} className="text-indigo-500" /> Contact Support
+                    <MessageCircle size={20} className="text-indigo-500" />{" "}
+                    Contact Support
                   </h3>
                   <div className="space-y-4">
                     <button className="w-full flex items-center gap-4 p-4 rounded-2xl bg-indigo-50 border border-indigo-100 hover:bg-indigo-100 hover:border-indigo-200 transition-colors text-left group">
@@ -352,8 +360,12 @@ export default function HelpPage() {
                         <MessageCircle size={20} />
                       </div>
                       <div>
-                        <div className="font-bold text-indigo-900 text-sm">Live Chat</div>
-                        <div className="text-indigo-600/80 text-xs font-semibold mt-0.5">Response in ~2 mins</div>
+                        <div className="font-bold text-indigo-900 text-sm">
+                          Live Chat
+                        </div>
+                        <div className="text-indigo-600/80 text-xs font-semibold mt-0.5">
+                          Response in ~2 mins
+                        </div>
                       </div>
                     </button>
                     <button className="w-full flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 hover:bg-slate-100 hover:border-slate-300 transition-colors text-left group">
@@ -361,8 +373,12 @@ export default function HelpPage() {
                         <PhoneCall size={20} />
                       </div>
                       <div>
-                        <div className="font-bold text-slate-800 text-sm">Phone Support</div>
-                        <div className="text-slate-500 text-xs font-semibold mt-0.5">1-800-POS-HELP</div>
+                        <div className="font-bold text-slate-800 text-sm">
+                          Phone Support
+                        </div>
+                        <div className="text-slate-500 text-xs font-semibold mt-0.5">
+                          1-800-POS-HELP
+                        </div>
                       </div>
                     </button>
                     <button className="w-full flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 hover:bg-slate-100 hover:border-slate-300 transition-colors text-left group">
@@ -370,8 +386,12 @@ export default function HelpPage() {
                         <Mail size={20} />
                       </div>
                       <div>
-                        <div className="font-bold text-slate-800 text-sm">Email Us</div>
-                        <div className="text-slate-500 text-xs font-semibold mt-0.5">support@posystem.com</div>
+                        <div className="font-bold text-slate-800 text-sm">
+                          Email Us
+                        </div>
+                        <div className="text-slate-500 text-xs font-semibold mt-0.5">
+                          support@posystem.com
+                        </div>
                       </div>
                     </button>
                   </div>
@@ -381,7 +401,8 @@ export default function HelpPage() {
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                   <div className="flex justify-between items-center mb-6">
                     <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-                      <Ticket size={20} className="text-indigo-500" /> Your Tickets
+                      <Ticket size={20} className="text-indigo-500" /> Your
+                      Tickets
                     </h3>
                     <button className="text-indigo-600 text-xs font-bold hover:underline">
                       View All
@@ -389,8 +410,13 @@ export default function HelpPage() {
                   </div>
                   <div className="space-y-4">
                     {RECENT_TICKETS.map((ticket) => (
-                      <div key={ticket.id} className="flex gap-4 items-start p-4 rounded-2xl border border-slate-100 bg-slate-50 hover:bg-white hover:border-indigo-100 transition-colors cursor-pointer group shadow-sm hover:shadow">
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border ${ticket.bg} ${ticket.color} border-current/10`}>
+                      <div
+                        key={ticket.id}
+                        className="flex gap-4 items-start p-4 rounded-2xl border border-slate-100 bg-slate-50 hover:bg-white hover:border-indigo-100 transition-colors cursor-pointer group shadow-sm hover:shadow"
+                      >
+                        <div
+                          className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border ${ticket.bg} ${ticket.color} border-current/10`}
+                        >
                           <ticket.icon size={18} strokeWidth={2.5} />
                         </div>
                         <div className="flex-1">
@@ -398,7 +424,9 @@ export default function HelpPage() {
                             <h4 className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">
                               {ticket.subject}
                             </h4>
-                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${ticket.bg} ${ticket.color} border-current/20`}>
+                            <span
+                              className={`text-[10px] font-bold px-2 py-0.5 rounded border ${ticket.bg} ${ticket.color} border-current/20`}
+                            >
                               {ticket.status}
                             </span>
                           </div>
@@ -419,13 +447,23 @@ export default function HelpPage() {
             {activeTab === "videos" && (
               <div className="bg-white p-6 rounded-b-2xl md:rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-                  <Video size={20} className="text-indigo-500" /> Video Tutorials
+                  <Video size={20} className="text-indigo-500" /> Video
+                  Tutorials
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {VIDEO_GUIDES.map((video) => (
-                    <div key={video.id} className="group cursor-pointer flex flex-col gap-3">
-                      <div className={`w-full aspect-video rounded-2xl flex items-center justify-center relative overflow-hidden shrink-0 ${video.thumbBg} ${video.thumbColor} transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-lg border border-current/10`}>
-                        <PlayCircle size={48} strokeWidth={1.5} className="relative z-10 opacity-70 group-hover:scale-110 group-hover:opacity-100 transition-all duration-300" />
+                    <div
+                      key={video.id}
+                      className="group cursor-pointer flex flex-col gap-3"
+                    >
+                      <div
+                        className={`w-full aspect-video rounded-2xl flex items-center justify-center relative overflow-hidden shrink-0 ${video.thumbBg} ${video.thumbColor} transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-lg border border-current/10`}
+                      >
+                        <PlayCircle
+                          size={48}
+                          strokeWidth={1.5}
+                          className="relative z-10 opacity-70 group-hover:scale-110 group-hover:opacity-100 transition-all duration-300"
+                        />
                       </div>
                       <div>
                         <div className="flex justify-between items-start gap-3 mb-1">

@@ -13,6 +13,7 @@ export default function CategoriesTab({ branchId }) {
 
   // Category UI States
   const [showAddCategory, setShowAddCategory] = useState(false);
+  const [catError, setCatError] = useState("");
   const [newCategoryName, setNewCategoryName] = useState("");
   const [editingCategoryId, setEditingCategoryId] = useState(null);
   const [editCategoryName, setEditCategoryName] = useState("");
@@ -126,7 +127,7 @@ export default function CategoriesTab({ branchId }) {
               <div className="flex justify-end gap-2">
                 <button
                   className="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 font-medium rounded-lg transition-colors"
-                  onClick={() => setShowAddCategory(false)}
+                  onClick={() => { setShowAddCategory(false); setCatError(""); }}
                 >
                   Cancel
                 </button>

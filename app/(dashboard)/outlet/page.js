@@ -33,58 +33,71 @@ import {
   Users,
   Shield,
   Eye,
+  EyeOff,
   Ban,
   Trash2,
   Edit2,
+  CheckSquare,
+  Square,
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import Modal from "../../components/ui/Modal";
 
-const ROLES = ["Owner", "Manager", "Cashier", "Waiter", "Kitchen", "Inventory"];
+const ROLES = ["Manager", "Cashier", "Waiter", "Kitchen"];
 const PERMISSIONS = [
   "dashboard",
-  "staff",
-  "inventory",
-  "reports",
-  "billing",
-  "orders",
-  "customers",
   "tables",
+  "pos",
   "kds",
+  "waiter",
+  "invoices",
+  "operations",
+  "orders",
+  "menu",
+  "day-end",
+  "inventory",
+  "suppliers",
+  "expense",
+  "billing-user",
+  "tables-qr",
+  "logs",
 ];
 
-const DEFAULT_PERMISSIONS = {
-  Manager: ["dashboard", "staff", "inventory", "reports", "billing"],
-  Cashier: ["billing", "orders", "customers"],
-  Waiter: ["orders", "tables"],
-  Kitchen: ["kds", "inventory"],
-  Owner: [
+const roleDefaults = {
+  manager: [
     "dashboard",
-    "staff",
-    "inventory",
-    "reports",
-    "billing",
-    "orders",
-    "customers",
-    "tables",
+    "waiter",
     "kds",
+    "operations",
+    "tables",
+    "pos",
+    "invoices",
   ],
-  Inventory: ["inventory", "reports"],
+  cashier: ["dashboard", "tables", "pos", "invoices"],
+  waiter: ["dashboard", "tables", "pos", "waiter"],
+  kitchen: ["kds"],
 };
 
-function StaffModal({ member, onSave, onClose }) {
+function StaffModal({ member, branches = [], onSave, onClose }) {
   const defaultRole = member?.role?.name || member?.role || "Waiter";
+  const [showPin, setShowPin] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
   const [form, setForm] = useState({
     first_name: member?.first_name || member?.name?.split(" ")[0] || "",
     last_name: member?.last_name || member?.name?.split(" ")[1] || "",
     role_name: defaultRole,
     permissions:
-      member?.role?.permissions || DEFAULT_PERMISSIONS[defaultRole] || [],
+      member?.role?.permissions ||
+      roleDefaults[defaultRole?.toLowerCase()] ||
+      [],
     phone: member?.phone || "",
     email: member?.email || "",
     pin: member?.pin || "",
+    password: "",
     salary: member?.salary || "",
-    active: member?.active ?? (member?.status === "Active" || true),
+    status: member?.status || "Active",
+    branch_id: member?.branch_id || member?.branch?.id || "",
   });
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
@@ -94,7 +107,7 @@ function StaffModal({ member, onSave, onClose }) {
     setForm((f) => ({
       ...f,
       role_name: newRole,
-      permissions: DEFAULT_PERMISSIONS[newRole] || [],
+      permissions: roleDefaults[newRole.toLowerCase()] || [],
     }));
   };
 
@@ -107,6 +120,55 @@ function StaffModal({ member, onSave, onClose }) {
     }));
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    if (!form.first_name?.trim())
+      newErrors.first_name = "First name is required";
+
+    if (form.phone && !/^\d{10}$/.test(form.phone.replace(/\D/g, ""))) {
+      newErrors.phone = "Phone must be exactly 10 digits";
+    }
+
+    if (form.email && !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(form.email)) {
+      newErrors.email = "Valid email is required";
+    }
+
+    if (form.pin && !/^\d{4}$/.test(form.pin)) {
+      newErrors.pin = "PIN must be exactly 4 digits";
+    }
+
+    if (!member && !form.password) {
+      newErrors.password = "Password is required for new staff";
+    } else if (
+      form.password &&
+      form.password.length > 0 &&
+      form.password.length < 6
+    ) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+
+    if (form.salary && parseFloat(form.salary) < 0) {
+      newErrors.salary = "Salary cannot be negative";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+    onSave({
+      ...form,
+      name: `${form.first_name} ${form.last_name}`.trim(),
+      role: {
+        name: form.role_name,
+        permissions: form.permissions,
+      },
+    });
+    onClose();
+  };
+
   return (
     <Modal
       isOpen={true}
@@ -114,18 +176,7 @@ function StaffModal({ member, onSave, onClose }) {
       title={member ? "Edit Staff Member" : "Add Staff Member"}
     >
       <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSave({
-            ...form,
-            name: `${form.first_name} ${form.last_name}`.trim(),
-            role: {
-              name: form.role_name,
-              permissions: form.permissions,
-            },
-          });
-          onClose();
-        }}
+        onSubmit={handleSubmit}
         style={{ display: "flex", flexDirection: "column", gap: 12 }}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -140,6 +191,11 @@ function StaffModal({ member, onSave, onClose }) {
               required
               placeholder="Rajan"
             />
+            {errors.first_name && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.first_name}
+              </span>
+            )}
           </div>
           <div>
             <label className="text-xs text-slate-500 block mb-1">
@@ -151,6 +207,17 @@ function StaffModal({ member, onSave, onClose }) {
               onChange={(e) => set("last_name", e.target.value)}
               placeholder="Verma"
             />
+          </div>
+          <div>
+            <label className="text-xs text-slate-500 block mb-1">Status</label>
+            <select
+              className="input select"
+              value={form.status}
+              onChange={(e) => set("status", e.target.value)}
+            >
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
           </div>
         </div>
 
@@ -180,6 +247,11 @@ function StaffModal({ member, onSave, onClose }) {
               onChange={(e) => set("salary", e.target.value)}
               placeholder="22000"
             />
+            {errors.salary && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.salary}
+              </span>
+            )}
           </div>
         </div>
 
@@ -188,20 +260,42 @@ function StaffModal({ member, onSave, onClose }) {
             Permissions
           </label>
           <div className="flex flex-wrap gap-2">
-            {PERMISSIONS.map((p) => (
-              <label
-                key={p}
-                className="flex items-center gap-1.5 text-xs text-slate-700 bg-slate-50 border border-slate-200 px-2 py-1 rounded cursor-pointer hover:bg-slate-100"
-              >
-                <input
-                  type="checkbox"
-                  checked={form.permissions.includes(p)}
-                  onChange={() => togglePermission(p)}
-                  className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
-                />
-                <span className="capitalize">{p}</span>
-              </label>
-            ))}
+            {PERMISSIONS.map((p) => {
+              const roleName = (form.role_name || "Manager").toLowerCase();
+              const defaults = roleDefaults[roleName] || [];
+              const isDefault =
+                defaults.includes(p) || ["dashboard", "settings"].includes(p);
+              const isChecked = isDefault || form.permissions.includes(p);
+
+              return (
+                <div
+                  key={p}
+                  onClick={(e) => {
+                    if (!isDefault) {
+                      e.preventDefault();
+                      togglePermission(p);
+                    }
+                  }}
+                  className={`flex items-center gap-1.5 text-xs border px-2 py-1 rounded select-none ${
+                    isDefault
+                      ? "bg-slate-100 border-slate-200 text-slate-400 opacity-70 cursor-not-allowed"
+                      : "bg-slate-50 border-slate-200 text-slate-700 cursor-pointer hover:bg-slate-100"
+                  }`}
+                >
+                  {isChecked ? (
+                    <CheckSquare
+                      size={14}
+                      className={
+                        isDefault ? "text-slate-400" : "text-indigo-600"
+                      }
+                    />
+                  ) : (
+                    <Square size={14} className="text-slate-400" />
+                  )}
+                  <span className="capitalize">{p}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -214,6 +308,11 @@ function StaffModal({ member, onSave, onClose }) {
               onChange={(e) => set("phone", e.target.value)}
               placeholder="9876543210"
             />
+            {errors.phone && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.phone}
+              </span>
+            )}
           </div>
           <div>
             <label className="text-xs text-slate-500 block mb-1">Email</label>
@@ -223,32 +322,83 @@ function StaffModal({ member, onSave, onClose }) {
               value={form.email}
               onChange={(e) => set("email", e.target.value)}
             />
+            {errors.email && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.email}
+              </span>
+            )}
+          </div>
+          <div>
+            <label className="text-xs text-slate-500 block mb-1">Branch</label>
+            <select
+              className="input select"
+              value={form.branch_id}
+              onChange={(e) => set("branch_id", e.target.value)}
+            >
+              {branches.map((b) => (
+                <option key={b.id} value={b.id}>
+                  {b.name}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
-        <div>
-          <label className="text-xs text-slate-500 block mb-1">
-            4-Digit PIN
-          </label>
-          <input
-            className="input"
-            type="password"
-            maxLength={4}
-            value={form.pin}
-            onChange={(e) => set("pin", e.target.value)}
-            placeholder="••••"
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs text-slate-500 block mb-1">
+              4-Digit PIN
+            </label>
+            <div className="relative">
+              <input
+                className="input pr-10"
+                type={showPin ? "text" : "password"}
+                maxLength={4}
+                value={form.pin}
+                onChange={(e) => set("pin", e.target.value)}
+                placeholder="••••"
+              />
+              {errors.pin && (
+                <span className="text-red-500 text-xs mt-1 block">
+                  {errors.pin}
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={() => setShowPin(!showPin)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              >
+                {showPin ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+          </div>
+          <div>
+            <label className="text-xs text-slate-500 block mb-1">
+              Password {member ? "(Leave blank to keep)" : ""}
+            </label>
+            <div className="relative">
+              <input
+                className="input pr-10"
+                type={showPassword ? "text" : "password"}
+                value={form.password}
+                onChange={(e) => set("password", e.target.value)}
+                placeholder="Enter password"
+              />
+              {errors.password && (
+                <span className="text-red-500 text-xs mt-1 block">
+                  {errors.password}
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+          </div>
         </div>
-
-        <label className="flex items-center gap-2 cursor-pointer mt-2">
-          <input
-            type="checkbox"
-            checked={form.active}
-            onChange={(e) => set("active", e.target.checked)}
-            className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
-          />
-          <span className="text-sm text-slate-600">Active (can clock-in)</span>
-        </label>
 
         <div className="flex gap-2 justify-end mt-4">
           <Button type="button" variant="surface" onClick={onClose}>
@@ -396,336 +546,343 @@ export default function OutletPage() {
   const maxStaff = baseStaff + extraStaff > 0 ? baseStaff + extraStaff : 0;
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans">
-      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
-      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-        <Topbar onMenuClick={() => setCollapsed((c) => !c)} />
-        <main className="flex-1 overflow-y-auto px-6 py-6">
-          <div className="max-w-7xl mx-auto space-y-6">
-            {/* Page Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <h2 className="text-2xl font-bold text-slate-800">
-                  Outlet Configuration
-                </h2>
-                <p className="mt-1 text-sm text-slate-500">
-                  Manage all operational branches and their configurations.
-                </p>
-              </div>
-              <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-                <CircularProgress
-                  value={branches.length}
-                  max={maxBranches}
-                  colorClass="text-indigo-500"
-                  icon={Store}
-                  label="Total Branches"
-                />
-                <CircularProgress
-                  value={teamMembers.length}
-                  max={maxStaff}
-                  colorClass="text-emerald-500"
-                  icon={Users}
-                  label="Total Staff"
-                />
-              </div>
+    <div className="flex flex-col bg-slate-50 font-sans">
+      <main className="flex-1 px-6 py-6">
+        <div className=" mx-auto space-y-6">
+          {/* Page Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-bold text-slate-800">
+                Outlet Configuration
+              </h2>
+              <p className="mt-1 text-sm text-slate-500">
+                Manage all operational branches and their configurations.
+              </p>
             </div>
-
-            <div className="border-b border-slate-200">
-              <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-                <button
-                  onClick={() => setActiveTab("outlets")}
-                  className={cn(
-                    "flex items-center gap-2 whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors",
-                    activeTab === "outlets"
-                      ? "border-indigo-600 text-indigo-600"
-                      : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700",
-                  )}
-                >
-                  <Store className="h-4 w-4" />
-                  Branches
-                </button>
-                <button
-                  onClick={() => setActiveTab("staff")}
-                  className={cn(
-                    "flex items-center gap-2 whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors",
-                    activeTab === "staff"
-                      ? "border-indigo-600 text-indigo-600"
-                      : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700",
-                  )}
-                >
-                  <Users className="h-4 w-4" />
-                  Team Members
-                </button>
-              </nav>
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+              <CircularProgress
+                value={branches.length}
+                max={maxBranches}
+                colorClass="text-indigo-500"
+                icon={Store}
+                label="Total Branches"
+              />
+              <CircularProgress
+                value={teamMembers.length}
+                max={maxStaff}
+                colorClass="text-emerald-500"
+                icon={Users}
+                label="Total Staff"
+              />
             </div>
+          </div>
 
-            {/* Branches Card */}
-            {activeTab === "outlets" && (
-              <Card padding="none">
-                <CardHeader className="pt-5 px-5 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100">
-                  <div className="flex items-center gap-2">
-                    <Building2 className="h-5 w-5 text-indigo-600" />
-                    <CardTitle>Branches ({branches.length})</CardTitle>
-                  </div>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    className="flex items-center gap-2"
-                    onClick={() => router.push("/outlet/new")}
-                  >
-                    <Plus className="h-4 w-4" />
-                    Add Outlet
-                  </Button>
-                </CardHeader>
+          <div className="border-b border-slate-200">
+            <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+              <button
+                onClick={() => setActiveTab("outlets")}
+                className={cn(
+                  "flex items-center gap-2 whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors",
+                  activeTab === "outlets"
+                    ? "border-indigo-600 text-indigo-600"
+                    : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700",
+                )}
+              >
+                <Store className="h-4 w-4" />
+                Branches
+              </button>
+              <button
+                onClick={() => setActiveTab("staff")}
+                className={cn(
+                  "flex items-center gap-2 whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors",
+                  activeTab === "staff"
+                    ? "border-indigo-600 text-indigo-600"
+                    : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700",
+                )}
+              >
+                <Users className="h-4 w-4" />
+                Team Members
+              </button>
+            </nav>
+          </div>
 
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Branch Name & Code</TableHead>
-                      <TableHead>Location</TableHead>
-                      <TableHead>Contact Info</TableHead>
-                      <TableHead className="text-right">Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {branches.length > 0 ? (
-                      branches.map((b, index) => (
-                        <TableRow
-                          key={b.id || index}
-                          className="hover:bg-slate-50/50 transition-colors"
-                        >
-                          <TableCell>
-                            <div className="font-semibold text-slate-800">
-                              {b.name}
-                            </div>
-                            <div className="text-xs text-slate-500 font-mono mt-0.5">
-                              {b.code || "MAIN"}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-1.5 text-slate-600">
-                              <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                              <span>
-                                {[b.city, b.state, b.country]
-                                  .filter(Boolean)
-                                  .join(", ") || "N/A"}
+          {/* Branches Card */}
+          {activeTab === "outlets" && (
+            <Card padding="none">
+              <CardHeader className="pt-5 px-5 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100">
+                <div className="flex items-center gap-2">
+                  <Building2 className="h-5 w-5 text-indigo-600" />
+                  <CardTitle>Branches ({branches.length})</CardTitle>
+                </div>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="flex items-center gap-2"
+                  onClick={() => {
+                    if (maxBranches > 0 && branches.length >= maxBranches) {
+                      alert(`You have reached your limit of ${maxBranches} branches. Please upgrade your plan to add more.`);
+                    } else {
+                      router.push("/outlet/new");
+                    }
+                  }}
+                >
+                  <Plus className="h-4 w-4" />
+                  Add Outlet
+                </Button>
+              </CardHeader>
+
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Branch Name & Code</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead>Contact Info</TableHead>
+                    <TableHead className="text-right">Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {branches.length > 0 ? (
+                    branches.map((b, index) => (
+                      <TableRow
+                        key={b.id || index}
+                        className="hover:bg-slate-50/50 transition-colors"
+                      >
+                        <TableCell>
+                          <div className="font-semibold text-slate-800">
+                            {b.name}
+                          </div>
+                          <div className="text-xs text-slate-500 font-mono mt-0.5">
+                            {b.code || "MAIN"}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-1.5 text-slate-600">
+                            <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                            <span>
+                              {[b.city, b.state, b.country]
+                                .filter(Boolean)
+                                .join(", ") || "N/A"}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="space-y-1">
+                            {b.contact && (
+                              <div className="text-xs text-slate-600 flex items-center gap-1.5">
+                                <Phone className="h-3 w-3 text-slate-400" />
+                                {b.contact}
+                              </div>
+                            )}
+                            {b.email && (
+                              <div className="text-xs text-slate-600 flex items-center gap-1.5">
+                                <Mail className="h-3 w-3 text-slate-400" />
+                                {b.email}
+                              </div>
+                            )}
+                            {!b.contact && !b.email && (
+                              <span className="text-xs text-slate-400">
+                                N/A
                               </span>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="space-y-1">
-                              {b.contact && (
-                                <div className="text-xs text-slate-600 flex items-center gap-1.5">
-                                  <Phone className="h-3 w-3 text-slate-400" />
-                                  {b.contact}
-                                </div>
-                              )}
-                              {b.email && (
-                                <div className="text-xs text-slate-600 flex items-center gap-1.5">
-                                  <Mail className="h-3 w-3 text-slate-400" />
-                                  {b.email}
-                                </div>
-                              )}
-                              {!b.contact && !b.email && (
-                                <span className="text-xs text-slate-400">
-                                  N/A
-                                </span>
-                              )}
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Badge
-                              variant={
-                                b.status === "Operational" ||
-                                b.status === "active"
-                                  ? "success"
-                                  : "warning"
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Badge
+                            variant={
+                              b.status === "Operational" ||
+                              b.status === "active"
+                                ? "success"
+                                : "warning"
+                            }
+                            dot
+                          >
+                            {b.status || "Operational"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-8 px-2 text-xs"
+                              onClick={() =>
+                                router.push(`/outlet/${b.id}/zones`)
                               }
-                              dot
                             >
-                              {b.status || "Operational"}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex items-center justify-end gap-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="h-8 px-2 text-xs"
-                                onClick={() =>
-                                  router.push(`/outlet/${b.id}/zones`)
-                                }
-                              >
-                                <MapPin className="h-3.5 w-3.5 mr-1" />
-                                Zones
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="h-8 px-2 text-xs"
-                                onClick={() => router.push(`/outlet/${b.id}`)}
-                              >
-                                <Eye className="h-3.5 w-3.5 mr-1" />
-                                View
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell
-                          colSpan={5}
-                          className="h-32 text-center text-slate-500"
-                        >
-                          No branches added to this business yet.
+                              <MapPin className="h-3.5 w-3.5 mr-1" />
+                              Zones
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-8 px-2 text-xs"
+                              onClick={() => router.push(`/outlet/${b.id}`)}
+                            >
+                              <Eye className="h-3.5 w-3.5 mr-1" />
+                              View
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </Card>
-            )}
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={5}
+                        className="h-32 text-center text-slate-500"
+                      >
+                        No branches added to this business yet.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </Card>
+          )}
 
-            {/* Staff Card */}
-            {activeTab === "staff" && (
-              <Card padding="none">
-                <CardHeader className="pt-5 px-5 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100">
-                  <div className="flex items-center gap-2">
-                    <Users className="h-5 w-5 text-indigo-600" />
-                    <CardTitle>Team Members ({teamMembers.length})</CardTitle>
-                  </div>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    className="flex items-center gap-2"
-                    onClick={() => {
+          {/* Staff Card */}
+          {activeTab === "staff" && (
+            <Card padding="none">
+              <CardHeader className="pt-5 px-5 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100">
+                <div className="flex items-center gap-2">
+                  <Users className="h-5 w-5 text-indigo-600" />
+                  <CardTitle>Team Members ({teamMembers.length})</CardTitle>
+                </div>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="flex items-center gap-2"
+                  onClick={() => {
+                    if (maxStaff > 0 && teamMembers.length >= maxStaff) {
+                      alert(`You have reached your limit of ${maxStaff} staff members. Please upgrade your plan to add more.`);
+                    } else {
                       setEditMember(null);
                       setShowModal(true);
-                    }}
-                  >
-                    <Plus className="h-4 w-4" />
-                    Add Staff
-                  </Button>
-                </CardHeader>
+                    }
+                  }}
+                >
+                  <Plus className="h-4 w-4" />
+                  Add Staff
+                </Button>
+              </CardHeader>
 
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Member Name</TableHead>
-                      <TableHead>Role</TableHead>
-                      <TableHead>Branch</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {teamMembers.length > 0 ? (
-                      teamMembers.map((member, idx) => (
-                        <TableRow
-                          key={member.id}
-                          className="hover:bg-slate-50/50 transition-colors"
-                        >
-                          <TableCell>
-                            <div className="font-semibold text-slate-800">
-                              {member.first_name || member.name}{" "}
-                              {member.last_name || ""}
-                            </div>
-                            <div className="text-xs text-slate-500 mt-0.5">
-                              {member.email}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
-                              <Shield className="h-3 w-3 text-indigo-500" />
-                              {member.role?.name || member.role || "Staff"}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="text-slate-600 font-medium">
-                              {member.branch?.name || "All Branches"}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge
-                              variant={
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Member Name</TableHead>
+                    <TableHead>Role</TableHead>
+                    <TableHead>Branch</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {teamMembers.length > 0 ? (
+                    teamMembers.map((member, idx) => (
+                      <TableRow
+                        key={member.id}
+                        className="hover:bg-slate-50/50 transition-colors"
+                      >
+                        <TableCell>
+                          <div className="font-semibold text-slate-800">
+                            {member.first_name || member.name}{" "}
+                            {member.last_name || ""}
+                          </div>
+                          <div className="text-xs text-slate-500 mt-0.5">
+                            {member.email}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
+                            <Shield className="h-3 w-3 text-indigo-500" />
+                            {member.role?.name || member.role || "Staff"}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-slate-600 font-medium">
+                            {member.branch?.name || "All Branches"}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              member.status === "Active" ||
+                              member.status === "active" ||
+                              member.active
+                                ? "success"
+                                : "muted"
+                            }
+                            dot
+                          >
+                            {member.status ||
+                              (member.active ? "Active" : "Inactive")}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-8 px-2 text-xs"
+                              onClick={() =>
+                                router.push(`/outlet/staff/${member.id}`)
+                              }
+                            >
+                              <Eye className="h-3.5 w-3.5 mr-1" />
+                              View
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleToggleStatus(member)}
+                              className={
                                 member.status === "Active" ||
                                 member.status === "active" ||
                                 member.active
-                                  ? "success"
-                                  : "muted"
+                                  ? "h-8 px-2 text-xs text-amber-600 border-amber-200 hover:bg-amber-50"
+                                  : "h-8 px-2 text-xs text-emerald-600 border-emerald-200 hover:bg-emerald-50"
                               }
-                              dot
                             >
-                              {member.status ||
-                                (member.active ? "Active" : "Inactive")}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex items-center justify-end gap-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="h-8 px-2 text-xs"
-                                onClick={() =>
-                                  router.push(`/staff/${member.id}`)
-                                }
-                              >
-                                <Eye className="h-3.5 w-3.5 mr-1" />
-                                View
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleToggleStatus(member)}
-                                className={
-                                  member.status === "Active" ||
-                                  member.status === "active" ||
-                                  member.active
-                                    ? "h-8 px-2 text-xs text-amber-600 border-amber-200 hover:bg-amber-50"
-                                    : "h-8 px-2 text-xs text-emerald-600 border-emerald-200 hover:bg-emerald-50"
-                                }
-                              >
-                                <Ban className="h-3.5 w-3.5 mr-1" />
-                                {member.status === "Active" ||
-                                member.status === "active" ||
-                                member.active
-                                  ? "Deactivate"
-                                  : "Activate"}
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleDeleteStaff(member.id)}
-                                className="h-8 px-2 text-xs text-red-600 hover:bg-red-50 hover:text-red-700"
-                              >
-                                <Trash2 className="h-3.5 w-3.5" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell
-                          colSpan={5}
-                          className="h-32 text-center text-slate-500"
-                        >
-                          No staff members added to this business yet.
+                              <Ban className="h-3.5 w-3.5 mr-1" />
+                              {member.status === "Active" ||
+                              member.status === "active" ||
+                              member.active
+                                ? "Deactivate"
+                                : "Activate"}
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDeleteStaff(member.id)}
+                              className="h-8 px-2 text-xs text-red-600 hover:bg-red-50 hover:text-red-700"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </Card>
-            )}
-          </div>
-        </main>
-      </div>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={5}
+                        className="h-32 text-center text-slate-500"
+                      >
+                        No staff members added to this business yet.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </Card>
+          )}
+        </div>
+      </main>
 
       {showModal && (
         <StaffModal
+          branches={branches}
           member={editMember}
           onSave={handleSaveStaff}
           onClose={() => {

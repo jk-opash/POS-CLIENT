@@ -25,6 +25,7 @@ export function OnboardingWizard() {
   const { loading: isProvisioning } = useSelector((state) => state.branch);
 
   const [currentStep, setCurrentStep] = useState(0);
+  const [errors, setErrors] = useState({});
   const [form, setForm] = useState({
     name: "",
     code: "",
@@ -49,8 +50,30 @@ export function OnboardingWizard() {
     setForm((f) => ({ ...f, [key]: value }));
   };
 
+
+  const validateStep = () => {
+    const newErrors = {};
+    if (currentStep === 0) {
+      if (!form.name.trim()) newErrors.name = "Branch Name is required";
+      if (!form.code.trim()) newErrors.code = "Branch Code is required";
+      else if (form.code.length < 2) newErrors.code = "Branch Code must be at least 2 characters";
+    } else if (currentStep === 1) {
+      if (!form.contact.trim()) newErrors.contact = "Contact number is required";
+      else if (!/^\d{10}$/.test(form.contact.replace(/\D/g, ''))) newErrors.contact = "Must be a valid 10-digit number";
+      if (form.email && !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(form.email)) newErrors.email = "Must be a valid email address";
+      if (!form.address.trim()) newErrors.address = "Address is required";
+      if (!form.city.trim()) newErrors.city = "City is required";
+      if (!form.state.trim()) newErrors.state = "State is required";
+    } else if (currentStep === 3) {
+      if (form.tax_registration && form.tax_registration.length !== 15) newErrors.tax_registration = "GST must be exactly 15 characters";
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleNext = () => {
-    if (currentStep < STEPS.length - 1) setCurrentStep((c) => c + 1);
+    if (validateStep() && currentStep < STEPS.length - 1) setCurrentStep((c) => c + 1);
   };
 
   const handlePrev = () => {
@@ -58,6 +81,7 @@ export function OnboardingWizard() {
   };
 
   const handleSubmit = async () => {
+    if (!validateStep()) return;
     try {
       await dispatch(createBranch(form)).unwrap();
       router.push("/outlet");
@@ -117,10 +141,10 @@ export function OnboardingWizard() {
             </div>
 
             <div key={currentStep} className="animate-in fade-in slide-in-from-right-4 duration-500">
-              {currentStep === 0 && <StepBranchInfo form={form} updateForm={updateForm} />}
-              {currentStep === 1 && <StepLocation form={form} updateForm={updateForm} />}
-              {currentStep === 2 && <StepOperational form={form} updateForm={updateForm} />}
-              {currentStep === 3 && <StepCompliance form={form} updateForm={updateForm} />}
+              {currentStep === 0 && <StepBranchInfo form={form} updateForm={updateForm} errors={errors} />}
+              {currentStep === 1 && <StepLocation form={form} updateForm={updateForm} errors={errors} />}
+              {currentStep === 2 && <StepOperational form={form} updateForm={updateForm} errors={errors} />}
+              {currentStep === 3 && <StepCompliance form={form} updateForm={updateForm} errors={errors} />}
             </div>
           </div>
         </div>

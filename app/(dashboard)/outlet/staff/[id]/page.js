@@ -6,15 +6,17 @@ import {
   fetchTeamMemberById,
   updateTeamMember,
   deleteTeamMember,
-} from "../../../store/slices/teamMemberSlice";
-import { fetchBranches } from "../../../store/slices/branchSlice";
-import Sidebar from "../../../components/Sidebar";
-import Topbar from "../../../components/Topbar";
-import Card from "../../../components/ui/Card";
-import Badge from "../../../components/ui/Badge";
-import Button from "../../../components/ui/Button";
-import Modal from "../../../components/ui/Modal";
-import { cn } from "../../../lib/utils";
+  resetTeamMemberPassword,
+  resetTeamMemberPin,
+} from "../../../../store/slices/teamMemberSlice";
+import { fetchBranches } from "../../../../store/slices/branchSlice";
+import Sidebar from "../../../../components/Sidebar";
+import Topbar from "../../../../components/Topbar";
+import Card from "../../../../components/ui/Card";
+import Badge from "../../../../components/ui/Badge";
+import Button from "../../../../components/ui/Button";
+import Modal from "../../../../components/ui/Modal";
+import { cn } from "../../../../lib/utils";
 import {
   Phone,
   Mail,
@@ -28,45 +30,53 @@ import {
   CheckCircle2,
   Ban,
 } from "lucide-react";
-const ROLES = ["Owner", "Manager", "Cashier", "Waiter", "Kitchen", "Inventory"];
+const ROLES = ["Manager", "Cashier", "Waiter", "Kitchen"];
 const PERMISSIONS = [
   "dashboard",
-  "staff",
-  "inventory",
-  "reports",
-  "billing",
-  "orders",
-  "customers",
   "tables",
+  "pos",
   "kds",
+  "waiter",
+  "invoices",
+  "operations",
+  "orders",
+  "menu",
+  "day-end",
+  "inventory",
+  "suppliers",
+  "expense",
+  "billing-user",
+  "tables-qr",
+  "logs",
 ];
-const DEFAULT_PERMISSIONS = {
-  Manager: ["dashboard", "staff", "inventory", "reports", "billing"],
-  Cashier: ["billing", "orders", "customers"],
-  Waiter: ["orders", "tables"],
-  Kitchen: ["kds", "inventory"],
-  Owner: [
+
+const roleDefaults = {
+  manager: [
     "dashboard",
-    "staff",
-    "inventory",
-    "reports",
-    "billing",
-    "orders",
-    "customers",
-    "tables",
+    "waiter",
     "kds",
+    "operations",
+    "tables",
+    "pos",
+    "invoices",
   ],
-  Inventory: ["inventory", "reports"],
+  cashier: ["dashboard", "tables", "pos", "invoices"],
+  waiter: ["dashboard", "tables", "pos", "waiter"],
+  kitchen: ["kds"],
 };
 // Edit Modal Component
 function EditStaffModal({ member, branches = [], onClose, onSave }) {
   const defaultRole = member?.role?.name || member?.role || "Waiter";
+  const [errors, setErrors] = useState({});
   const [form, setForm] = useState({
     first_name: member?.first_name || member?.name?.split(" ")[0] || "",
     last_name: member?.last_name || member?.name?.split(" ")[1] || "",
     role_name: defaultRole,
     permissions:
-      member?.role?.permissions || DEFAULT_PERMISSIONS[defaultRole] || [],
+      member?.role?.permissions ||
+      roleDefaults[defaultRole?.toLowerCase()] ||
+      roleDefaults[defaultRole] ||
+      [],
     phone: member?.phone || "",
     email: member?.email || "",
     pin: member?.pin || "",
@@ -80,7 +90,8 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
     setForm((f) => ({
       ...f,
       role_name: newRole,
-      permissions: DEFAULT_PERMISSIONS[newRole] || [],
+      permissions:
+        roleDefaults[newRole.toLowerCase()] || roleDefaults[newRole] || [],
     }));
   };
   const togglePermission = (perm) => {
@@ -91,22 +102,51 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
         : [...f.permissions, perm],
     }));
   };
+  const validateForm = () => {
+    const newErrors = {};
+    if (!form.first_name?.trim())
+      newErrors.first_name = "First name is required";
+
+    if (form.phone && !/^\d{10}$/.test(form.phone.replace(/\D/g, ""))) {
+      newErrors.phone = "Phone must be exactly 10 digits";
+    }
+
+    if (form.email && !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(form.email)) {
+      newErrors.email = "Valid email is required";
+    }
+
+    if (form.pin && !/^\d{4}$/.test(form.pin)) {
+      newErrors.pin = "PIN must be exactly 4 digits";
+    }
+
+    if (form.password && form.password.length > 0 && form.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+
+    if (form.salary && parseFloat(form.salary) < 0) {
+      newErrors.salary = "Salary cannot be negative";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+    onSave({
+      ...form,
+      name: `${form.first_name} ${form.last_name}`.trim(),
+      role: {
+        name: form.role_name,
+        permissions: form.permissions,
+      },
+    });
+  };
+
   return (
     <Modal isOpen={true} onClose={onClose} title="Edit Staff Profile">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSave({
-            ...form,
-            name: `${form.first_name} ${form.last_name}`.trim(),
-            role: {
-              name: form.role_name,
-              permissions: form.permissions,
-            },
-          });
-        }}
-        className="flex flex-col gap-4"
-      >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="text-xs text-slate-500 block mb-1">
@@ -118,6 +158,11 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
               onChange={(e) => set("first_name", e.target.value)}
               required
             />
+            {errors.first_name && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.first_name}
+              </span>
+            )}
           </div>
           <div>
             <label className="text-xs text-slate-500 block mb-1">
@@ -161,6 +206,11 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
               value={form.phone}
               onChange={(e) => set("phone", e.target.value)}
             />
+            {errors.phone && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.phone}
+              </span>
+            )}
           </div>
           <div>
             <label className="text-xs text-slate-500 block mb-1">Email</label>
@@ -170,6 +220,11 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
               value={form.email}
               onChange={(e) => set("email", e.target.value)}
             />
+            {errors.email && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.email}
+              </span>
+            )}
           </div>
           <div>
             <label className="text-xs text-slate-500 block mb-1">Branch</label>
@@ -186,26 +241,98 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
               ))}
             </select>
           </div>
+          <div>
+            <label className="text-xs text-slate-500 block mb-1">
+              4-Digit PIN
+            </label>
+            <div className="relative">
+              <input
+                className="input pr-10"
+                type={showPin ? "text" : "password"}
+                maxLength={4}
+                value={form.pin}
+                onChange={(e) => set("pin", e.target.value)}
+                placeholder="••••"
+              />
+              {errors.pin && (
+                <span className="text-red-500 text-xs mt-1 block">
+                  {errors.pin}
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={() => setShowPin(!showPin)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              >
+                {showPin ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+          </div>
+          <div>
+            <label className="text-xs text-slate-500 block mb-1">
+              Password {member ? "(Leave blank to keep)" : ""}
+            </label>
+            <div className="relative">
+              <input
+                className="input pr-10"
+                type={showPassword ? "text" : "password"}
+                value={form.password}
+                onChange={(e) => set("password", e.target.value)}
+                placeholder="Enter password"
+              />
+              {errors.password && (
+                <span className="text-red-500 text-xs mt-1 block">
+                  {errors.password}
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+          </div>
         </div>
         <div>
           <label className="text-xs text-slate-500 block mb-2">
             Permissions
           </label>
           <div className="flex flex-wrap gap-2">
-            {PERMISSIONS.map((p) => (
-              <label
-                key={p}
-                className="flex items-center gap-1.5 text-xs text-slate-700 bg-slate-50 border border-slate-200 px-2 py-1 rounded cursor-pointer hover:bg-slate-100"
-              >
-                <input
-                  type="checkbox"
-                  checked={form.permissions.includes(p)}
-                  onChange={() => togglePermission(p)}
-                  className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
-                />
-                <span className="capitalize">{p}</span>
-              </label>
-            ))}
+            {PERMISSIONS.map((p) => {
+              const roleName = (form.role_name || "Manager").toLowerCase();
+              const defaults =
+                roleDefaults[roleName] || roleDefaults[form.role_name] || [];
+              const isDefault =
+                defaults.includes(p) || ["dashboard", "settings"].includes(p);
+              const isChecked = isDefault || form.permissions.includes(p);
+
+              return (
+                <label
+                  key={p}
+                  onClick={(e) => {
+                    if (isDefault) e.preventDefault();
+                  }}
+                  className={`flex items-center gap-1.5 text-xs border px-2 py-1 rounded ${
+                    isDefault
+                      ? "bg-slate-100 border-slate-200 text-slate-400 opacity-70 cursor-not-allowed"
+                      : "bg-slate-50 border-slate-200 text-slate-700 cursor-pointer hover:bg-slate-100"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    disabled={isDefault}
+                    onChange={() => {
+                      if (!isDefault) togglePermission(p);
+                    }}
+                    className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 disabled:opacity-50"
+                  />
+                  <span className="capitalize">{p}</span>
+                </label>
+              );
+            })}
           </div>
         </div>
         <div className="flex gap-3 justify-end mt-4 pt-4 border-t border-slate-100">
@@ -246,6 +373,7 @@ export default function StaffDetailsPage() {
   const handleSaveStaff = async (data) => {
     try {
       await dispatch(updateTeamMember({ id, data })).unwrap();
+      dispatch(fetchTeamMemberById(id));
       setShowEditModal(false);
     } catch (err) {
       console.error("Failed to update team member", err);
@@ -263,6 +391,53 @@ export default function StaffDetailsPage() {
       } catch (err) {
         console.error("Failed to delete team member", err);
       }
+    }
+  };
+
+  const [customPassword, setCustomPassword] = useState("");
+  const [isResetting, setIsResetting] = useState(false);
+  const [newPassword, setNewPassword] = useState(null);
+
+  const handleResetPassword = async () => {
+    if (!confirm("Are you sure you want to reset the staff member's password?"))
+      return;
+    setIsResetting(true);
+    setNewPassword(null);
+    try {
+      const response = await dispatch(
+        resetTeamMemberPassword({
+          id,
+          newPassword: customPassword || undefined,
+        }),
+      ).unwrap();
+      setNewPassword(response.newPassword);
+      setCustomPassword("");
+    } catch (err) {
+      console.error("Failed to reset password:", err);
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
+  const [customPin, setCustomPin] = useState("");
+  const [isResettingPin, setIsResettingPin] = useState(false);
+  const [newPinResult, setNewPinResult] = useState(null);
+
+  const handleResetPin = async () => {
+    if (!confirm("Are you sure you want to reset the staff member's PIN?"))
+      return;
+    setIsResettingPin(true);
+    setNewPinResult(null);
+    try {
+      const response = await dispatch(
+        resetTeamMemberPin({ id, newPin: customPin || undefined }),
+      ).unwrap();
+      setNewPinResult(response.newPin);
+      setCustomPin("");
+    } catch (err) {
+      console.error("Failed to reset PIN:", err);
+    } finally {
+      setIsResettingPin(false);
     }
   };
   if (loading && !currentTeamMember) {
@@ -291,11 +466,9 @@ export default function StaffDetailsPage() {
   const m = currentTeamMember;
   if (!m) return null;
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans">
-      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(false)} />
-      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-        <Topbar onMenuClick={handleToggle} />
-        <main className="flex-1 overflow-y-auto p-6 md:p-8">
+    <div className="flex flex-col bg-slate-50 font-sans">
+      <div className="flex-1 flex flex-col min-w-0">
+        <main className="flex-1 p-6 md:p-8">
           <div className="space-y-6 pb-12">
             {/* Back Button */}
             <div>
@@ -530,8 +703,20 @@ export default function StaffDetailsPage() {
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                         {PERMISSIONS.map((p) => {
+                          const roleName = String(
+                            m.role?.name || m.role || "Waiter",
+                          ).toLowerCase();
+                          const defaults =
+                            roleDefaults[roleName] ||
+                            roleDefaults[m.role?.name] ||
+                            [];
+                          const isDefault =
+                            defaults.includes(p) ||
+                            ["dashboard", "settings"].includes(p);
                           const hasPermission =
-                            m.role?.permissions?.includes(p) || false;
+                            isDefault ||
+                            m.role?.permissions?.includes(p) ||
+                            false;
                           return (
                             <div
                               key={p}
@@ -583,31 +768,107 @@ export default function StaffDetailsPage() {
                         Security & Authentication
                       </h3>
                       <div className="space-y-4">
-                        <div className="flex items-center justify-between p-3 border border-slate-100 rounded-lg bg-slate-50/50 hover:bg-slate-50 transition-colors">
-                          <div>
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 p-3 border border-slate-100 rounded-lg bg-slate-50/50 hover:bg-slate-50 transition-colors">
+                          <div className="flex-1">
                             <p className="text-sm font-medium text-slate-800">
                               POS PIN Code
                             </p>
-                            <p className="text-xs text-slate-500">
-                              Manage 4-digit PIN for POS system login
+                            <p className="text-xs text-slate-500 mb-2">
+                              Set a custom 4-digit PIN or leave blank to
+                              generate a random one.
                             </p>
+                            <div className="flex gap-2 items-center max-w-sm">
+                              <input
+                                type="text"
+                                maxLength={4}
+                                pattern="\d{4}"
+                                className="input flex-1"
+                                placeholder="Enter 4-digit PIN..."
+                                value={customPin}
+                                onChange={(e) =>
+                                  setCustomPin(
+                                    e.target.value.replace(/\D/g, ""),
+                                  )
+                                }
+                                disabled={isResettingPin}
+                              />
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={handleResetPin}
+                                disabled={isResettingPin}
+                              >
+                                {isResettingPin ? "Resetting..." : "Reset PIN"}
+                              </Button>
+                            </div>
+                            {newPinResult && (
+                              <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-md">
+                                <p className="text-sm text-green-800 font-medium">
+                                  PIN reset successful!
+                                </p>
+                                <p className="text-sm text-green-900 mt-1">
+                                  New PIN:{" "}
+                                  <span className="font-bold font-mono bg-white px-2 py-1 rounded tracking-widest">
+                                    {newPinResult}
+                                  </span>
+                                </p>
+                                <p className="text-xs text-green-700 mt-1">
+                                  Please copy this PIN and share it with the
+                                  staff member securely.
+                                </p>
+                              </div>
+                            )}
                           </div>
-                          <Button variant="outline" size="sm">
-                            Reset PIN
-                          </Button>
                         </div>
-                        <div className="flex items-center justify-between p-3 border border-slate-100 rounded-lg bg-slate-50/50 hover:bg-slate-50 transition-colors">
-                          <div>
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 p-3 border border-slate-100 rounded-lg bg-slate-50/50 hover:bg-slate-50 transition-colors">
+                          <div className="flex-1">
                             <p className="text-sm font-medium text-slate-800">
                               Password
                             </p>
-                            <p className="text-xs text-slate-500">
-                              Send a password reset link to their email
+                            <p className="text-xs text-slate-500 mb-2">
+                              Set a custom password or leave blank to generate a
+                              random one.
                             </p>
+                            <div className="flex gap-2 items-center max-w-sm">
+                              <input
+                                type="text"
+                                className="input flex-1"
+                                placeholder="Enter custom password..."
+                                value={customPassword}
+                                onChange={(e) =>
+                                  setCustomPassword(e.target.value)
+                                }
+                                disabled={isResetting}
+                              />
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={handleResetPassword}
+                                disabled={isResetting}
+                              >
+                                {isResetting
+                                  ? "Resetting..."
+                                  : "Reset Password"}
+                              </Button>
+                            </div>
+                            {newPassword && (
+                              <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-md">
+                                <p className="text-sm text-green-800 font-medium">
+                                  Password reset successful!
+                                </p>
+                                <p className="text-sm text-green-900 mt-1">
+                                  New Password:{" "}
+                                  <span className="font-bold font-mono bg-white px-2 py-1 rounded">
+                                    {newPassword}
+                                  </span>
+                                </p>
+                                <p className="text-xs text-green-700 mt-1">
+                                  Please copy this password and share it with
+                                  the staff member securely.
+                                </p>
+                              </div>
+                            )}
                           </div>
-                          <Button variant="outline" size="sm">
-                            Send Link
-                          </Button>
                         </div>
                       </div>
                     </Card>

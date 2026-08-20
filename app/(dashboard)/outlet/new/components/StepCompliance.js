@@ -1,6 +1,6 @@
 import { FileCheck, FileText, DollarSign } from "lucide-react";
 
-export function StepCompliance({ form, updateForm }) {
+export function StepCompliance({ form, updateForm, errors = {} }) {
   return (
     <div className="space-y-8 py-2">
       <div className="space-y-5">
@@ -26,6 +26,7 @@ export function StepCompliance({ form, updateForm }) {
             value={form.tax_registration}
             onChange={(e) => updateForm("tax_registration", e.target.value)}
           />
+          {errors.tax_registration && <span className="text-red-500 text-xs mt-1 block">{errors.tax_registration}</span>}
         </div>
 
         <div>

@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 export const NAV_ITEMS = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   {
     href: "/pos",
     label: "Orders And Billing",
@@ -42,18 +42,15 @@ export const NAV_ITEMS = [
     label: "Accounting",
     icon: Receipt,
     submenu: [
-      { href: "/invoices/payments", label: "Payments" },
+      { href: "/Accounting/payments", label: "Payments" },
       {
-        href: "/invoices/reconciliation",
+        href: "/Accounting/reconciliation",
         label: "Online Order Reconciliation",
       },
-      { href: "/invoices/gst", label: "GST Information" },
-      { href: "/invoices/bank", label: "Bank Details" },
-      { href: "/invoices/utility", label: "Utility Bill" },
-      { href: "/invoices/expense", label: "Expense & Withdrawal" },
+      { href: "/Accounting/expense", label: "Expense & Withdrawal" },
     ],
   },
-  { href: "/purchase-orders", label: "Suppliers Hub", icon: Truck },
+  { href: "/suppliers", label: "Suppliers Hub", icon: Truck },
   { href: "/logs", label: "User Logs", icon: ClipboardList },
   { href: "/help", label: "Help Manual", icon: HelpCircle },
 ];
