@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/slices/authSlice";
+import { fetchNotifications } from "../../store/slices/notificationSlice";
 import {
   Menu,
   Search,
@@ -17,6 +18,7 @@ import {
 import { Avatar } from "../ui/Avatar";
 import Badge from "../ui/Badge";
 import { cn } from "../../lib/utils";
+import { NotificationSlider } from "./NotificationSlider";
 
 const PAGE_TITLES = {
   "/": "Dashboard",
@@ -46,9 +48,11 @@ export function Header({ onMenuClick }) {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { branches } = useSelector((state) => state.branch);
+  const { unreadCount } = useSelector((state) => state.notifications || { unreadCount: 0 });
 
   const [showOutletDropdown, setShowOutletDropdown] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [isNotificationSliderOpen, setIsNotificationSliderOpen] = useState(false);
   const [selectedOutlet, setSelectedOutlet] = useState(null);
 
   const dropdownRef = useRef(null);
@@ -70,6 +74,12 @@ export function Header({ onMenuClick }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchNotifications());
+    }
+  }, [dispatch, user]);
+
   const handleLogout = () => {
     dispatch(logout());
     router.push("/login");
@@ -81,8 +91,9 @@ export function Header({ onMenuClick }) {
     )?.[1] || "POS Manager";
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-white/60 bg-white/70 px-4 md:px-8 backdrop-blur-xl shadow-[0_4px_30px_rgb(0,0,0,0.03)]">
-      <div className="flex items-center gap-3 md:gap-4">
+    <>
+      <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-white/60 bg-white/70 px-4 md:px-8 backdrop-blur-xl shadow-[0_4px_30px_rgb(0,0,0,0.03)]">
+        <div className="flex items-center gap-3 md:gap-4">
         <button
           onClick={onMenuClick}
           className="md:hidden text-slate-500 hover:text-slate-800 transition-colors"
@@ -173,8 +184,16 @@ export function Header({ onMenuClick }) {
         </button>
 
         <div className="flex items-center gap-3 md:gap-4 border-l border-slate-200 pl-4 md:pl-6">
-          <button className="relative text-slate-500 hover:text-indigo-600 transition-colors">
+          <button 
+            onClick={() => setIsNotificationSliderOpen(true)}
+            className="relative text-slate-500 hover:text-indigo-600 transition-colors"
+          >
             <Bell className="h-5 w-5" />
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-white">
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            )}
           </button>
 
           <div className="relative" ref={profileDropdownRef}>
@@ -247,6 +266,14 @@ export function Header({ onMenuClick }) {
           </div>
         </div>
       </div>
-    </header>
+      </header>
+
+      {/* Notification Slider */}
+      <NotificationSlider 
+        isOpen={isNotificationSliderOpen} 
+        onClose={() => setIsNotificationSliderOpen(false)} 
+      />
+    </>
   );
 }
+
