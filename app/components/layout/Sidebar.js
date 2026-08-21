@@ -47,7 +47,7 @@ export function Sidebar({ isOpen, onClose }) {
       {/* Mobile Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-tooltip bg-brand-dark/40 backdrop-blur-sm md:hidden"
+          className="fixed z-100 inset-0 z-tooltip bg-brand-dark/40 backdrop-blur-sm md:hidden"
           onClick={onClose}
         />
       )}
@@ -55,7 +55,7 @@ export function Sidebar({ isOpen, onClose }) {
       {/* Sidebar Drawer */}
       <aside
         className={cn(
-          "fixed md:relative left-0 top-0 z-modal h-screen w-64 border-r border-slate-800 bg-brand-dark flex flex-col transition-transform duration-300 ease-spring ease-in-out md:translate-x-0 shrink-0",
+          "fixed md:relative z-100 left-0 top-0 z-modal h-screen w-64 border-r border-slate-800 bg-brand-dark flex flex-col transition-transform duration-300 ease-spring ease-in-out md:translate-x-0 shrink-0",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >

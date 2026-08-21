@@ -61,6 +61,7 @@ const PERMISSIONS = [
   "billing-user",
   "tables-qr",
   "logs",
+  "support-ticket",
 ];
 
 const roleDefaults = {
@@ -620,7 +621,9 @@ export default function OutletPage() {
                   className="flex items-center gap-2"
                   onClick={() => {
                     if (maxBranches > 0 && branches.length >= maxBranches) {
-                      alert(`You have reached your limit of ${maxBranches} branches. Please upgrade your plan to add more.`);
+                      alert(
+                        `You have reached your limit of ${maxBranches} branches. Please upgrade your plan to add more.`,
+                      );
                     } else {
                       router.push("/outlet/new");
                     }
@@ -755,7 +758,9 @@ export default function OutletPage() {
                   className="flex items-center gap-2"
                   onClick={() => {
                     if (maxStaff > 0 && teamMembers.length >= maxStaff) {
-                      alert(`You have reached your limit of ${maxStaff} staff members. Please upgrade your plan to add more.`);
+                      alert(
+                        `You have reached your limit of ${maxStaff} staff members. Please upgrade your plan to add more.`,
+                      );
                     } else {
                       setEditMember(null);
                       setShowModal(true);
