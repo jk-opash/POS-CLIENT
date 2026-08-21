@@ -40,8 +40,6 @@ const PAGE_TITLES = {
   "/help": "Help Center",
 };
 
-
-
 export function Header({ onMenuClick }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -91,11 +89,10 @@ export function Header({ onMenuClick }) {
         >
           <Menu className="h-6 w-6" />
         </button>
-        <h1 className="text-lg md:text-xl font-black text-slate-800 tracking-tight truncate">
+        {/* <h1 className="text-lg md:text-xl font-black text-slate-800 tracking-tight truncate">
           {title}
         </h1>
 
-        {/* Outlet Selector (Desktop) */}
         <div className="hidden md:block relative ml-4" ref={dropdownRef}>
           <button
             onClick={() => setShowOutletDropdown(!showOutletDropdown)}
@@ -157,7 +154,7 @@ export function Header({ onMenuClick }) {
               </div>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
 
       <div className="flex items-center gap-4 md:gap-6">

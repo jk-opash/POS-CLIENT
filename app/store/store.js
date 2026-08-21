@@ -15,6 +15,7 @@ import expenseReducer from "./slices/expenseSlice";
 import withdrawalReducer from "./slices/withdrawalSlice";
 import paymentReducer from "./slices/paymentSlice";
 import reconciliationReducer from "./slices/reconciliationSlice";
+import supportTicketReducer from "./slices/supportTicketSlice";
 import { socketMiddleware } from "./socketMiddleware";
 
 export const store = configureStore({
@@ -35,6 +36,7 @@ export const store = configureStore({
     withdrawal: withdrawalReducer,
     payment: paymentReducer,
     reconciliation: reconciliationReducer,
+    supportTicket: supportTicketReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(socketMiddleware),

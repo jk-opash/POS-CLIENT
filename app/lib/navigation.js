@@ -11,6 +11,7 @@ import {
   ClipboardList,
   Map,
   HelpCircle,
+  Ticket,
 } from "lucide-react";
 
 export const NAV_ITEMS = [
@@ -52,5 +53,6 @@ export const NAV_ITEMS = [
   },
   { href: "/suppliers", label: "Suppliers Hub", icon: Truck },
   { href: "/logs", label: "User Logs", icon: ClipboardList },
+  { href: "/support", label: "Support Ticket", icon: Ticket },
   { href: "/help", label: "Help Manual", icon: HelpCircle },
 ];

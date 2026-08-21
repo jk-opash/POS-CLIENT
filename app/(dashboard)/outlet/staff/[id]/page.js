@@ -48,6 +48,7 @@ const PERMISSIONS = [
   "billing-user",
   "tables-qr",
   "logs",
+  "support-ticket",
 ];
 
 const roleDefaults = {
