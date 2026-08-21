@@ -9,6 +9,7 @@ import {
   setSessionConflict,
   clearSessionConflict,
 } from "./slices/authSlice";
+import { addNotification } from "./slices/notificationSlice";
 
 export const socketMiddleware = (store) => (next) => (action) => {
   // Pass the action down first so state gets updated
@@ -35,22 +36,26 @@ export const socketMiddleware = (store) => (next) => (action) => {
 
       if (branchId) {
         // Listen for table status updates
+        socketService.off("tableStatusChanged");
         socketService.on("tableStatusChanged", () => {
           store.dispatch(fetchZones(branchId));
         });
 
         // Listen for menu updates
+        socketService.off("menuChanged");
         socketService.on("menuChanged", () => {
           store.dispatch(fetchCategories(branchId));
           store.dispatch(fetchMenuItems(branchId));
         });
 
         // Listen for inventory updates
+        socketService.off("inventoryChanged");
         socketService.on("inventoryChanged", () => {
           store.dispatch(fetchInventoryItems(branchId));
         });
 
         // Optional: Add listeners for team members if needed
+        socketService.off("teamMemberChanged");
         socketService.on("teamMemberChanged", () => {
           const currentState = store.getState();
           const authUser = currentState.auth?.user;
@@ -64,21 +69,31 @@ export const socketMiddleware = (store) => (next) => (action) => {
         });
       }
 
+      // Listen for notifications
+      socketService.off("new_notification");
+      socketService.on("new_notification", (data) => {
+        store.dispatch(addNotification(data));
+      });
+
       // Session Conflict Management
+      socketService.off("session_conflict");
       socketService.on("session_conflict", (data) => {
         store.dispatch(setSessionConflict(data?.message));
       });
 
+      socketService.off("session_conflict_resolved");
       socketService.on("session_conflict_resolved", () => {
         store.dispatch(clearSessionConflict());
       });
 
+      socketService.off("session_conflict_failed");
       socketService.on("session_conflict_failed", (data) => {
         if (typeof window !== "undefined") {
           alert(data?.error || "Invalid PIN");
         }
       });
 
+      socketService.off("session_expired");
       socketService.on("session_expired", (data) => {
         store.dispatch(logout());
         if (typeof window !== "undefined") {
