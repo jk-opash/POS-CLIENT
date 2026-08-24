@@ -10,8 +10,7 @@ import {
   resetTeamMemberPin,
 } from "../../../../store/slices/teamMemberSlice";
 import { fetchBranches } from "../../../../store/slices/branchSlice";
-import Sidebar from "../../../../components/Sidebar";
-import Topbar from "../../../../components/Topbar";
+
 import Card from "../../../../components/ui/Card";
 import Badge from "../../../../components/ui/Badge";
 import Button from "../../../../components/ui/Button";
@@ -29,6 +28,8 @@ import {
   AlertCircle,
   CheckCircle2,
   Ban,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 const ROLES = ["Manager", "Cashier", "Waiter", "Kitchen"];
 const PERMISSIONS = [
@@ -49,6 +50,7 @@ const PERMISSIONS = [
   "tables-qr",
   "logs",
   "support-ticket",
+  "online-orders",
 ];
 
 const roleDefaults = {
@@ -69,6 +71,8 @@ const roleDefaults = {
 function EditStaffModal({ member, branches = [], onClose, onSave }) {
   const defaultRole = member?.role?.name || member?.role || "Waiter";
   const [errors, setErrors] = useState({});
+  const [showPin, setShowPin] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({
     first_name: member?.first_name || member?.name?.split(" ")[0] || "",
     last_name: member?.last_name || member?.name?.split(" ")[1] || "",

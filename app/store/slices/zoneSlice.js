@@ -76,6 +76,21 @@ export const fetchTables = createAsyncThunk(
   }
 );
 
+// Fetch tables for a branch
+export const fetchTablesByBranch = createAsyncThunk(
+  "zone/fetchTablesByBranch",
+  async (branchId, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/table?branch_id=${branchId}`);
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.error || "Failed to fetch tables"
+      );
+    }
+  }
+);
+
 // Create a table
 export const createTable = createAsyncThunk(
   "zone/createTable",
@@ -178,6 +193,19 @@ const zoneSlice = createSlice({
         state.tables = action.payload;
       })
       .addCase(fetchTables.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // fetchTablesByBranch
+      .addCase(fetchTablesByBranch.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchTablesByBranch.fulfilled, (state, action) => {
+        state.loading = false;
+        state.tables = action.payload;
+      })
+      .addCase(fetchTablesByBranch.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

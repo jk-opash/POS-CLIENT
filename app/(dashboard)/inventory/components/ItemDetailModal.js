@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { motion } from "framer-motion";
 import { getBadgeStyle } from "./helpers";
 import StockBar from "./StockBar";
+import { getImageUrl } from "../../../../lib/utils";
 
 export default function ItemDetailModal({ item, onClose, onAdjust }) {
   if (!item) return null;
@@ -31,9 +32,9 @@ export default function ItemDetailModal({ item, onClose, onAdjust }) {
           </button>
         </div>
         <div className="px-6 py-5 space-y-4">
-          {item.image && (
+          {item.image_url && (
             <img
-              src={item.image}
+              src={getImageUrl(item.image_url)}
               alt={item.name}
               className="w-full h-36 object-cover rounded-xl"
             />

@@ -5,8 +5,7 @@ import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchItemWiseSales } from "../../../../store/slices/analyticsSlice";
 import { fetchBranches } from "../../../../store/slices/branchSlice";
-import Sidebar from "../../../../components/Sidebar";
-import Topbar from "../../../../components/Topbar";
+
 import StatCard from "../../../../components/ui/StatCard";
 import {
   DollarSign,

@@ -73,6 +73,21 @@ export const socketMiddleware = (store) => (next) => (action) => {
       socketService.off("new_notification");
       socketService.on("new_notification", (data) => {
         store.dispatch(addNotification(data));
+
+        // Play notification sound
+        if (typeof window !== "undefined") {
+          try {
+            const audio = new Audio("../assets/tethys.mp3");
+            audio.play().catch((err) => {
+              console.log(
+                "Audio play blocked by browser. User must interact with the document first.",
+                err,
+              );
+            });
+          } catch (error) {
+            console.error("Error playing notification sound:", error);
+          }
+        }
       });
 
       // Session Conflict Management

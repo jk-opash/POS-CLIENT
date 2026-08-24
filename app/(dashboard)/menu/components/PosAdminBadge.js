@@ -8,6 +8,7 @@ export default function PosAdminBadge({ variant = "default", children, dot, ...p
     danger: "bg-red-50/80 text-red-700 border-red-200",
     info: "bg-blue-50/80 text-blue-700 border-blue-200",
     purple: "bg-violet-50/80 text-violet-700 border-violet-200",
+    orange: "bg-orange-50/80 text-orange-700 border-orange-200",
     muted: "bg-slate-50/80 text-slate-700 border-slate-200",
   };
 
@@ -18,6 +19,7 @@ export default function PosAdminBadge({ variant = "default", children, dot, ...p
     danger: "bg-red-500",
     info: "bg-blue-500",
     purple: "bg-violet-500",
+    orange: "bg-orange-500",
     muted: "bg-slate-400",
   };
 

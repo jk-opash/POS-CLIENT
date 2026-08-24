@@ -1,5 +1,6 @@
 import React from "react";
 import { UtensilsCrossed, Edit2, Trash2, AlertTriangle } from "lucide-react";
+import { getImageUrl } from "../../../lib/utils";
 import PosAdminBadge from "./PosAdminBadge";
 import PosAdminPagination from "./PosAdminPagination";
 
@@ -18,16 +19,22 @@ export default function ItemsTabTable({
 }) {
   const getFoodBadgeVariant = (foodType, isVeg) => {
     const type = foodType?.toLowerCase() || (isVeg ? "veg" : "non-veg");
+    if (type.includes("dessert")) return { variant: "info", label: "Dessert" };
+    if (type.includes("beverage") || type.includes("drink")) return { variant: "purple", label: "Beverage" };
+    
     switch (type) {
       case "veg":
         return { variant: "success", label: "Veg" };
       case "non-veg":
+      case "non veg":
       case "non_veg":
         return { variant: "danger", label: "Non-Veg" };
       case "egg":
         return { variant: "warning", label: "Egg" };
       case "vegan":
-        return { variant: "info", label: "Vegan" };
+        return { variant: "success", label: "Vegan" };
+      case "jain":
+        return { variant: "orange", label: "Jain" };
       default:
         return { variant: "muted", label: foodType || "General" };
     }
@@ -90,7 +97,7 @@ export default function ItemsTabTable({
                       <div className="flex items-center gap-3">
                         {item.image_url ? (
                           <img
-                            src={item.image_url}
+                            src={getImageUrl(item.image_url)}
                             alt={item.name}
                             className="w-9 h-9 rounded-xl object-cover border border-slate-200 shrink-0"
                           />
@@ -141,21 +148,34 @@ export default function ItemsTabTable({
                             </PosAdminBadge>
                             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-50 pointer-events-none opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 ease-out">
                               <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white text-[11px] font-medium p-3 rounded-xl shadow-[0_10px_25px_-5px_rgba(59,130,246,0.5)] border border-blue-400/50 w-max max-w-[240px] whitespace-pre-wrap text-left leading-relaxed relative">
-                                {item.variants.map(v => `${v.name} (₹${v.price})`).join('\n')}
+                                {item.variants
+                                  .map((v) => `${v.name} (₹${v.price})`)
+                                  .join("\n")}
                                 <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-blue-600 border-b border-r border-blue-400/50 rotate-45"></div>
                               </div>
                             </div>
                           </div>
                         )}
-                        {(item.addonGroups?.length > 0 || item.addon_categories?.length > 0) && (
+                        {(item.addonGroups?.length > 0 ||
+                          item.addon_categories?.length > 0) && (
                           <div className="group relative flex items-center cursor-default">
                             <PosAdminBadge variant="purple">
-                              {item.addonGroups?.length || item.addon_categories?.length}{" "}
+                              {item.addonGroups?.length ||
+                                item.addon_categories?.length}{" "}
                               Add-ons
                             </PosAdminBadge>
                             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-50 pointer-events-none opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 ease-out">
                               <div className="bg-gradient-to-br from-violet-500 to-violet-600 text-white text-[11px] font-medium p-3 rounded-xl shadow-[0_10px_25px_-5px_rgba(139,92,246,0.5)] border border-violet-400/50 w-max max-w-[260px] whitespace-pre-wrap text-left leading-relaxed relative">
-                                {(item.addonGroups || item.addon_categories || []).map(cat => `${cat.name}: ${cat.options?.map(o => o.name).join(', ')}`).join('\n')}
+                                {(
+                                  item.addonGroups ||
+                                  item.addon_categories ||
+                                  []
+                                )
+                                  .map(
+                                    (cat) =>
+                                      `${cat.name}: ${cat.options?.map((o) => o.name).join(", ")}`,
+                                  )
+                                  .join("\n")}
                                 <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-violet-600 border-b border-r border-violet-400/50 rotate-45"></div>
                               </div>
                             </div>
@@ -163,7 +183,9 @@ export default function ItemsTabTable({
                         )}
                         {item.spice_level_enabled && (
                           <div className="group relative flex items-center cursor-default">
-                            <PosAdminBadge variant="warning">Spice</PosAdminBadge>
+                            <PosAdminBadge variant="warning">
+                              Spice
+                            </PosAdminBadge>
                             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-50 pointer-events-none opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 ease-out">
                               <div className="bg-gradient-to-br from-amber-400 to-amber-500 text-amber-950 text-[11px] font-bold p-2.5 rounded-xl shadow-[0_10px_25px_-5px_rgba(245,158,11,0.5)] border border-amber-300/50 w-max whitespace-nowrap relative">
                                 Customers can choose spice level

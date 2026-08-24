@@ -1,0 +1,303 @@
+"use client";
+
+import { use, useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPublicMenu } from "../../store/slices/publicMenuSlice";
+import ItemConfigModal from "./components/ItemConfigModal";
+import CategoryFAB from "./components/CategoryFAB";
+import MenuTab from "./tabs/MenuTab";
+import CartTab from "./tabs/CartTab";
+import { UtensilsCrossed, Clock, CheckCircle, MapPin } from "lucide-react";
+
+export default function CustomerOrderPage({ params }) {
+  const resolvedParams = use(params);
+  const tableId = resolvedParams.tableId;
+
+  const [activeTab, setActiveTab] = useState("menu"); // menu, orders, bill
+  const [activeCategory, setActiveCategory] = useState("all");
+  const [showCategoryMenu, setShowCategoryMenu] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Redux state
+  const dispatch = useDispatch();
+  const { data, loading, error } = useSelector((state) => state.publicMenu);
+
+  // Cart State
+  const [cart, setCart] = useState([]);
+
+  // Modal State
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  // Handle scroll effect for glassmorphic header
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (tableId) {
+      dispatch(fetchPublicMenu(tableId));
+    }
+  }, [dispatch, tableId]);
+
+  useEffect(() => {
+    if (data?.categories?.length > 0) {
+      setActiveCategory(data.categories[0].id);
+    }
+  }, [data]);
+
+  const handleAddToCart = (cartItem) => {
+    setCart((prev) => {
+      // Find existing entry with same item, variant, addons, and spice
+      const existingIdx = prev.findIndex(
+        (c) =>
+          c.item.id === cartItem.item.id &&
+          c.variant?.name === cartItem.variant?.name &&
+          c.spiceLevel === cartItem.spiceLevel &&
+          JSON.stringify(c.addons.map((a) => a.name).sort()) ===
+            JSON.stringify(cartItem.addons.map((a) => a.name).sort())
+      );
+
+      if (existingIdx !== -1) {
+        // Increment quantity of the existing entry
+        return prev.map((c, i) =>
+          i === existingIdx
+            ? {
+                ...c,
+                quantity: c.quantity + cartItem.quantity,
+                totalPrice: c.unitPrice * (c.quantity + cartItem.quantity),
+              }
+            : c
+        );
+      }
+
+      return [...prev, cartItem];
+    });
+    setSelectedItem(null);
+  };
+
+  const handleQuickAdd = (item) => {
+    const hasVariants = item.variants && item.variants.length > 0;
+    const hasAddons = item.addon_categories && item.addon_categories.length > 0;
+    const hasSpice = item.spice_level_enabled;
+
+    if (hasVariants || hasAddons || hasSpice) {
+      setSelectedItem(item);
+    } else {
+      handleAddToCart({
+        id: Math.random().toString(36).substr(2, 9),
+        item,
+        quantity: 1,
+        variant: null,
+        addons: [],
+        spiceLevel: null,
+        unitPrice: parseFloat(item.base_price),
+        totalPrice: parseFloat(item.base_price),
+      });
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col pt-12 px-6">
+        <div className="w-48 h-8 bg-slate-200 rounded-full animate-pulse mb-4"></div>
+        <div className="flex gap-3 mb-8 overflow-x-hidden">
+          {[1, 2, 3, 4].map((i) => (
+            <div
+              key={i}
+              className="w-24 h-10 bg-slate-200 rounded-2xl animate-pulse shrink-0"
+            ></div>
+          ))}
+        </div>
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="h-32 bg-white rounded-3xl animate-pulse shadow-sm border border-slate-100 flex p-4 gap-4"
+            >
+              <div className="w-24 h-24 bg-slate-100 rounded-2xl"></div>
+              <div className="flex-1 flex flex-col justify-between py-1">
+                <div>
+                  <div className="w-3/4 h-5 bg-slate-100 rounded-md mb-2"></div>
+                  <div className="w-full h-3 bg-slate-100 rounded-md"></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-6 text-center">
+        <div className="w-24 h-24 bg-red-50 rounded-full flex items-center justify-center mb-6 shadow-sm">
+          <UtensilsCrossed size={40} className="text-red-400" />
+        </div>
+        <h1 className="text-2xl font-black text-slate-800 mb-2 tracking-tight">
+          Oops!
+        </h1>
+        <p className="text-slate-500 font-medium">
+          {error || "Data unavailable"}
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-8 px-8 py-3 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-all active:scale-95 shadow-lg shadow-slate-900/20"
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  const { business, branch, table, categories, menuItems } = data;
+
+  const displayItems =
+    activeCategory === "all"
+      ? menuItems
+      : menuItems.filter((item) => item.category_id === activeCategory);
+
+  const activeCategoryName =
+    activeCategory === "all"
+      ? "All Items"
+      : categories?.find((c) => c.id === activeCategory)?.name || "Our Menu";
+
+  const cartTotal = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+  const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  return (
+    <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-800 pb-24">
+      {/* Dynamic Header */}
+      <header
+        className={`sticky top-0 z-40 transition-all duration-300 pt-3 ${
+          scrolled
+            ? "bg-white/80 backdrop-blur-xl shadow-sm pb-2"
+            : "bg-transparent pb-3"
+        }`}
+      >
+        <div className="px-4 flex items-center justify-between mb-3">
+          <div>
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight line-clamp-1">
+              {activeCategoryName}
+            </h1>
+            <div className="flex items-center gap-1.5 mt-1.5">
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md">
+                <MapPin size={12} />
+                {branch?.name}
+              </span>
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-2 py-1 rounded-md">
+                Table {table?.name || tableId}
+              </span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content Area */}
+      <main className="px-4 pt-2 space-y-3">
+        {activeTab === "menu" && (
+          <MenuTab
+            displayItems={displayItems}
+            categories={categories}
+            cart={cart}
+            branch={branch}
+            handleQuickAdd={handleQuickAdd}
+          />
+        )}
+
+        {activeTab === "bill" && (
+          <CartTab
+            cart={cart}
+            setCart={setCart}
+            branch={branch}
+            cartTotal={cartTotal}
+            tableId={tableId}
+          />
+        )}
+      </main>
+
+      {/* Item Config Modal */}
+      {selectedItem && (
+        <ItemConfigModal
+          item={selectedItem}
+          currency={branch?.currency}
+          onClose={() => setSelectedItem(null)}
+          onAdd={handleAddToCart}
+        />
+      )}
+
+      {/* Floating Island Bottom Navigation */}
+      <div className="fixed gap-4 bottom-4 left-4 right-4 z-30 flex justify-center pb-safe pointer-events-none">
+        <div className="bg-slate-900/95 backdrop-blur-md p-1.5 rounded-full shadow-2xl flex items-center gap-2 border border-slate-800 pointer-events-auto relative">
+          <button
+            onClick={() => setActiveTab("menu")}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 ${
+              activeTab === "menu"
+                ? "bg-white text-slate-900 shadow-sm"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            <UtensilsCrossed
+              size={18}
+              strokeWidth={activeTab === "menu" ? 2.5 : 2}
+            />
+            {activeTab === "menu" && (
+              <span className="text-xs font-bold">Menu</span>
+            )}
+          </button>
+
+          <button
+            onClick={() => setActiveTab("orders")}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 ${
+              activeTab === "orders"
+                ? "bg-white text-slate-900 shadow-sm"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            <Clock size={18} strokeWidth={activeTab === "orders" ? 2.5 : 2} />
+            {activeTab === "orders" && (
+              <span className="text-xs font-bold">Orders</span>
+            )}
+          </button>
+
+          <button
+            onClick={() => setActiveTab("bill")}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 relative ${
+              activeTab === "bill"
+                ? "bg-white text-slate-900 shadow-sm"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            <CheckCircle
+              size={18}
+              strokeWidth={activeTab === "bill" ? 2.5 : 2}
+            />
+            {activeTab === "bill" && (
+              <span className="text-xs font-bold">Cart</span>
+            )}
+            {cartItemCount > 0 && (
+              <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-slate-900">
+                {cartItemCount}
+              </div>
+            )}
+          </button>
+        </div>
+        {activeTab === "menu" && (
+          <div className="pointer-events-auto">
+            <CategoryFAB
+              categories={categories || []}
+              activeCategory={activeCategory}
+              setActiveCategory={setActiveCategory}
+              showCategoryMenu={showCategoryMenu}
+              setShowCategoryMenu={setShowCategoryMenu}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

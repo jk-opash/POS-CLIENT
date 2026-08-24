@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import Sidebar from "../../components/Sidebar";
-import Topbar from "../../components/Topbar";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { fetchBranches } from "../../store/slices/branchSlice";
@@ -62,6 +60,7 @@ const PERMISSIONS = [
   "tables-qr",
   "logs",
   "support-ticket",
+  "online-orders",
 ];
 
 const roleDefaults = {

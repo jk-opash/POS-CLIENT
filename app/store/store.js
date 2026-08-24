@@ -17,6 +17,7 @@ import paymentReducer from "./slices/paymentSlice";
 import reconciliationReducer from "./slices/reconciliationSlice";
 import supportTicketReducer from "./slices/supportTicketSlice";
 import notificationReducer from "./slices/notificationSlice";
+import publicMenuReducer from "./slices/publicMenuSlice";
 import { socketMiddleware } from "./socketMiddleware";
 
 export const store = configureStore({
@@ -39,6 +40,7 @@ export const store = configureStore({
     reconciliation: reconciliationReducer,
     supportTicket: supportTicketReducer,
     notifications: notificationReducer,
+    publicMenu: publicMenuReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(socketMiddleware),
