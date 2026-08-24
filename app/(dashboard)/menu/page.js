@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import Sidebar from "../../components/Sidebar";
-import Topbar from "../../components/Topbar";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchMenuItems,
@@ -10,10 +8,7 @@ import {
   updateMenuItem,
   deleteMenuItem,
 } from "../../store/slices/menuItemSlice";
-import {
-  fetchCategories,
-  createCategory,
-} from "../../store/slices/categorySlice";
+import { fetchCategories } from "../../store/slices/categorySlice";
 import { fetchBranches } from "../../store/slices/branchSlice";
 import MenuItemModal from "../../components/MenuItemModal";
 import DeleteConfirmModal from "../inventory/components/DeleteConfirmModal";

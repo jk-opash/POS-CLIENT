@@ -11,8 +11,6 @@ import {
   UtensilsCrossed,
   Store,
 } from "lucide-react";
-import Sidebar from "../../components/Sidebar";
-import Topbar from "../../components/Topbar";
 import Tabs from "../../components/ui/Tabs";
 import PosAdminBadge from "../menu/components/PosAdminBadge";
 

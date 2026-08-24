@@ -16,3 +16,14 @@ export function getInitials(name) {
   }
   return initials;
 }
+
+export function getImageUrl(path) {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  
+  // Get base url by removing /api from NEXT_PUBLIC_API_URL
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api";
+  const baseUrl = apiUrl.replace(/\/api\/?$/, '');
+  
+  return `${baseUrl}${path}`;
+}

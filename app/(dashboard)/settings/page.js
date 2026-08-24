@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import Sidebar from "../../components/Sidebar";
-import Topbar from "../../components/Topbar";
 import { useSelector } from "react-redux";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";

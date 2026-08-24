@@ -1,13 +1,5 @@
-import Card, { CardHeader, CardTitle, CardDescription } from "../ui/Card";
-import {
-  Clock,
-  RefreshCcw,
-  TrendingUp,
-  ConciergeBell,
-  ShoppingBag,
-  MoreVertical,
-  ChevronDown,
-} from "lucide-react";
+import Card from "../ui/Card";
+import { Clock, TrendingUp, ConciergeBell, ShoppingBag } from "lucide-react";
 import {
   AreaChart,
   Area,
@@ -18,18 +10,11 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import StatCard from "../ui/StatCard";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchDashboardAnalytics } from "../../store/slices/analyticsSlice";
+import { useSelector } from "react-redux";
 
 export default function OnlineOrdersWidget() {
-  const dispatch = useDispatch();
   const { stats } = useSelector((state) => state.analytics);
   const chartData = stats?.chartData || [];
-
-  const handleFilterChange = (e) => {
-    const timeRange = e.target.value;
-    dispatch(fetchDashboardAnalytics({ timeRange }));
-  };
 
   const totalSales = stats?.totalSales || 0;
   const onlineSales = stats?.onlineSales || 0;
@@ -48,30 +33,6 @@ export default function OnlineOrdersWidget() {
             <Clock size={14} />
             <span>Order synced 4 Hours ago & POS synced 3 Hours ago.</span>
           </div>
-        </div>
-        <div className="flex items-center gap-3 mt-4 lg:mt-0">
-          <div className="relative group">
-            <select
-              onChange={handleFilterChange}
-              className="appearance-none bg-white border border-brand-border text-brand-dark text-sm font-semibold rounded-lg px-4 py-2 pr-10 outline-none hover:bg-brand-light cursor-pointer shadow-sm transition-colors"
-            >
-              <option value="">All Time</option>
-              <option value="today">Today</option>
-              <option value="week">This Week</option>
-              <option value="month">This Month</option>
-              <option value="year">This Year</option>
-            </select>
-            <ChevronDown
-              size={14}
-              className="absolute right-3 top-2.5 text-brand-muted pointer-events-none"
-            />
-          </div>
-          <button
-            onClick={() => dispatch(fetchDashboardAnalytics({}))}
-            className="p-2 bg-white border border-brand-border rounded-lg text-brand-muted hover:bg-brand-light hover:text-brand-dark transition-colors shadow-sm"
-          >
-            <RefreshCcw size={16} />
-          </button>
         </div>
       </div>
 

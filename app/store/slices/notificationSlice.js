@@ -2,8 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // Determine the base API URL correctly for the client
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api";
 
 // Fetch notifications
 export const fetchNotifications = createAsyncThunk(
@@ -39,7 +38,11 @@ export const markAsRead = createAsyncThunk(
         },
       };
 
-      const response = await axios.put(`${API_URL}/notifications/${id}/read`, {}, config);
+      const response = await axios.patch(
+        `${API_URL}/notifications/${id}/read`,
+        {},
+        config,
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -61,7 +64,11 @@ export const markAllAsRead = createAsyncThunk(
         },
       };
 
-      const response = await axios.put(`${API_URL}/notifications/read-all`, {}, config);
+      const response = await axios.patch(
+        `${API_URL}/notifications/read-all`,
+        {},
+        config,
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -99,24 +106,31 @@ const notificationSlice = createSlice({
       })
       .addCase(fetchNotifications.fulfilled, (state, action) => {
         state.loading = false;
-        
+
         let fetchedItems = [];
         if (Array.isArray(action.payload)) {
           fetchedItems = action.payload;
         } else if (action.payload && Array.isArray(action.payload.data)) {
           fetchedItems = action.payload.data;
-        } else if (action.payload && Array.isArray(action.payload.notifications)) {
+        } else if (
+          action.payload &&
+          Array.isArray(action.payload.notifications)
+        ) {
           fetchedItems = action.payload.notifications;
         } else if (action.payload && Array.isArray(action.payload.items)) {
           fetchedItems = action.payload.items;
-        } else if (action.payload && typeof action.payload === 'object') {
+        } else if (action.payload && typeof action.payload === "object") {
           // If the backend returns a single object that isn't wrapped in an array but has a data property that's an object
-          const possibleArray = Object.values(action.payload).find(val => Array.isArray(val));
+          const possibleArray = Object.values(action.payload).find((val) =>
+            Array.isArray(val),
+          );
           if (possibleArray) fetchedItems = possibleArray;
         }
-        
+
         state.items = fetchedItems;
-        state.unreadCount = state.items.filter((item) => !item.read && !item.is_read).length;
+        state.unreadCount = state.items.filter(
+          (item) => !item.read && !item.is_read,
+        ).length;
       })
       .addCase(fetchNotifications.rejected, (state, action) => {
         state.loading = false;
@@ -143,5 +157,6 @@ const notificationSlice = createSlice({
   },
 });
 
-export const { addNotification, clearNotifications } = notificationSlice.actions;
+export const { addNotification, clearNotifications } =
+  notificationSlice.actions;
 export default notificationSlice.reducer;

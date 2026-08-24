@@ -18,8 +18,9 @@ export default function AuthProvider({ children }) {
     if (!mounted) return;
 
     const isAuthRoute = pathname === '/login';
+    const isPublicRoute = pathname.startsWith('/order');
 
-    if (!token && !isAuthRoute) {
+    if (!token && !isAuthRoute && !isPublicRoute) {
       router.push('/login');
     } else if (token && isAuthRoute) {
       router.push('/pos');
@@ -27,9 +28,13 @@ export default function AuthProvider({ children }) {
   }, [token, pathname, router, mounted]);
 
   // Don't render until mounted to prevent hydration errors,
-  // and don't render protected content if no token (unless on login page)
+  // and don't render protected content if no token (unless on login or public page)
   if (!mounted) return null;
-  if (!token && pathname !== '/login') return null;
+  
+  const isAuthRoute = pathname === '/login';
+  const isPublicRoute = pathname.startsWith('/order');
+  
+  if (!token && !isAuthRoute && !isPublicRoute) return null;
 
   return <>{children}</>;
 }

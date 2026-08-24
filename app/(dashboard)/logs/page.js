@@ -4,8 +4,6 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAuditLogs } from "../../store/slices/auditLogSlice";
 
-import Sidebar from "../../components/Sidebar";
-import Topbar from "../../components/Topbar";
 import { cn } from "../../lib/utils";
 
 import {

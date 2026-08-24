@@ -35,8 +35,6 @@ import {
   Building2,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import Sidebar from "../../components/Sidebar";
-import Topbar from "../../components/Topbar";
 
 // Extracted Components
 import AdjustmentsTab from "./components/AdjustmentsTab";
