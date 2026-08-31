@@ -10,6 +10,7 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import api from "../../../lib/api";
+import LottieLoader from "../../../components/common/LottieLoader";
 
 export default function AuditLogTab({ branchId }) {
   const [ledger, setLedger] = useState([]);
@@ -86,9 +87,8 @@ export default function AuditLogTab({ branchId }) {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={5} className="py-16 text-center text-slate-500">
-                  <Clock className="w-6 h-6 animate-spin mx-auto mb-3 text-slate-400" />
-                  <div>Loading audit log...</div>
+                <td colSpan={5} className="py-16 text-center">
+                  <LottieLoader text="Loading audit log..." />
                 </td>
               </tr>
             ) : error ? (

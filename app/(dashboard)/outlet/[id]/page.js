@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import Sidebar from "../../../components/Sidebar";
-import Topbar from "../../../components/Topbar";
+
 import { useParams, useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -18,6 +17,7 @@ import Card, {
 import Badge from "../../../components/ui/Badge";
 import Button from "../../../components/ui/Button";
 import Modal from "../../../components/ui/Modal";
+import LottieLoader from "../../../components/common/LottieLoader";
 import {
   Table,
   TableHeader,
@@ -362,13 +362,7 @@ export default function BranchDetailsPage() {
   };
 
   if (loading && !currentBranch) {
-    return (
-      <div className="flex h-screen bg-slate-50 items-center justify-center font-sans">
-        <p className="text-slate-500 flex items-center gap-2">
-          <Clock className="w-5 h-5 animate-spin" /> Loading branch details...
-        </p>
-      </div>
-    );
+    return <LottieLoader fullScreen text="Loading branch details..." />;
   }
 
   if (error && !currentBranch) {

@@ -7,6 +7,7 @@ import { TicketTable } from './components/TicketTable';
 import { Select } from '../../components/ui/Select';
 import { StatsCard } from '../../components/ui/StatsCard';
 import Button from '../../components/ui/Button';
+import LottieLoader from "../../components/common/LottieLoader";
 import { Search, Filter, AlertCircle, Clock, CheckCircle2, Ticket } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -123,8 +124,8 @@ export default function SupportPage() {
         </div>
 
         {loading ? (
-          <div className="py-16 text-center text-sm font-medium text-brand-muted">
-            Loading support tickets...
+          <div className="flex justify-center min-h-[200px] items-center">
+            <LottieLoader text="Loading support tickets..." />
           </div>
         ) : (
           <TicketTable data={tickets} />

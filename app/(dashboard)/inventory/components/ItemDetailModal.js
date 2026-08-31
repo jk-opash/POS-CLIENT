@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 import { motion } from "framer-motion";
 import { getBadgeStyle } from "./helpers";
 import StockBar from "./StockBar";
-import { getImageUrl } from "../../../../lib/utils";
+import { getImageUrl } from "../../../lib/utils";
 
 export default function ItemDetailModal({ item, onClose, onAdjust }) {
   if (!item) return null;

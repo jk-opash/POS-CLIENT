@@ -40,6 +40,7 @@ import {
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import Modal from "../../components/ui/Modal";
+import LottieLoader from "../../components/common/LottieLoader";
 
 const ROLES = ["Manager", "Cashier", "Waiter", "Kitchen"];
 const PERMISSIONS = [
@@ -544,6 +545,10 @@ export default function OutletPage() {
   const baseStaff = subscription?.max_team_members || 0;
   const extraStaff = business?.extra_team_members || 0;
   const maxStaff = baseStaff + extraStaff > 0 ? baseStaff + extraStaff : 0;
+
+  if (branchesLoading || teamLoading) {
+    return <LottieLoader fullScreen text="Loading outlet data..." />;
+  }
 
   return (
     <div className="flex flex-col bg-slate-50 font-sans">

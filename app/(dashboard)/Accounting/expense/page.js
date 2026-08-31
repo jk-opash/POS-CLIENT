@@ -17,6 +17,7 @@ import {
   FileText,
   Building2,
 } from "lucide-react";
+import LottieLoader from "../../../components/common/LottieLoader";
 
 export default function ExpensePage() {
   const dispatch = useDispatch();
@@ -217,10 +218,10 @@ export default function ExpensePage() {
                       <tr>
                         <td
                           colSpan={5}
-                          className="py-12 text-center text-slate-400"
+                          className="py-12 text-center"
                         >
-                          <div className="flex justify-center items-center">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                          <div className="flex justify-center min-h-[200px]">
+                            <LottieLoader text="Loading expense data..." />
                           </div>
                         </td>
                       </tr>

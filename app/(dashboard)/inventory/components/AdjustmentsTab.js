@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ClipboardList, Clock, AlertCircle } from "lucide-react";
 import api from "../../../lib/api";
+import LottieLoader from "../../../components/common/LottieLoader";
 
 export default function AdjustmentsTab({ branchId }) {
   const [adjustments, setAdjustments] = useState([]);
@@ -67,9 +68,8 @@ export default function AdjustmentsTab({ branchId }) {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={6} className="py-16 text-center text-slate-500">
-                  <Clock className="w-6 h-6 animate-spin mx-auto mb-3 text-slate-400" />
-                  <div>Loading adjustments...</div>
+                <td colSpan={6} className="py-16 text-center">
+                  <LottieLoader text="Loading adjustments..." />
                 </td>
               </tr>
             ) : error ? (

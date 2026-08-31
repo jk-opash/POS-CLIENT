@@ -10,6 +10,7 @@ import {
 } from "../../store/slices/supplierSlice";
 import { Plus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import LottieLoader from "../../components/common/LottieLoader";
 
 // Extracted Components
 import SupplierTabFilters from "./components/SupplierTabFilters";
@@ -142,9 +143,12 @@ export default function SuppliersPage() {
             </div>
           </div>
 
-          {/* Table Area */}
           <div className="space-y-4 md:space-y-5">
-            {activeTab === "suppliers" && (
+            {loading ? (
+              <div className="flex justify-center min-h-[200px] items-center">
+                <LottieLoader text="Loading suppliers..." />
+              </div>
+            ) : activeTab === "suppliers" && (
               <SupplierTabTable
                 paginatedItems={paginatedItems}
                 filteredItems={filteredItems}

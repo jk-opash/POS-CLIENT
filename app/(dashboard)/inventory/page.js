@@ -43,6 +43,7 @@ import AddItemModal from "./components/AddItemModal";
 import ActionModal from "./components/ActionModal";
 import ItemDetailModal from "./components/ItemDetailModal";
 import DeleteConfirmModal from "./components/DeleteConfirmModal";
+import LottieLoader from "../../components/common/LottieLoader";
 
 // ═══════════════════════════════════════════════════════════════════════
 // ── Main Page ──────────────────────────────────────────────────────────
@@ -189,6 +190,10 @@ export default function InventoryPage() {
     month: "long",
     year: "numeric",
   });
+
+  if (loading) {
+    return <LottieLoader fullScreen text="Loading Inventory..." />;
+  }
 
   return (
     <div className="flex flex-col bg-slate-50 font-sans">
