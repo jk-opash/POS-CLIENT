@@ -6,6 +6,7 @@ import { fetchNotifications, markAsRead, markAllAsRead } from "../../store/slice
 import { motion, AnimatePresence } from "framer-motion";
 import { Bell, Check, Clock, Info, AlertTriangle, CheckCircle, X } from "lucide-react";
 import { cn } from "../../lib/utils";
+import LottieLoader from "../common/LottieLoader";
 
 export function NotificationSlider({ isOpen, onClose }) {
   const dispatch = useDispatch();
@@ -125,9 +126,8 @@ export function NotificationSlider({ isOpen, onClose }) {
             {/* Notifications List */}
             <div className="flex-1 overflow-y-auto custom-scrollbar bg-slate-50/50">
               {loading && notifications.length === 0 ? (
-                <div className="p-8 text-center text-slate-500 flex flex-col items-center">
-                  <div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4" />
-                  Loading notifications...
+                <div className="p-8 flex flex-col items-center">
+                  <LottieLoader size={60} text="Loading notifications..." />
                 </div>
               ) : notifications.length === 0 ? (
                 <div className="p-12 text-center flex flex-col items-center justify-center h-full">

@@ -4,8 +4,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDashboardAnalytics } from "../../../store/slices/analyticsSlice";
 import { fetchBranches } from "../../../store/slices/branchSlice";
-import Sidebar from "../../../components/Sidebar";
-import Topbar from "../../../components/Topbar";
+
 import StatCard from "../../../components/ui/StatCard";
 import Card from "../../../components/ui/Card";
 import {

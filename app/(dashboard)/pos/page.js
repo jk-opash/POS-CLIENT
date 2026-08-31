@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Tabs from "../../components/ui/Tabs";
 import PosAdminBadge from "../menu/components/PosAdminBadge";
+import LottieLoader from "../../components/common/LottieLoader";
 
 export default function POSPage() {
   const dispatch = useDispatch();
@@ -146,6 +147,10 @@ export default function POSPage() {
             <p className="text-sm mt-2">
               Please select a branch to view orders.
             </p>
+          </div>
+        ) : (allOrders?.length === 0 && loading) ? (
+          <div className="flex flex-col items-center justify-center min-h-[400px] mt-4">
+            <LottieLoader text="Loading orders..." />
           </div>
         ) : filteredOrders.length === 0 && !loading ? (
           <div className="flex flex-col items-center justify-center text-slate-400 min-h-[400px] mt-4">

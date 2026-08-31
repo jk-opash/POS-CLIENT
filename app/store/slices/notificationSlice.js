@@ -2,7 +2,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // Determine the base API URL correctly for the client
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api";
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://pos-backend-qcky.onrender.com/api";
 
 // Fetch notifications
 export const fetchNotifications = createAsyncThunk(

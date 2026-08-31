@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDashboardAnalytics } from "../../store/slices/analyticsSlice";
+import LottieLoader from "../../components/common/LottieLoader";
 
 import StatCard from "../../components/ui/StatCard";
 
@@ -52,6 +53,10 @@ export default function DashboardPage() {
   useEffect(() => {
     dispatch(fetchDashboardAnalytics({ timeRange: "today" }));
   }, [dispatch]);
+
+  if (loading) {
+    return <LottieLoader fullScreen text="Loading Dashboard..." />;
+  }
 
   const totalSales = stats?.totalSales || 0;
   const netSales = stats?.netSales || 0;

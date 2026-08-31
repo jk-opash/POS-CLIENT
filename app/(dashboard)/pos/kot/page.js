@@ -16,9 +16,9 @@ import {
   Building2,
   UtensilsCrossed,
 } from "lucide-react";
-import Sidebar from "../../../components/Sidebar";
-import Topbar from "../../../components/Topbar";
+
 import PosAdminBadge from "../../menu/components/PosAdminBadge";
+import LottieLoader from "../../../components/common/LottieLoader";
 
 export default function KOTPage() {
   const dispatch = useDispatch();
@@ -126,6 +126,10 @@ export default function KOTPage() {
               Please select a branch from the dropdown above to view pending
               Kitchen Orders.
             </p>
+          </div>
+        ) : (orders?.length === 0 && loading) ? (
+          <div className="flex flex-col items-center justify-center min-h-[400px] mt-4">
+            <LottieLoader text="Loading KOTs..." />
           </div>
         ) : orders.length === 0 && !loading ? (
           <div className="flex flex-col items-center justify-center text-slate-400 min-h-[400px] mt-4">

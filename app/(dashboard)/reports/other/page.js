@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Sidebar from "../../../components/Sidebar";
-import Topbar from "../../../components/Topbar";
+
 import {
   FileText,
   Users,

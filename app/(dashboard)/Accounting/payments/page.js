@@ -8,6 +8,7 @@ import { fetchUtilityBills } from "../../../store/slices/utilityBillSlice";
 import { fetchWithdrawals } from "../../../store/slices/withdrawalSlice";
 import { fetchAllOrders } from "../../../store/slices/orderSlice";
 import { Building2, CreditCard, ArrowDownToLine, CheckCircle2, Clock } from "lucide-react";
+import LottieLoader from "../../../components/common/LottieLoader";
 
 export default function PaymentsPage() {
   const dispatch = useDispatch();
@@ -207,9 +208,9 @@ export default function PaymentsPage() {
                   <tbody className="divide-y divide-slate-100 text-xs">
                     {loading ? (
                       <tr>
-                        <td colSpan={6} className="py-12 text-center text-slate-400">
-                          <div className="flex justify-center items-center">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                        <td colSpan={6} className="py-12 text-center">
+                          <div className="flex justify-center min-h-[200px]">
+                            <LottieLoader text="Loading payments data..." />
                           </div>
                         </td>
                       </tr>

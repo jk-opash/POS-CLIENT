@@ -31,7 +31,9 @@ import {
   MapPin,
   AlertCircle,
   Eye,
+  LayoutGrid,
 } from "lucide-react";
+import LottieLoader from "../../../../components/common/LottieLoader";
 import { motion, AnimatePresence } from "framer-motion";
 
 const CAPACITY_OPTIONS = Array.from({ length: 10 }, (_, i) => {
@@ -733,6 +735,11 @@ export default function ZonesPage() {
           {zones.length === 0 && !loading && !showAddZone && (
             <div className="text-center p-4 text-sm text-slate-500 border border-dashed rounded-lg">
               No zones yet.
+            </div>
+          )}
+          {loading && (
+            <div className="flex justify-center min-h-[200px]">
+              <LottieLoader text="Loading zones..." />
             </div>
           )}
         </div>

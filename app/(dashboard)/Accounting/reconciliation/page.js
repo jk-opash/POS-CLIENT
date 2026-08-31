@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchBranches } from "../../../store/slices/branchSlice";
 import { fetchReconciliations } from "../../../store/slices/reconciliationSlice";
 import { Building2, UploadCloud, CheckCircle2, AlertTriangle, XCircle, RefreshCcw } from "lucide-react";
+import LottieLoader from "../../../components/common/LottieLoader";
 
 export default function ReconciliationPage() {
   const dispatch = useDispatch();
@@ -180,9 +181,9 @@ export default function ReconciliationPage() {
                   <tbody className="divide-y divide-slate-100 text-xs">
                     {loading ? (
                       <tr>
-                        <td colSpan={6} className="py-12 text-center text-slate-400">
-                          <div className="flex justify-center items-center">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                        <td colSpan={6} className="py-12 text-center">
+                          <div className="flex justify-center min-h-[200px]">
+                            <LottieLoader text="Loading reconciliation data..." />
                           </div>
                         </td>
                       </tr>

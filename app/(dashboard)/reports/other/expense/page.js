@@ -21,6 +21,7 @@ import PosAdminPagination from "../../../menu/components/PosAdminPagination";
 import StatCard from "../../../../components/ui/StatCard";
 import DateRangePicker from "../../../../components/ui/DateRangePicker";
 import * as XLSX from "xlsx";
+import LottieLoader from "../../../../components/common/LottieLoader";
 
 function fmt(value) {
   return Number(value || 0).toLocaleString("en-IN", {
@@ -343,11 +344,11 @@ export default function ExpenseReport() {
                       <tr>
                         <td
                           colSpan="4"
-                          className="py-12 text-center text-slate-400"
+                          className="py-12 text-center"
                         >
-                          <p className="font-bold text-slate-600">
-                            Loading data...
-                          </p>
+                          <div className="flex justify-center min-h-[200px]">
+                            <LottieLoader text="Loading data..." />
+                          </div>
                         </td>
                       </tr>
                     ) : paginatedRecords.length === 0 ? (

@@ -3,8 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import Sidebar from "../../../components/Sidebar";
-import Topbar from "../../../components/Topbar";
+
 import api from "../../../lib/api";
 import {
   updateInventoryItem,
@@ -32,8 +31,10 @@ import {
   BellRing,
   TrendingUp,
   ArrowUpRight,
+  ArrowUpRight,
   ArrowDownRight,
 } from "lucide-react";
+import LottieLoader from "../../../components/common/LottieLoader";
 
 // Edit Item Modal
 function EditItemModal({ item, onClose, onSave }) {
@@ -259,13 +260,7 @@ export default function ItemDetailsPage() {
   };
 
   if (loading && !item) {
-    return (
-      <div className="flex h-screen bg-slate-50 items-center justify-center font-sans">
-        <p className="text-slate-500 flex items-center gap-2">
-          <Clock className="w-5 h-5 animate-spin" /> Loading item details...
-        </p>
-      </div>
-    );
+    return <LottieLoader fullScreen text="Loading item details..." />;
   }
 
   if (error && !item) {
@@ -464,10 +459,11 @@ export default function ItemDetailsPage() {
                             <tr>
                               <td
                                 colSpan={4}
-                                className="px-6 py-12 text-center text-slate-500"
+                                className="px-6 py-12 text-center"
                               >
-                                <Clock className="w-5 h-5 animate-spin mx-auto mb-2" />
-                                Loading ledger...
+                                <div className="flex justify-center">
+                                  <LottieLoader text="Loading ledger..." />
+                                </div>
                               </td>
                             </tr>
                           ) : ledger.length === 0 ? (

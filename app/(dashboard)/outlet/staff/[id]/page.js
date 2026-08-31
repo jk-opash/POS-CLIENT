@@ -10,8 +10,8 @@ import {
   resetTeamMemberPin,
 } from "../../../../store/slices/teamMemberSlice";
 import { fetchBranches } from "../../../../store/slices/branchSlice";
-
 import Card from "../../../../components/ui/Card";
+import LottieLoader from "../../../../components/common/LottieLoader";
 import Badge from "../../../../components/ui/Badge";
 import Button from "../../../../components/ui/Button";
 import Modal from "../../../../components/ui/Modal";
@@ -448,9 +448,7 @@ export default function StaffDetailsPage() {
   if (loading && !currentTeamMember) {
     return (
       <div className="flex h-screen bg-slate-50 items-center justify-center font-sans">
-        <p className="text-slate-500 flex items-center gap-2">
-          <Clock className="w-5 h-5 animate-spin" /> Loading staff details...
-        </p>
+        <LottieLoader text="Loading staff details..." />
       </div>
     );
   }

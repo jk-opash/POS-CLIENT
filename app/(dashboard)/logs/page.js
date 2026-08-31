@@ -21,6 +21,7 @@ import {
   Receipt,
   AlertTriangle,
 } from "lucide-react";
+import LottieLoader from "../../components/common/LottieLoader";
 
 export default function UserLogsPage() {
   const [collapsed, setCollapsed] = useState(false);
@@ -202,9 +203,11 @@ export default function UserLogsPage() {
                       <tr>
                         <td
                           colSpan="5"
-                          className="py-16 text-center text-brand-muted font-medium"
+                          className="py-16 text-center"
                         >
-                          Loading audit logs...
+                          <div className="flex justify-center min-h-[200px]">
+                            <LottieLoader text="Loading audit logs..." />
+                          </div>
                         </td>
                       </tr>
                     ) : filteredLogs.length === 0 ? (

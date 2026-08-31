@@ -8,6 +8,7 @@ import CategoryFAB from "./components/CategoryFAB";
 import MenuTab from "./tabs/MenuTab";
 import CartTab from "./tabs/CartTab";
 import { UtensilsCrossed, Clock, CheckCircle, MapPin } from "lucide-react";
+import LottieLoader from "../../components/common/LottieLoader";
 
 export default function CustomerOrderPage({ params }) {
   const resolvedParams = use(params);
@@ -101,35 +102,7 @@ export default function CustomerOrderPage({ params }) {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex flex-col pt-12 px-6">
-        <div className="w-48 h-8 bg-slate-200 rounded-full animate-pulse mb-4"></div>
-        <div className="flex gap-3 mb-8 overflow-x-hidden">
-          {[1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className="w-24 h-10 bg-slate-200 rounded-2xl animate-pulse shrink-0"
-            ></div>
-          ))}
-        </div>
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="h-32 bg-white rounded-3xl animate-pulse shadow-sm border border-slate-100 flex p-4 gap-4"
-            >
-              <div className="w-24 h-24 bg-slate-100 rounded-2xl"></div>
-              <div className="flex-1 flex flex-col justify-between py-1">
-                <div>
-                  <div className="w-3/4 h-5 bg-slate-100 rounded-md mb-2"></div>
-                  <div className="w-full h-3 bg-slate-100 rounded-md"></div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+    return <LottieLoader fullScreen text="Loading Menu..." />;
   }
 
   if (error || !data) {
