@@ -21,7 +21,7 @@ export default function RevenueLeakageWidget() {
       <CardHeader className="flex flex-row justify-between items-center mb-4">
         <CardTitle>Revenue Leakage</CardTitle>
         <div className="flex items-center gap-2">
-          <select
+          <select 
             value={timeRange}
             onChange={handleFilterChange}
             className="bg-slate-50 text-xs px-2 h-7 border border-slate-200 rounded-md text-slate-700 outline-none focus:ring-2 focus:ring-blue-100"
@@ -32,7 +32,7 @@ export default function RevenueLeakageWidget() {
             <option value="month">This Month</option>
             <option value="year">This Year</option>
           </select>
-          <button
+          <button 
             onClick={() => {
               setTimeRange("");
               dispatch(fetchDashboardAnalytics({}));
@@ -53,14 +53,8 @@ export default function RevenueLeakageWidget() {
           { val: "0", label: "Not Used In Bills" },
         ].map((item, i) => (
           <div key={i} className="border-l-2 border-slate-100 pl-3">
-            <div
-              className={`text-[22px] font-bold tracking-tight mb-0.5 ${item.color || "text-slate-800"}`}
-            >
-              {item.val}
-            </div>
-            <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider leading-tight">
-              {item.label}
-            </div>
+            <div className={`text-[22px] font-bold tracking-tight mb-0.5 ${item.color || 'text-slate-800'}`}>{item.val}</div>
+            <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider leading-tight">{item.label}</div>
           </div>
         ))}
       </div>

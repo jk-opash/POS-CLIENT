@@ -55,7 +55,7 @@ export default function OrderStatisticsWidget() {
       <CardHeader className="flex flex-row justify-between items-center mb-6">
         <CardTitle>Order Statistics</CardTitle>
       </CardHeader>
-
+      
       <div className="grid grid-cols-2 gap-4 flex-1">
         {data.map((item, idx) => {
           const Icon = item.icon;
@@ -67,23 +67,18 @@ export default function OrderStatisticsWidget() {
                 item.bgColor,
                 item.borderColor,
                 "hover:-translate-y-1 hover:shadow-xl",
-                item.shadowColor,
+                item.shadowColor
               )}
             >
               {/* Decorative background gradient */}
               <div className="absolute inset-0 bg-gradient-to-br from-white/60 to-transparent rounded-2xl pointer-events-none" />
-
+              
               <div className="relative flex items-start justify-between mb-6">
-                <div
-                  className={cn(
-                    "p-2.5 rounded-xl bg-white shadow-sm ring-1 ring-black/5",
-                    item.color,
-                  )}
-                >
+                <div className={cn("p-2.5 rounded-xl bg-white shadow-sm ring-1 ring-black/5", item.color)}>
                   <Icon size={22} strokeWidth={2.5} />
                 </div>
               </div>
-
+              
               <div className="relative">
                 <div className="flex items-baseline gap-1.5 mb-1.5">
                   <span className="text-3xl font-black text-slate-800 tracking-tight">

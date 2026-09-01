@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Sidebar } from "./components/layout/Sidebar";
-import { Header } from "./components/layout/Header";
-import { useDispatch, useSelector } from "react-redux";
-import SessionConflictModal from "./components/common/SessionConflictModal";
+import { useState, useEffect } from 'react';
+import { Sidebar } from './components/layout/Sidebar';
+import { Header } from './components/layout/Header';
+import { useDispatch, useSelector } from 'react-redux';
+import SessionConflictModal from './components/common/SessionConflictModal';
 
 export default function DashboardLayout({ children }) {
   const [mounted, setMounted] = useState(false);
@@ -15,7 +15,7 @@ export default function DashboardLayout({ children }) {
   useEffect(() => {
     setMounted(true);
     if (user) {
-      dispatch({ type: "socket/init" });
+      dispatch({ type: 'socket/init' });
     }
   }, [dispatch, user]);
 
