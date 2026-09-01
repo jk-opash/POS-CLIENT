@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 
@@ -9,11 +9,7 @@ import {
   updateInventoryItem,
   deleteInventoryItem,
 } from "../../../store/slices/inventorySlice";
-import Card, {
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "../../../components/ui/Card";
+import Card from "../../../components/ui/Card";
 import Badge from "../../../components/ui/Badge";
 import Button from "../../../components/ui/Button";
 import Modal from "../../../components/ui/Modal";
@@ -22,7 +18,6 @@ import {
   ChevronLeft,
   Edit,
   AlertCircle,
-  Clock,
   Package,
   Barcode,
   Tag,
@@ -30,7 +25,6 @@ import {
   IndianRupee,
   BellRing,
   TrendingUp,
-  ArrowUpRight,
   ArrowUpRight,
   ArrowDownRight,
 } from "lucide-react";
