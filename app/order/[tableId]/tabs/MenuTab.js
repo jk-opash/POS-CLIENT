@@ -1,4 +1,4 @@
-import { UtensilsCrossed, Plus } from "lucide-react";
+import { UtensilsCrossed, Plus, Minus } from "lucide-react";
 import { getImageUrl } from "../../../lib/utils";
 
 const getFoodTypeColor = (type) => {
@@ -21,6 +21,7 @@ export default function MenuTab({
   cart,
   branch,
   handleQuickAdd,
+  handleQuickRemove,
 }) {
   if (!displayItems || displayItems.length === 0) {
     return (
@@ -147,12 +148,22 @@ export default function MenuTab({
                                   {parseFloat(item.base_price).toFixed(2)}
                                 </span>
                               </span>
-                              <button
-                                onClick={() => handleQuickAdd(item)}
-                                className="w-9 h-9 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all duration-300 active:scale-90 shadow-sm"
-                              >
-                                <Plus size={18} strokeWidth={3} />
-                              </button>
+                              <div className="flex items-center gap-2">
+                                {inCartCount > 0 && (
+                                  <button
+                                    onClick={() => handleQuickRemove(item)}
+                                    className="w-9 h-9 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all duration-300 active:scale-90 shadow-sm"
+                                  >
+                                    <Minus size={18} strokeWidth={3} />
+                                  </button>
+                                )}
+                                <button
+                                  onClick={() => handleQuickAdd(item)}
+                                  className="w-9 h-9 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all duration-300 active:scale-90 shadow-sm"
+                                >
+                                  <Plus size={18} strokeWidth={3} />
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>

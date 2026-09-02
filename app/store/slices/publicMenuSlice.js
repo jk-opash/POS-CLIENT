@@ -26,6 +26,25 @@ export const fetchPublicMenu = createAsyncThunk(
   },
 );
 
+export const fetchTableActiveOrders = createAsyncThunk(
+  "publicMenu/fetchTableActiveOrders",
+  async (tableId, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/public/order/${tableId}/active`,
+      );
+      if (response.data.success) {
+        return response.data.data;
+      }
+      return rejectWithValue("Failed to fetch active orders");
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.error || "Network error. Please try again.",
+      );
+    }
+  },
+);
+
 export const placePublicOrder = createAsyncThunk(
   "publicMenu/placePublicOrder",
   async ({ orderData, kotData }, { rejectWithValue }) => {

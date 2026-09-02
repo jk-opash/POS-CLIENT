@@ -6,7 +6,7 @@ import { placePublicOrder } from "../../../store/slices/publicMenuSlice";
 import { Trash2, ShoppingCart, Minus, Plus, Tag, Loader2 } from "lucide-react";
 import { getImageUrl } from "../../../lib/utils";
 
-export default function CartTab({ cart, setCart, branch, cartTotal, tableId }) {
+export default function CartTab({ cart, setCart, branch, cartTotal, tableId, onOrderPlaced }) {
   const dispatch = useDispatch();
   const tax = cartTotal * 0.05;
   const total = cartTotal + tax;
@@ -70,6 +70,10 @@ export default function CartTab({ cart, setCart, branch, cartTotal, tableId }) {
       };
 
       await dispatch(placePublicOrder({ orderData, kotData })).unwrap();
+
+      if (onOrderPlaced) {
+        onOrderPlaced();
+      }
 
       setCart([]);
       alert("Order sent to kitchen!");
