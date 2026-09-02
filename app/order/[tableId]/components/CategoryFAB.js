@@ -1,5 +1,5 @@
 "use client";
-import { ListFilter, X, CheckCircle } from "lucide-react";
+import { BookOpenText, X, CheckCircle } from "lucide-react";
 
 export default function CategoryFAB({
   categories,
@@ -18,7 +18,7 @@ export default function CategoryFAB({
           onClick={() => setShowCategoryMenu(true)}
           className="w-14 h-14 bg-slate-900 text-white rounded-full flex items-center justify-center shadow-[0_10px_25px_-5px_rgba(0,0,0,0.3)] active:scale-95 transition-all"
         >
-          <ListFilter size={24} />
+          <BookOpenText size={24} />
         </button>
       </div>
 

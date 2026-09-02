@@ -95,7 +95,7 @@ export function Header({ onMenuClick }) {
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-white/60 bg-white/70 px-4 md:px-8 backdrop-blur-xl shadow-[0_4px_30px_rgb(0,0,0,0.03)]">
+      <header className="sticky top-0 z-[100] flex h-16 w-full items-center justify-between border-b border-white/60 bg-white/70 px-4 md:px-8 backdrop-blur-xl shadow-[0_4px_30px_rgb(0,0,0,0.03)]">
         {/* Left Section: Menu Toggle and Profile */}
         <div className="flex items-center gap-3 md:gap-4">
           {/* Profile Dropdown */}

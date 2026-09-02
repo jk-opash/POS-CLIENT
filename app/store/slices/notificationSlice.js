@@ -146,7 +146,12 @@ const notificationSlice = createSlice({
       .addCase(markAsRead.fulfilled, (state, action) => {
         const id = action.meta.arg;
         const notification = state.items.find((item) => item.id === id);
-        if (notification && !notification.isRead && !notification.read && !notification.is_read) {
+        if (
+          notification &&
+          !notification.isRead &&
+          !notification.read &&
+          !notification.is_read
+        ) {
           notification.isRead = true;
           notification.read = true;
           notification.is_read = true;

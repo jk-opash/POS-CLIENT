@@ -1,16 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { createBranch } from '../../../../store/slices/branchSlice';
-import { ChevronLeft, ChevronRight, Check, Store, MapPin, Settings, FileCheck } from "lucide-react";
+import { createBranch } from "../../../../store/slices/branchSlice";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Check,
+  Store,
+  MapPin,
+  Settings,
+  FileCheck,
+} from "lucide-react";
 
-import { StepBranchInfo } from './StepBranchInfo';
-import { StepLocation } from './StepLocation';
-import { StepOperational } from './StepOperational';
-import { StepCompliance } from './StepCompliance';
-import { cn } from '../../../../lib/utils';
+import { StepBranchInfo } from "./StepBranchInfo";
+import { StepLocation } from "./StepLocation";
+import { StepOperational } from "./StepOperational";
+import { StepCompliance } from "./StepCompliance";
+import { cn } from "../../../../lib/utils";
 
 const STEPS = [
   { id: 1, title: "Branch Info", desc: "Basic branch details", icon: Store },
@@ -22,7 +30,10 @@ const STEPS = [
 export function OnboardingWizard() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { loading: isProvisioning } = useSelector((state) => state.branch);
+  const { loading: isProvisioning, branches: reduxBranches } = useSelector(
+    (state) => state.branch,
+  );
+  const { user } = useSelector((state) => state.auth);
 
   const [currentStep, setCurrentStep] = useState(0);
   const [errors, setErrors] = useState({});
@@ -50,35 +61,58 @@ export function OnboardingWizard() {
     setForm((f) => ({ ...f, [key]: value }));
   };
 
-
   const validateStep = () => {
     const newErrors = {};
     if (currentStep === 0) {
       if (!form.name.trim()) newErrors.name = "Branch Name is required";
       if (!form.code.trim()) newErrors.code = "Branch Code is required";
-      else if (form.code.length < 2) newErrors.code = "Branch Code must be at least 2 characters";
+      else if (form.code.length < 2)
+        newErrors.code = "Branch Code must be at least 2 characters";
     } else if (currentStep === 1) {
-      if (!form.contact.trim()) newErrors.contact = "Contact number is required";
-      else if (!/^\d{10}$/.test(form.contact.replace(/\D/g, ''))) newErrors.contact = "Must be a valid 10-digit number";
-      if (form.email && !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(form.email)) newErrors.email = "Must be a valid email address";
+      if (!form.contact.trim())
+        newErrors.contact = "Contact number is required";
+      else if (!/^\d{10}$/.test(form.contact.replace(/\D/g, "")))
+        newErrors.contact = "Must be a valid 10-digit number";
+      if (form.email && !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(form.email))
+        newErrors.email = "Must be a valid email address";
       if (!form.address.trim()) newErrors.address = "Address is required";
       if (!form.city.trim()) newErrors.city = "City is required";
       if (!form.state.trim()) newErrors.state = "State is required";
     } else if (currentStep === 3) {
-      if (form.tax_registration && form.tax_registration.length !== 15) newErrors.tax_registration = "GST must be exactly 15 characters";
+      if (form.tax_registration && form.tax_registration.length !== 15)
+        newErrors.tax_registration = "GST must be exactly 15 characters";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleNext = () => {
-    if (validateStep() && currentStep < STEPS.length - 1) setCurrentStep((c) => c + 1);
+    if (validateStep() && currentStep < STEPS.length - 1)
+      setCurrentStep((c) => c + 1);
   };
 
   const handlePrev = () => {
     if (currentStep > 0) setCurrentStep((c) => c - 1);
   };
+
+  const business = user?.businesses?.[0];
+  const branches =
+    reduxBranches?.length > 0 ? reduxBranches : business?.branches || [];
+  const subscription = business?.subscription_plan;
+  const baseBranches = Number(subscription?.max_branches || 0);
+  const extraBranches = Number(business?.extra_branches || 0);
+  const maxBranches =
+    baseBranches + extraBranches > 0 ? baseBranches + extraBranches : 0;
+
+  useEffect(() => {
+    if (maxBranches > 0 && branches.length >= maxBranches) {
+      alert(
+        `You have reached your limit of ${maxBranches} branches. Please upgrade your plan to add more.`,
+      );
+      router.push("/outlet");
+    }
+  }, [maxBranches, branches.length, router]);
 
   const handleSubmit = async () => {
     if (!validateStep()) return;
@@ -95,7 +129,7 @@ export function OnboardingWizard() {
       {/* Left Sidebar Stepper */}
       <div className="w-1/3 max-w-[320px] bg-slate-50 border-r border-slate-200 p-8 hidden md:block overflow-y-auto">
         <h2 className="text-lg font-bold text-slate-900 mb-8">Create Branch</h2>
-        
+
         <div className="space-y-6">
           {STEPS.map((step, idx) => {
             const isActive = currentStep === idx;
@@ -105,24 +139,42 @@ export function OnboardingWizard() {
             return (
               <div key={step.id} className="flex gap-4 relative">
                 {idx !== STEPS.length - 1 && (
-                  <div className={cn(
-                    "absolute left-5 top-10 bottom-[-24px] w-0.5 transition-colors duration-500",
-                    isCompleted ? "bg-indigo-600" : "bg-slate-200"
-                  )} />
+                  <div
+                    className={cn(
+                      "absolute left-5 top-10 bottom-[-24px] w-0.5 transition-colors duration-500",
+                      isCompleted ? "bg-indigo-600" : "bg-slate-200",
+                    )}
+                  />
                 )}
-                <div className={cn(
-                  "relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-300",
-                  isActive ? "border-indigo-600 text-indigo-600 bg-indigo-50 shadow-[0_0_0_4px_rgba(79,70,229,0.1)]" : 
-                  isCompleted ? "border-indigo-600 bg-indigo-600 text-white" : 
-                  "border-slate-200 text-slate-400 bg-white"
-                )}>
-                  {isCompleted ? <Check className="h-5 w-5" /> : <Icon className="h-5 w-5" />}
+                <div
+                  className={cn(
+                    "relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-300",
+                    isActive
+                      ? "border-indigo-600 text-indigo-600 bg-indigo-50 shadow-[0_0_0_4px_rgba(79,70,229,0.1)]"
+                      : isCompleted
+                        ? "border-indigo-600 bg-indigo-600 text-white"
+                        : "border-slate-200 text-slate-400 bg-white",
+                  )}
+                >
+                  {isCompleted ? (
+                    <Check className="h-5 w-5" />
+                  ) : (
+                    <Icon className="h-5 w-5" />
+                  )}
                 </div>
                 <div className="pt-2 pb-4">
-                  <h3 className={cn(
-                    "text-sm font-bold transition-colors",
-                    isActive ? "text-indigo-900" : isCompleted ? "text-slate-900" : "text-slate-500"
-                  )}>{step.title}</h3>
+                  <h3
+                    className={cn(
+                      "text-sm font-bold transition-colors",
+                      isActive
+                        ? "text-indigo-900"
+                        : isCompleted
+                          ? "text-slate-900"
+                          : "text-slate-500",
+                    )}
+                  >
+                    {step.title}
+                  </h3>
                   <p className="text-sm text-slate-500">{step.desc}</p>
                 </div>
               </div>
@@ -136,15 +188,46 @@ export function OnboardingWizard() {
         <div className="flex-1 overflow-y-auto p-8 md:p-12 custom-scrollbar">
           <div className="max-w-2xl">
             <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <h2 className="text-2xl font-bold text-slate-900 mb-2">{STEPS[currentStep].title}</h2>
-              <p className="text-slate-500 mb-8">Please fill in the details below to proceed.</p>
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">
+                {STEPS[currentStep].title}
+              </h2>
+              <p className="text-slate-500 mb-8">
+                Please fill in the details below to proceed.
+              </p>
             </div>
 
-            <div key={currentStep} className="animate-in fade-in slide-in-from-right-4 duration-500">
-              {currentStep === 0 && <StepBranchInfo form={form} updateForm={updateForm} errors={errors} />}
-              {currentStep === 1 && <StepLocation form={form} updateForm={updateForm} errors={errors} />}
-              {currentStep === 2 && <StepOperational form={form} updateForm={updateForm} errors={errors} />}
-              {currentStep === 3 && <StepCompliance form={form} updateForm={updateForm} errors={errors} />}
+            <div
+              key={currentStep}
+              className="animate-in fade-in slide-in-from-right-4 duration-500"
+            >
+              {currentStep === 0 && (
+                <StepBranchInfo
+                  form={form}
+                  updateForm={updateForm}
+                  errors={errors}
+                />
+              )}
+              {currentStep === 1 && (
+                <StepLocation
+                  form={form}
+                  updateForm={updateForm}
+                  errors={errors}
+                />
+              )}
+              {currentStep === 2 && (
+                <StepOperational
+                  form={form}
+                  updateForm={updateForm}
+                  errors={errors}
+                />
+              )}
+              {currentStep === 3 && (
+                <StepCompliance
+                  form={form}
+                  updateForm={updateForm}
+                  errors={errors}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -156,7 +239,7 @@ export function OnboardingWizard() {
             disabled={currentStep === 0 || isProvisioning}
             className={cn(
               "px-6 py-2.5 text-sm font-medium rounded-xl border border-slate-200 bg-white hover:bg-slate-50 hover:text-slate-900 text-slate-600 transition-all flex items-center gap-2",
-              currentStep === 0 && "opacity-0 pointer-events-none"
+              currentStep === 0 && "opacity-0 pointer-events-none",
             )}
           >
             <ChevronLeft className="w-4 h-4" /> Back
@@ -177,7 +260,8 @@ export function OnboardingWizard() {
             >
               {isProvisioning ? (
                 <>
-                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Saving...
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />{" "}
+                  Saving...
                 </>
               ) : (
                 <>

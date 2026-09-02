@@ -2,11 +2,12 @@
 
 import { use, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPublicMenu } from "../../store/slices/publicMenuSlice";
+import { fetchPublicMenu, fetchTableActiveOrders } from "../../store/slices/publicMenuSlice";
 import ItemConfigModal from "./components/ItemConfigModal";
 import CategoryFAB from "./components/CategoryFAB";
 import MenuTab from "./tabs/MenuTab";
 import CartTab from "./tabs/CartTab";
+import OrdersTab from "./tabs/OrdersTab";
 import { UtensilsCrossed, Clock, CheckCircle, MapPin } from "lucide-react";
 import LottieLoader from "../../components/common/LottieLoader";
 
@@ -25,6 +26,31 @@ export default function CustomerOrderPage({ params }) {
 
   // Cart State
   const [cart, setCart] = useState([]);
+  const [placedOrders, setPlacedOrders] = useState([]);
+
+  // Load menu and active orders on mount
+  useEffect(() => {
+    dispatch(fetchPublicMenu(tableId));
+    loadActiveOrders();
+  }, [dispatch, tableId]);
+
+  const loadActiveOrders = async () => {
+    try {
+      const response = await dispatch(fetchTableActiveOrders(tableId)).unwrap();
+      
+      // response is an array of orders.
+      // Each order has a 'running_order' Json field containing the items.
+      const allPlacedItems = [];
+      response.forEach((order) => {
+        if (order.running_order && Array.isArray(order.running_order)) {
+          allPlacedItems.push(...order.running_order);
+        }
+      });
+      setPlacedOrders(allPlacedItems);
+    } catch (error) {
+      console.error("Failed to load active orders:", error);
+    }
+  };
 
   // Modal State
   const [selectedItem, setSelectedItem] = useState(null);
@@ -39,16 +65,23 @@ export default function CustomerOrderPage({ params }) {
   }, []);
 
   useEffect(() => {
-    if (tableId) {
-      dispatch(fetchPublicMenu(tableId));
-    }
-  }, [dispatch, tableId]);
-
-  useEffect(() => {
     if (data?.categories?.length > 0) {
       setActiveCategory(data.categories[0].id);
     }
   }, [data]);
+
+  // Keep orders fresh when viewing the Orders tab
+  useEffect(() => {
+    if (activeTab === "orders" || activeTab === "bill") {
+      loadActiveOrders();
+      
+      const interval = setInterval(() => {
+        loadActiveOrders();
+      }, 10000); // poll every 10 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [activeTab]);
 
   const handleAddToCart = (cartItem) => {
     setCart((prev) => {
@@ -101,6 +134,36 @@ export default function CustomerOrderPage({ params }) {
     }
   };
 
+  const handleQuickRemove = (item) => {
+    setCart((prev) => {
+      // Find the last added item with this ID to remove
+      // (This makes it more predictable if they added multiple variants)
+      let targetIdx = -1;
+      for (let i = prev.length - 1; i >= 0; i--) {
+        if (prev[i].item.id === item.id) {
+          targetIdx = i;
+          break;
+        }
+      }
+
+      if (targetIdx !== -1) {
+        const c = prev[targetIdx];
+        if (c.quantity > 1) {
+          const newArr = [...prev];
+          newArr[targetIdx] = {
+            ...c,
+            quantity: c.quantity - 1,
+            totalPrice: c.unitPrice * (c.quantity - 1),
+          };
+          return newArr;
+        } else {
+          return prev.filter((_, i) => i !== targetIdx);
+        }
+      }
+      return prev;
+    });
+  };
+
   if (loading) {
     return <LottieLoader fullScreen text="Loading Menu..." />;
   }
@@ -142,6 +205,11 @@ export default function CustomerOrderPage({ params }) {
   const cartTotal = cart.reduce((sum, item) => sum + item.totalPrice, 0);
   const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
+  // Do not include cancelled items in the active orders badge count
+  const activeOrdersCount = placedOrders.filter(
+    (item) => item && item?.status?.toLowerCase() !== "cancelled"
+  ).length;
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-800 pb-24">
       {/* Dynamic Header */}
@@ -179,6 +247,14 @@ export default function CustomerOrderPage({ params }) {
             cart={cart}
             branch={branch}
             handleQuickAdd={handleQuickAdd}
+            handleQuickRemove={handleQuickRemove}
+          />
+        )}
+
+        {activeTab === "orders" && (
+          <OrdersTab 
+            placedOrders={placedOrders} 
+            onGoToMenu={() => setActiveTab("menu")}
           />
         )}
 
@@ -189,6 +265,7 @@ export default function CustomerOrderPage({ params }) {
             branch={branch}
             cartTotal={cartTotal}
             tableId={tableId}
+            onOrderPlaced={loadActiveOrders}
           />
         )}
       </main>
@@ -225,7 +302,7 @@ export default function CustomerOrderPage({ params }) {
 
           <button
             onClick={() => setActiveTab("orders")}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 relative ${
               activeTab === "orders"
                 ? "bg-white text-slate-900 shadow-sm"
                 : "text-slate-400 hover:text-slate-200"
@@ -234,6 +311,11 @@ export default function CustomerOrderPage({ params }) {
             <Clock size={18} strokeWidth={activeTab === "orders" ? 2.5 : 2} />
             {activeTab === "orders" && (
               <span className="text-xs font-bold">Orders</span>
+            )}
+            {activeOrdersCount > 0 && (
+              <div className="absolute -top-1 -right-1 w-5 h-5 bg-indigo-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-slate-900">
+                {activeOrdersCount}
+              </div>
             )}
           </button>
 

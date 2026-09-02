@@ -3,16 +3,30 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "../../lib/utils";
-import { Settings, X, LogOut, ChevronDown } from "lucide-react";
+import { Settings, X, LogOut, ChevronDown, AlertTriangle } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { NAV_ITEMS } from "../../lib/navigation";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/slices/authSlice";
+
+function getSubscriptionDaysLeft(user) {
+  try {
+    const end = user?.businesses?.[0]?.subscription_plan?.current_period_end;
+    if (!end) return null;
+    const diff = new Date(end) - new Date();
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  } catch {
+    return null;
+  }
+}
 
 export function Sidebar({ isOpen, onClose }) {
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const daysLeft = getSubscriptionDaysLeft(user);
+  const showWarning = daysLeft !== null && daysLeft <= 10;
 
   // Decide which nav items to show
   const navItems = NAV_ITEMS;
@@ -181,6 +195,27 @@ export function Sidebar({ isOpen, onClose }) {
             );
           })}
         </div>
+
+        {showWarning && (
+          <div className={cn(
+            "mx-3 mb-3 rounded-xl px-3 py-2.5 flex items-start gap-2.5 border shrink-0",
+            daysLeft <= 3
+              ? "bg-red-500/10 border-red-500/30 text-red-400"
+              : "bg-amber-500/10 border-amber-500/30 text-amber-400"
+          )}>
+            <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+            <div className="min-w-0">
+              <p className="text-[11px] font-bold leading-tight">
+                {daysLeft <= 0 ? "Subscription Expired" : `${daysLeft} day${daysLeft === 1 ? "" : "s"} left`}
+              </p>
+              <p className="text-[10px] opacity-70 mt-0.5 leading-tight">
+                {daysLeft <= 0
+                  ? "Renew now to restore access"
+                  : "Renew to avoid service interruption"}
+              </p>
+            </div>
+          </div>
+        )}
 
         <div className="p-4 border-t border-slate-800 bg-brand-dark space-y-1 shrink-0">
           <Link

@@ -23,6 +23,114 @@ import {
 } from "lucide-react";
 import LottieLoader from "../../components/common/LottieLoader";
 
+const TYPE_MAPPING = {
+  Transaction: ["Order", "Invoice", "SubscriptionInvoice", "Transaction"],
+  Authentication: ["Admin", "Superadmin", "Authentication"],
+  Cash: ["Expense", "Withdrawal", "UtilityBill", "Cash"],
+  Settings: [
+    "Business",
+    "Branch",
+    "TeamMember",
+    "Zone",
+    "Table",
+    "MenuCategory",
+    "MenuItem",
+    "InventoryItem",
+    "Supplier",
+    "SubscriptionPlan",
+    "SupportTicket",
+    "Settings",
+    "StockLedger",
+  ],
+};
+
+const TAB_KEYWORDS = {
+  Transaction: [
+    "void",
+    "discount",
+    "sale",
+    "order",
+    "payment",
+    "transaction",
+    "invoice",
+  ],
+  Authentication: ["login", "logout", "auth", "session", "credential"],
+  Cash: [
+    "drawer",
+    "refund",
+    "cash",
+    "till",
+    "payout",
+    "payin",
+    "expense",
+    "withdrawal",
+  ],
+  Settings: [
+    "config",
+    "settings",
+    "system",
+    "teammember",
+    "activated",
+    "reset",
+    "branch",
+    "tax",
+    "role",
+    "deactivated",
+    "business",
+    "zone",
+    "table",
+    "menu",
+  ],
+};
+
+const formatDetails = (details) => {
+  if (!details || details === "{}") return "-";
+  try {
+    const parsed = typeof details === "string" ? JSON.parse(details) : details;
+    if (typeof parsed === "object" && parsed !== null) {
+      const entries = Object.entries(parsed).filter(
+        ([k, v]) =>
+          v !== null &&
+          v !== undefined &&
+          v !== "" &&
+          k !== "id" &&
+          k !== "password_hash",
+      );
+
+      if (entries.length === 0) return "No additional details recorded.";
+
+      const descriptions = entries.map(([k, v]) => {
+        // Convert keys like "first_name" or "firstName" to "first name"
+        const keyName = k
+          .replace(/_/g, " ")
+          .replace(/([A-Z])/g, " $1")
+          .toLowerCase()
+          .trim();
+
+        if (typeof v === "object") {
+          if (Array.isArray(v)) {
+            return `${keyName} updated with ${v.length} items`;
+          }
+          return `${keyName} modified`;
+        }
+
+        if (typeof v === "boolean") {
+          return `${keyName} was ${v ? "enabled" : "disabled"}`;
+        }
+
+        return `${keyName} set to '${v}'`;
+      });
+
+      // Capitalize first letter of the resulting string
+      const summary = descriptions.join(", ");
+      return summary.charAt(0).toUpperCase() + summary.slice(1) + ".";
+    }
+    return String(details);
+  } catch (e) {
+    return String(details);
+  }
+};
+
 export default function UserLogsPage() {
   const [collapsed, setCollapsed] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -36,13 +144,40 @@ export default function UserLogsPage() {
   }, [dispatch]);
 
   const filteredLogs = (logs || []).filter((log) => {
-    const matchesTab = activeTab === "All" || log.type === activeTab;
+    const rawType = log.type || "";
+    const typeLower = rawType.toLowerCase();
+    const actionLower = (log.action || "").toLowerCase();
+
+    let matchesTab = false;
+    if (activeTab === "All") {
+      matchesTab = true;
+    } else {
+      const tabLower = activeTab.toLowerCase();
+      const mappedTypes = TYPE_MAPPING[activeTab] || [];
+
+      // 1. Direct Backend Model Type Match
+      if (mappedTypes.some((t) => t.toLowerCase() === typeLower)) {
+        matchesTab = true;
+      }
+      // 2. Fallback Exact String Match
+      else if (typeLower === tabLower) {
+        matchesTab = true;
+      }
+      // 3. Fallback Keyword Action Match
+      else if (TAB_KEYWORDS[activeTab]) {
+        matchesTab = TAB_KEYWORDS[activeTab].some((kw) =>
+          actionLower.includes(kw),
+        );
+      }
+    }
+
     const matchesSearch =
       (log.actor_name || "")
         .toLowerCase()
         .includes(searchQuery.toLowerCase()) ||
       (log.action || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
       (log.details || "").toLowerCase().includes(searchQuery.toLowerCase());
+
     return matchesTab && matchesSearch;
   });
 
@@ -113,11 +248,6 @@ export default function UserLogsPage() {
 
               <div className="flex flex-wrap items-center gap-3">
                 <button className="flex items-center gap-2 rounded-lg border border-brand-border bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm hover:bg-brand-light transition-colors">
-                  <Calendar size={16} className="text-slate-400" />
-                  Today (28 Jul)
-                  <ChevronDown size={14} className="text-slate-400 ml-1" />
-                </button>
-                <button className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-bold text-emerald-700 shadow-sm hover:bg-emerald-100 transition-colors">
                   <Download size={16} className="text-emerald-500" /> Export CSV
                 </button>
               </div>
@@ -190,9 +320,6 @@ export default function UserLogsPage() {
                       <th className="py-4 px-6 font-bold text-xs text-brand-muted uppercase tracking-wider">
                         Action
                       </th>
-                      <th className="py-4 px-6 font-bold text-xs text-brand-muted uppercase tracking-wider">
-                        Details
-                      </th>
                       <th className="py-4 px-6 font-bold text-xs text-brand-muted uppercase tracking-wider text-right">
                         Severity
                       </th>
@@ -201,10 +328,7 @@ export default function UserLogsPage() {
                   <tbody>
                     {loading ? (
                       <tr>
-                        <td
-                          colSpan="5"
-                          className="py-16 text-center"
-                        >
+                        <td colSpan="5" className="py-16 text-center">
                           <div className="flex justify-center min-h-[200px]">
                             <LottieLoader text="Loading audit logs..." />
                           </div>
@@ -269,11 +393,6 @@ export default function UserLogsPage() {
                               <span className="font-bold text-brand-dark">
                                 {log.action}
                               </span>
-                            </div>
-                          </td>
-                          <td className="py-4 px-6">
-                            <div className="text-slate-600 font-medium whitespace-normal max-w-md line-clamp-2">
-                              {log.details}
                             </div>
                           </td>
                           <td className="py-4 px-6 text-right flex justify-end">
