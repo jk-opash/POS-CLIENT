@@ -47,7 +47,7 @@ export function Sidebar({ isOpen, onClose }) {
       {/* Mobile Overlay */}
       {isOpen && (
         <div
-          className="fixed z-100 inset-0 z-tooltip bg-brand-dark/40 backdrop-blur-sm md:hidden"
+          className="fixed z-[100] inset-0 z-tooltip bg-brand-dark/40 backdrop-blur-sm md:hidden"
           onClick={onClose}
         />
       )}
