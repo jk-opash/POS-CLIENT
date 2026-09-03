@@ -2,13 +2,24 @@
 
 import { use, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPublicMenu, fetchTableActiveOrders } from "../../store/slices/publicMenuSlice";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  fetchPublicMenu,
+  fetchTableActiveOrders,
+} from "../../store/slices/publicMenuSlice";
 import ItemConfigModal from "./components/ItemConfigModal";
 import CategoryFAB from "./components/CategoryFAB";
 import MenuTab from "./tabs/MenuTab";
 import CartTab from "./tabs/CartTab";
 import OrdersTab from "./tabs/OrdersTab";
-import { UtensilsCrossed, Clock, CheckCircle, MapPin } from "lucide-react";
+import {
+  UtensilsCrossed,
+  Clock,
+  CheckCircle,
+  MapPin,
+  Menu,
+  ChevronDown,
+} from "lucide-react";
 import LottieLoader from "../../components/common/LottieLoader";
 
 export default function CustomerOrderPage({ params }) {
@@ -27,6 +38,7 @@ export default function CustomerOrderPage({ params }) {
   // Cart State
   const [cart, setCart] = useState([]);
   const [placedOrders, setPlacedOrders] = useState([]);
+  const [activeOrders, setActiveOrders] = useState([]);
 
   // Load menu and active orders on mount
   useEffect(() => {
@@ -37,7 +49,8 @@ export default function CustomerOrderPage({ params }) {
   const loadActiveOrders = async () => {
     try {
       const response = await dispatch(fetchTableActiveOrders(tableId)).unwrap();
-      
+      setActiveOrders(response);
+
       // response is an array of orders.
       // Each order has a 'running_order' Json field containing the items.
       const allPlacedItems = [];
@@ -74,7 +87,7 @@ export default function CustomerOrderPage({ params }) {
   useEffect(() => {
     if (activeTab === "orders" || activeTab === "bill") {
       loadActiveOrders();
-      
+
       const interval = setInterval(() => {
         loadActiveOrders();
       }, 10000); // poll every 10 seconds
@@ -92,7 +105,7 @@ export default function CustomerOrderPage({ params }) {
           c.variant?.name === cartItem.variant?.name &&
           c.spiceLevel === cartItem.spiceLevel &&
           JSON.stringify(c.addons.map((a) => a.name).sort()) ===
-            JSON.stringify(cartItem.addons.map((a) => a.name).sort())
+            JSON.stringify(cartItem.addons.map((a) => a.name).sort()),
       );
 
       if (existingIdx !== -1) {
@@ -104,7 +117,7 @@ export default function CustomerOrderPage({ params }) {
                 quantity: c.quantity + cartItem.quantity,
                 totalPrice: c.unitPrice * (c.quantity + cartItem.quantity),
               }
-            : c
+            : c,
         );
       }
 
@@ -207,53 +220,89 @@ export default function CustomerOrderPage({ params }) {
 
   // Do not include cancelled items in the active orders badge count
   const activeOrdersCount = placedOrders.filter(
-    (item) => item && item?.status?.toLowerCase() !== "cancelled"
+    (item) => item && item?.status?.toLowerCase() !== "cancelled",
   ).length;
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-800 pb-24">
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 pb-24">
       {/* Dynamic Header */}
       <header
-        className={`sticky top-0 z-40 transition-all duration-300 pt-3 ${
-          scrolled
-            ? "bg-white/80 backdrop-blur-xl shadow-sm pb-2"
-            : "bg-transparent pb-3"
+        className={`sticky top-0 z-40 transition-all duration-300 bg-gradient-to-r from-indigo-300 via-purple-300 to-orange-300 backdrop-blur-xl shadow-md ${
+          activeTab === "menu" ? "pt-3" : "py-3"
         }`}
       >
-        <div className="px-4 flex items-center justify-between mb-3">
-          <div>
-            <h1 className="text-3xl font-black text-slate-900 tracking-tight line-clamp-1">
-              {activeCategoryName}
+        {/* Brand & Table */}
+        <div className="px-4 flex items-center justify-between ">
+          <div className="flex flex-col">
+            <h1
+              className="text-3xl font-black text-slate-900 tracking-tight drop-shadow-sm"
+              style={{ fontFamily: "'Playfair Display', 'Georgia', serif" }}
+            >
+              {business?.name}
             </h1>
-            <div className="flex items-center gap-1.5 mt-1.5">
-              <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md">
-                <MapPin size={12} />
-                {branch?.name}
-              </span>
-              <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-2 py-1 rounded-md">
-                Table {table?.name || tableId}
-              </span>
+            <div className="text-[10px] font-bold uppercase tracking-widest text-slate-700">
+              A TASTE OF HOME
             </div>
           </div>
+          <span className="inline-flex self-start gap-1 text-[11px] font-bold uppercase tracking-wider text-slate-700 bg-orange-50 px-2 py-1 rounded-md">
+            <UtensilsCrossed size={14} />
+            Table {table?.name || tableId}
+          </span>
         </div>
+
+        {/* Categories Bar */}
+        {activeTab === "menu" && (
+          <div className="px-4 py-2 overflow-x-auto hide-scrollbar flex items-center gap-2">
+            <button
+              onClick={() => setActiveCategory("all")}
+              className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm transition-all ${
+                activeCategory === "all"
+                  ? "bg-white text-indigo-700 font-bold"
+                  : "bg-white/40 text-slate-700 font-medium hover:bg-white/60"
+              }`}
+            >
+              All
+            </button>
+            {categories?.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id)}
+                className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm transition-all ${
+                  activeCategory === cat.id
+                    ? "bg-white text-indigo-700 font-bold"
+                    : "bg-white/40 text-slate-700 font-medium hover:bg-white/60"
+                }`}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
+        )}
       </header>
 
       {/* Main Content Area */}
       <main className="px-4 pt-2 space-y-3">
         {activeTab === "menu" && (
-          <MenuTab
-            displayItems={displayItems}
-            categories={categories}
-            cart={cart}
-            branch={branch}
-            handleQuickAdd={handleQuickAdd}
-            handleQuickRemove={handleQuickRemove}
-          />
+          <>
+            {/* <div className="flex items-center justify-between pt-1 pb-1">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight">
+                {activeCategoryName}
+              </h2>
+            </div> */}
+            <MenuTab
+              displayItems={displayItems}
+              categories={categories}
+              cart={cart}
+              branch={branch}
+              handleQuickAdd={handleQuickAdd}
+              handleQuickRemove={handleQuickRemove}
+            />
+          </>
         )}
 
         {activeTab === "orders" && (
-          <OrdersTab 
-            placedOrders={placedOrders} 
+          <OrdersTab
+            placedOrders={placedOrders}
             onGoToMenu={() => setActiveTab("menu")}
           />
         )}
@@ -266,6 +315,7 @@ export default function CustomerOrderPage({ params }) {
             cartTotal={cartTotal}
             tableId={tableId}
             onOrderPlaced={loadActiveOrders}
+            activeOrders={activeOrders}
           />
         )}
       </main>
@@ -282,76 +332,124 @@ export default function CustomerOrderPage({ params }) {
 
       {/* Floating Island Bottom Navigation */}
       <div className="fixed gap-4 bottom-4 left-4 right-4 z-30 flex justify-center pb-safe pointer-events-none">
-        <div className="bg-slate-900/95 backdrop-blur-md p-1.5 rounded-full shadow-2xl flex items-center gap-2 border border-slate-800 pointer-events-auto relative">
-          <button
+        <motion.div
+          layout
+          className="bg-slate-900/95 backdrop-blur-md p-1.5 rounded-full shadow-2xl flex items-center gap-2 border border-slate-800 pointer-events-auto relative"
+        >
+          <motion.button
+            layout
             onClick={() => setActiveTab("menu")}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 ${
+            className={`flex items-center px-4 py-2.5 rounded-full transition-colors duration-300 ${
               activeTab === "menu"
                 ? "bg-white text-slate-900 shadow-sm"
                 : "text-slate-400 hover:text-slate-200"
             }`}
           >
-            <UtensilsCrossed
-              size={18}
-              strokeWidth={activeTab === "menu" ? 2.5 : 2}
-            />
-            {activeTab === "menu" && (
-              <span className="text-xs font-bold">Menu</span>
-            )}
-          </button>
+            <motion.div layout>
+              <UtensilsCrossed
+                size={18}
+                strokeWidth={activeTab === "menu" ? 2.5 : 2}
+              />
+            </motion.div>
+            <AnimatePresence initial={false}>
+              {activeTab === "menu" && (
+                <motion.span
+                  layout
+                  initial={{ opacity: 0, width: 0, marginLeft: 0 }}
+                  animate={{ opacity: 1, width: "auto", marginLeft: 8 }}
+                  exit={{ opacity: 0, width: 0, marginLeft: 0 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  className="text-xs font-bold whitespace-nowrap overflow-hidden"
+                >
+                  Menu
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
 
-          <button
+          <motion.button
+            layout
             onClick={() => setActiveTab("orders")}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 relative ${
+            className={`flex items-center px-4 py-2.5 rounded-full transition-colors duration-300 relative ${
               activeTab === "orders"
                 ? "bg-white text-slate-900 shadow-sm"
                 : "text-slate-400 hover:text-slate-200"
             }`}
           >
-            <Clock size={18} strokeWidth={activeTab === "orders" ? 2.5 : 2} />
-            {activeTab === "orders" && (
-              <span className="text-xs font-bold">Orders</span>
-            )}
-            {activeOrdersCount > 0 && (
-              <div className="absolute -top-1 -right-1 w-5 h-5 bg-indigo-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-slate-900">
-                {activeOrdersCount}
-              </div>
-            )}
-          </button>
+            <motion.div layout>
+              <Clock size={18} strokeWidth={activeTab === "orders" ? 2.5 : 2} />
+            </motion.div>
+            <AnimatePresence initial={false}>
+              {activeTab === "orders" && (
+                <motion.span
+                  layout
+                  initial={{ opacity: 0, width: 0, marginLeft: 0 }}
+                  animate={{ opacity: 1, width: "auto", marginLeft: 8 }}
+                  exit={{ opacity: 0, width: 0, marginLeft: 0 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  className="text-xs font-bold whitespace-nowrap overflow-hidden"
+                >
+                  Orders
+                </motion.span>
+              )}
+            </AnimatePresence>
+            <AnimatePresence>
+              {activeOrdersCount > 0 && (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  className="absolute -top-1 -right-1 w-5 h-5 bg-indigo-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-slate-900"
+                >
+                  {activeOrdersCount}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.button>
 
-          <button
+          <motion.button
+            layout
             onClick={() => setActiveTab("bill")}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 relative ${
+            className={`flex items-center px-4 py-2.5 rounded-full transition-colors duration-300 relative ${
               activeTab === "bill"
                 ? "bg-white text-slate-900 shadow-sm"
                 : "text-slate-400 hover:text-slate-200"
             }`}
           >
-            <CheckCircle
-              size={18}
-              strokeWidth={activeTab === "bill" ? 2.5 : 2}
-            />
-            {activeTab === "bill" && (
-              <span className="text-xs font-bold">Cart</span>
-            )}
-            {cartItemCount > 0 && (
-              <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-slate-900">
-                {cartItemCount}
-              </div>
-            )}
-          </button>
-        </div>
-        {activeTab === "menu" && (
-          <div className="pointer-events-auto">
-            <CategoryFAB
-              categories={categories || []}
-              activeCategory={activeCategory}
-              setActiveCategory={setActiveCategory}
-              showCategoryMenu={showCategoryMenu}
-              setShowCategoryMenu={setShowCategoryMenu}
-            />
-          </div>
-        )}
+            <motion.div layout>
+              <CheckCircle
+                size={18}
+                strokeWidth={activeTab === "bill" ? 2.5 : 2}
+              />
+            </motion.div>
+            <AnimatePresence initial={false}>
+              {activeTab === "bill" && (
+                <motion.span
+                  layout
+                  initial={{ opacity: 0, width: 0, marginLeft: 0 }}
+                  animate={{ opacity: 1, width: "auto", marginLeft: 8 }}
+                  exit={{ opacity: 0, width: 0, marginLeft: 0 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  className="text-xs font-bold whitespace-nowrap overflow-hidden"
+                >
+                  Cart
+                </motion.span>
+              )}
+            </AnimatePresence>
+            <AnimatePresence>
+              {cartItemCount > 0 && (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-slate-900"
+                >
+                  {cartItemCount}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.button>
+        </motion.div>
       </div>
     </div>
   );

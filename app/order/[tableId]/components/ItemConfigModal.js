@@ -171,7 +171,7 @@ export default function ItemConfigModal({ item, currency, onClose, onAdd }) {
                         <input
                           type="checkbox"
                           className="hidden"
-                          checked={isSelected}
+                          checked={!!isSelected}
                           onChange={() => handleToggleAddon(addon)}
                         />
                       </label>

@@ -3,21 +3,43 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { placePublicOrder } from "../../../store/slices/publicMenuSlice";
-import { Trash2, ShoppingCart, Minus, Plus, Tag, Loader2 } from "lucide-react";
+import {
+  Trash2,
+  ShoppingCart,
+  Minus,
+  Plus,
+  Tag,
+  Loader2,
+  Sparkles,
+  UtensilsCrossed,
+} from "lucide-react";
 import { getImageUrl } from "../../../lib/utils";
 
-export default function CartTab({ cart, setCart, branch, cartTotal, tableId, onOrderPlaced }) {
+export default function CartTab({
+  cart,
+  setCart,
+  branch,
+  cartTotal,
+  tableId,
+  onOrderPlaced,
+  activeOrders = [],
+}) {
   const dispatch = useDispatch();
-  const tax = cartTotal * 0.05;
-  const total = cartTotal + tax;
+  const total = cartTotal;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handlePlaceOrder = async () => {
     if (cart.length === 0) return;
     setIsSubmitting(true);
     try {
-      const orderNumber = `ORD-${branch?.branch_code || "BR"}-${Date.now().toString().slice(-6)}`;
-      const kotNumber = `KOT-${orderNumber.split("-").pop()}`;
+      const pendingOrder = activeOrders?.find(
+        (o) => o.status === "Pending" && o.payment_status === "Pending",
+      );
+
+      const orderNumber =
+        pendingOrder?.order_number ||
+        `ORD-${branch?.branch_code || "BR"}-${Date.now().toString().slice(-6)}`;
+      const kotNumber = `KOT-${Date.now().toString().slice(-6)}`;
 
       const orderData = {
         branch_id: branch?.id,
@@ -27,7 +49,7 @@ export default function CartTab({ cart, setCart, branch, cartTotal, tableId, onO
         status: "Pending",
         payment_status: "Pending",
         subtotal: cartTotal,
-        tax_amount: tax,
+        tax_amount: 0,
         discount_amount: 0,
         total_amount: total,
       };
@@ -59,22 +81,39 @@ export default function CartTab({ cart, setCart, branch, cartTotal, tableId, onO
         })),
       });
 
+      const newSanitizedCart = cart.map(sanitizeItem);
+
+      // Merge running_order and totals if pending order exists
+      const mergedRunningOrder = pendingOrder
+        ? [...(pendingOrder.running_order || []), ...newSanitizedCart]
+        : newSanitizedCart;
+
+      const mergedSubtotal = pendingOrder
+        ? parseFloat(pendingOrder.subtotal || 0) + cartTotal
+        : cartTotal;
+      const mergedTotal = pendingOrder
+        ? parseFloat(pendingOrder.total_amount || 0) + total
+        : total;
+
       const kotData = {
         kot_numbers: [kotNumber],
-        running_order: cart.map(sanitizeItem),
+        running_order: mergedRunningOrder,
         cart_items: [],
-        subtotal: cartTotal,
-        tax_amount: tax,
+        subtotal: mergedSubtotal.toString(),
+        tax_amount: 0,
         discount_amount: 0,
-        total_amount: total,
+        total_amount: mergedTotal.toString(),
       };
 
-      await dispatch(placePublicOrder({ orderData, kotData })).unwrap();
+      await dispatch(
+        placePublicOrder({
+          existingOrderId: pendingOrder?.id,
+          orderData,
+          kotData,
+        }),
+      ).unwrap();
 
-      if (onOrderPlaced) {
-        onOrderPlaced();
-      }
-
+      if (onOrderPlaced) onOrderPlaced();
       setCart([]);
       alert("Order sent to kitchen!");
     } catch (error) {
@@ -106,24 +145,44 @@ export default function CartTab({ cart, setCart, branch, cartTotal, tableId, onO
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-black text-slate-900">Your Cart</h2>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h2
+          className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-black via-slate-800 to-slate-700 drop-shadow-sm"
+          style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+        >
+          Your Cart
+        </h2>
+        {cart.length > 0 && (
+          <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">
+            {cart.length} item{cart.length !== 1 ? "s" : ""}
+          </span>
+        )}
+      </div>
 
       <AnimatePresence mode="popLayout">
         {cart.length === 0 ? (
           <motion.div
             key="empty"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.25 }}
-            className="text-center py-14 bg-white rounded-3xl border border-dashed border-slate-200 flex flex-col items-center gap-3"
+            transition={{ duration: 0.3 }}
+            className="text-center py-16 bg-white/70 backdrop-blur-xl rounded-[2rem] border border-white shadow-sm flex flex-col items-center gap-4"
           >
-            <div className="w-14 h-14 bg-slate-50 rounded-full flex items-center justify-center">
-              <ShoppingCart size={24} className="text-slate-300" />
-            </div>
+            <motion.div
+              initial={{ rotate: -10, scale: 0.8 }}
+              animate={{ rotate: 3, scale: 1 }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              className="w-20 h-20 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-[1.5rem] flex items-center justify-center shadow-inner border border-indigo-100"
+            >
+              <ShoppingCart size={32} className="text-indigo-300" />
+            </motion.div>
             <div>
-              <p className="font-bold text-slate-600">Your cart is empty</p>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="font-black text-slate-700 text-base">
+                Your cart is empty
+              </p>
+              <p className="text-xs text-slate-400 mt-1">
                 Add items from the menu to get started
               </p>
             </div>
@@ -135,21 +194,21 @@ export default function CartTab({ cart, setCart, branch, cartTotal, tableId, onO
             animate={{ opacity: 1 }}
             className="space-y-3"
           >
-            {/* Cart Items */}
+            {/* Cart Item Cards */}
             <AnimatePresence mode="popLayout">
               {cart.map((cartItem) => (
                 <motion.div
                   key={cartItem.id}
                   layout
-                  initial={{ opacity: 0, y: 12, scale: 0.97 }}
+                  initial={{ opacity: 0, y: 16, scale: 0.97 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, x: -48, scale: 0.94 }}
+                  exit={{ opacity: 0, x: -56, scale: 0.93 }}
                   transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
-                  className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden"
+                  className="bg-white/80 backdrop-blur-md rounded-3xl border border-white shadow-sm overflow-hidden"
                 >
                   <div className="flex gap-3 p-3">
-                    {/* Item image */}
-                    <div className="w-16 h-16 rounded-xl overflow-hidden bg-slate-50 flex-shrink-0 border border-slate-100">
+                    {/* Image */}
+                    <div className="w-[72px] h-[72px] rounded-2xl overflow-hidden flex-shrink-0 bg-slate-50 border border-slate-100 shadow-inner">
                       {cartItem.item.image_url ? (
                         <img
                           src={getImageUrl(cartItem.item.image_url)}
@@ -157,75 +216,80 @@ export default function CartTab({ cart, setCart, branch, cartTotal, tableId, onO
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-slate-300 text-2xl">
-                          🍽
+                        <div className="w-full h-full flex items-center justify-center text-slate-300">
+                          <UtensilsCrossed size={28} strokeWidth={1.5} />
                         </div>
                       )}
                     </div>
 
-                    {/* Info */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex justify-between items-start gap-1">
-                        <h4 className="font-bold text-slate-900 text-sm leading-tight truncate">
-                          {cartItem.item.name}
-                        </h4>
-                        <span className="font-black text-slate-900 text-sm shrink-0">
+                    {/* Details */}
+                    <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="overflow-hidden flex-1">
+                          <h4 className="font-black text-transparent bg-clip-text bg-gradient-to-r from-black via-slate-800 to-slate-700 text-[14px] leading-snug drop-shadow-sm inline-block">
+                            {cartItem.item.name}
+                          </h4>
+                        </div>
+                        <span className="font-black text-slate-800 text-[14px] shrink-0">
                           {branch?.currency} {cartItem.totalPrice.toFixed(2)}
                         </span>
                       </div>
 
-                      {/* Customizations */}
-                      {(cartItem.variant ||
-                        cartItem.spiceLevel ||
-                        cartItem.addons?.length > 0) && (
-                        <div className="flex flex-wrap gap-1 mt-1.5">
-                          {cartItem.variant && (
-                            <span className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-0.5 rounded-full">
-                              <Tag size={9} /> {cartItem.variant.name}
-                            </span>
+                      <div className="flex items-center justify-between">
+                        {/* Tags */}
+                        <div>
+                          {(cartItem.variant ||
+                            cartItem.spiceLevel ||
+                            cartItem.addons?.length > 0) && (
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {cartItem.variant && (
+                                <span className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-600 text-[11px] font-bold px-1.5 py-0.5 rounded-full">
+                                  <Tag size={11} /> {cartItem.variant.name}
+                                </span>
+                              )}
+                              {cartItem.spiceLevel && (
+                                <span className="inline-flex items-center bg-orange-50 text-orange-500 text-[11px] font-bold px-1.5 py-0.5 rounded-full">
+                                  🌶 {cartItem.spiceLevel}
+                                </span>
+                              )}
+                              {cartItem.addons?.map((addon, idx) => (
+                                <span
+                                  key={idx}
+                                  className="inline-flex items-center bg-slate-100 text-slate-500 text-[11px] font-bold px-1.5 py-0.5 rounded-full"
+                                >
+                                  + {addon.name}
+                                </span>
+                              ))}
+                            </div>
                           )}
-                          {cartItem.spiceLevel && (
-                            <span className="inline-flex items-center bg-orange-50 text-orange-500 text-[10px] font-bold px-2 py-0.5 rounded-full">
-                              🌶 {cartItem.spiceLevel}
-                            </span>
-                          )}
-                          {cartItem.addons?.map((addon, idx) => (
-                            <span
-                              key={idx}
-                              className="inline-flex items-center bg-slate-100 text-slate-500 text-[10px] font-bold px-2 py-0.5 rounded-full"
+                        </div>
+
+                        {/* Qty + Remove */}
+                        <div className="flex items-center gap-2 mt-2">
+                          <div className="flex items-center bg-slate-100 rounded-xl overflow-hidden">
+                            <button
+                              onClick={() => updateQty(cartItem.id, -1)}
+                              className="w-7 h-7 flex items-center justify-center text-slate-600 hover:bg-slate-200 active:scale-90 transition-all"
                             >
-                              + {addon.name}
+                              <Minus size={12} strokeWidth={3} />
+                            </button>
+                            <span className="w-7 text-center text-sm font-black text-slate-900">
+                              {cartItem.quantity}
                             </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Qty + Remove */}
-                      <div className="flex items-center justify-between mt-2.5">
-                        <div className="flex items-center bg-slate-100 rounded-lg overflow-hidden">
+                            <button
+                              onClick={() => updateQty(cartItem.id, 1)}
+                              className="w-7 h-7 flex items-center justify-center text-slate-600 hover:bg-slate-200 active:scale-90 transition-all"
+                            >
+                              <Plus size={12} strokeWidth={3} />
+                            </button>
+                          </div>
                           <button
-                            onClick={() => updateQty(cartItem.id, -1)}
-                            className="w-7 h-7 flex items-center justify-center text-slate-500 hover:bg-slate-200 active:scale-90 transition-all"
+                            onClick={() => removeItem(cartItem.id)}
+                            className="w-7 h-7 bg-red-50 text-red-400 rounded-xl flex items-center justify-center hover:bg-red-100 hover:text-red-500 active:scale-90 transition-all"
                           >
-                            <Minus size={13} strokeWidth={3} />
-                          </button>
-                          <span className="w-7 text-center text-sm font-black text-slate-900">
-                            {cartItem.quantity}
-                          </span>
-                          <button
-                            onClick={() => updateQty(cartItem.id, 1)}
-                            className="w-7 h-7 flex items-center justify-center text-slate-500 hover:bg-slate-200 active:scale-90 transition-all"
-                          >
-                            <Plus size={13} strokeWidth={3} />
+                            <Trash2 size={12} />
                           </button>
                         </div>
-
-                        <button
-                          onClick={() => removeItem(cartItem.id)}
-                          className="w-7 h-7 bg-red-50 text-red-400 rounded-lg flex items-center justify-center hover:bg-red-100 hover:text-red-500 active:scale-90 transition-all"
-                        >
-                          <Trash2 size={13} />
-                        </button>
                       </div>
                     </div>
                   </div>
@@ -233,56 +297,56 @@ export default function CartTab({ cart, setCart, branch, cartTotal, tableId, onO
               ))}
             </AnimatePresence>
 
-            {/* Order Summary */}
+            {/* Order Summary Card */}
             <motion.div
               layout
-              className="bg-slate-900 text-white p-5 rounded-3xl"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="relative overflow-hidden rounded-[2rem] border border-slate-800 shadow-2xl shadow-indigo-900/25 mt-2"
             >
-              <div className="space-y-2 mb-4">
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Subtotal</span>
-                  <span className="font-semibold">
-                    {branch?.currency} {cartTotal.toFixed(2)}
+              <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900" />
+              <div className="absolute top-0 right-0 w-40 h-40 bg-indigo-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-600/15 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
+
+              <div className="relative p-6 text-white">
+                <div className="flex items-center gap-2 mb-5">
+                  <Sparkles size={14} className="text-indigo-300" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-300">
+                    Order Summary
                   </span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">GST (5%)</span>
-                  <span className="font-semibold">
-                    {branch?.currency} {tax.toFixed(2)}
-                  </span>
+
+                <div className="flex justify-between items-center mb-6">
+                  <motion.span
+                    key={total.toFixed(2)}
+                    initial={{ scale: 1.15, color: "#818cf8" }}
+                    animate={{ scale: 1, color: "#ffffff" }}
+                    transition={{ duration: 0.3 }}
+                    className="text-3xl font-black tracking-tighter"
+                  >
+                    {branch?.currency} {total.toFixed(2)}
+                  </motion.span>
                 </div>
-              </div>
 
-              <div className="h-px bg-slate-700/60 mb-4" />
-
-              <div className="flex justify-between items-center mb-5">
-                <span className="font-bold text-base">Total</span>
-                <motion.span
-                  key={total.toFixed(2)}
-                  initial={{ scale: 1.1, color: "#818cf8" }}
-                  animate={{ scale: 1, color: "#ffffff" }}
-                  transition={{ duration: 0.3 }}
-                  className="text-2xl font-black"
+                <motion.button
+                  whileTap={!isSubmitting ? { scale: 0.97 } : {}}
+                  onClick={handlePlaceOrder}
+                  disabled={isSubmitting}
+                  className="w-full py-4 bg-white text-slate-900 font-black rounded-2xl text-[15px] tracking-wide disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:bg-indigo-50 active:scale-[0.98] transition-all"
                 >
-                  {branch?.currency} {total.toFixed(2)}
-                </motion.span>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Sending to Kitchen...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles size={15} className="text-indigo-500" />
+                      Place Order
+                    </>
+                  )}
+                </motion.button>
               </div>
-
-              <motion.button
-                whileTap={!isSubmitting ? { scale: 0.97 } : {}}
-                onClick={handlePlaceOrder}
-                disabled={isSubmitting}
-                className="w-full py-3.5 bg-white text-slate-900 font-black rounded-xl hover:bg-slate-50 transition-colors text-sm tracking-wide disabled:opacity-80 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Sending to Kitchen...
-                  </>
-                ) : (
-                  "Place Order →"
-                )}
-              </motion.button>
             </motion.div>
           </motion.div>
         )}

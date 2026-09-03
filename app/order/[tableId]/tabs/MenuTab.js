@@ -87,7 +87,7 @@ export default function MenuTab({
                     </h3>
                   )}
 
-                  <div className="grid grid-cols-1 gap-3">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
                     {items.map((item) => {
                       const inCartCount = cart
                         .filter((c) => c.item.id === item.id)
@@ -96,72 +96,73 @@ export default function MenuTab({
                       return (
                         <div
                           key={item.id}
-                          className={`group p-3 rounded-3xl shadow-sm border flex gap-3 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 ${
+                          onClick={() => handleQuickAdd(item)}
+                          className={`group relative bg-white rounded-2xl shadow-sm overflow-hidden border flex flex-col transition-all duration-300 hover:shadow-md cursor-pointer ${
                             inCartCount > 0
-                              ? "bg-indigo-50/50 border-indigo-200"
-                              : "bg-white border-slate-100"
+                              ? "border-indigo-600"
+                              : "border-slate-100"
                           }`}
                         >
-                          <div className="relative w-15 h-15 rounded-2xl overflow-hidden flex-shrink-0 bg-slate-50 shadow-inner">
+                          <div className="relative w-full aspect-[16/9] bg-slate-50">
                             {item.image_url ? (
                               <img
                                 src={getImageUrl(item.image_url)}
                                 alt={item.name}
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center text-slate-300">
                                 <UtensilsCrossed size={32} strokeWidth={1.5} />
                               </div>
                             )}
-                            {item.food_type &&
-                              getFoodTypeColor(item.food_type) && (
-                                <div className="absolute top-2 left-2 bg-white p-1 rounded shadow-sm">
-                                  <div
-                                    className="w-2 h-2 rounded-full"
-                                    style={{
-                                      backgroundColor: getFoodTypeColor(
-                                        item.food_type,
-                                      ),
-                                    }}
-                                  ></div>
-                                </div>
-                              )}
+
+                            {/* Best Seller Badge Example */}
+                            {item.is_best_seller && (
+                              <div className="absolute bottom-0 right-0 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-tl-lg">
+                                Best Seller
+                              </div>
+                            )}
+
+                            {/* In Cart Badge */}
                             {inCartCount > 0 && (
-                              <div className="absolute top-2 right-2 bg-indigo-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm">
-                                x{inCartCount}
+                              <div className="absolute top-2 right-2 bg-indigo-600 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full shadow-md z-10">
+                                {inCartCount}
                               </div>
                             )}
                           </div>
 
-                          <div className="flex-1 flex flex-col justify-between">
-                            <div>
-                              <h3 className="font-bold text-slate-900 text-base leading-tight">
+                          <div className="p-3 flex flex-col justify-between flex-1">
+                            <div className="w-full overflow-hidden">
+                              <h3 className=" font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-slate-700 to-slate-500 text-[13px] leading-tight mb-1 drop-shadow-sm inline-block">
                                 {item.name}
                               </h3>
                             </div>
 
-                            <div className="flex items-center justify-between ">
-                              <span className="font-medium text-slate-500 text-sm tracking-tight">
+                            <div className="flex items-center justify-between mt-auto">
+                              <span className="font-bold text-slate-900 text-sm">
                                 {branch?.currency}{" "}
-                                <span className="text-lg font-black text-green-700">
+                                <span className="font-black text-green-700 text-lg">
                                   {parseFloat(item.base_price).toFixed(2)}
                                 </span>
                               </span>
-                              <div className="flex items-center gap-2">
+                              {/* Quantity Controls - Show if in cart */}
+                              <div
+                                className="flex items-center gap-1.5"
+                                onClick={(e) => e.stopPropagation()}
+                              >
                                 {inCartCount > 0 && (
                                   <button
                                     onClick={() => handleQuickRemove(item)}
-                                    className="w-9 h-9 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all duration-300 active:scale-90 shadow-sm"
+                                    className="w-6 h-6 bg-slate-100 text-slate-600 rounded-full flex items-center justify-center hover:bg-slate-200 transition-colors"
                                   >
-                                    <Minus size={18} strokeWidth={3} />
+                                    <Minus size={12} strokeWidth={2.5} />
                                   </button>
                                 )}
                                 <button
                                   onClick={() => handleQuickAdd(item)}
-                                  className="w-9 h-9 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all duration-300 active:scale-90 shadow-sm"
+                                  className="w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center hover:bg-indigo-700 transition-colors"
                                 >
-                                  <Plus size={18} strokeWidth={3} />
+                                  <Plus size={12} strokeWidth={2.5} />
                                 </button>
                               </div>
                             </div>
