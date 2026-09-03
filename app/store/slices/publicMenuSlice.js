@@ -47,12 +47,15 @@ export const fetchTableActiveOrders = createAsyncThunk(
 
 export const placePublicOrder = createAsyncThunk(
   "publicMenu/placePublicOrder",
-  async ({ orderData, kotData }, { rejectWithValue }) => {
+  async ({ existingOrderId, orderData, kotData }, { rejectWithValue }) => {
     try {
-      // 1. Create Order
-      const createRes = await axios.post(`${API_URL}/public/order`, orderData);
+      let orderId = existingOrderId;
 
-      const orderId = createRes.data.data.id;
+      if (!orderId) {
+        // 1. Create Order if it doesn't exist
+        const createRes = await axios.post(`${API_URL}/public/order`, orderData);
+        orderId = createRes.data.data.id;
+      }
 
       // 2. Update with KOT
       const kotRes = await axios.put(
