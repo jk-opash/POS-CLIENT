@@ -132,7 +132,7 @@ export default function HourlyTrendsPage() {
   }, [timeRange, selectedBranch, dateRange]);
 
   return (
-    <div className="flex flex-col bg-slate-50 font-sans">
+    <div className="flex flex-col bg-brand-bg font-sans">
       <div className="flex flex-1 min-w-0 flex-col">
         <main className="flex-1 px-6 py-6">
           <div className="space-y-6 pb-12">
@@ -186,12 +186,12 @@ export default function HourlyTrendsPage() {
                   placeholder="Select Date Range"
                 />
 
-                <div className="relative flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 shadow-sm">
-                  <Building2 size={14} className="text-slate-500 shrink-0" />
+                <div className="relative flex items-center gap-2 bg-white border border-brand-border rounded-xl px-3 py-2 shadow-sm">
+                  <Building2 size={14} className="text-brand-muted shrink-0" />
                   <select
                     value={selectedBranch}
                     onChange={(e) => setSelectedBranch(e.target.value)}
-                    className="text-sm font-semibold text-slate-700 outline-none bg-transparent cursor-pointer pr-2 max-w-[150px] truncate"
+                    className="text-sm font-semibold text-brand-dark outline-none bg-transparent cursor-pointer pr-2 max-w-[150px] truncate"
                   >
                     {branches?.map((b) => (
                       <option key={b.id} value={b.id}>
@@ -235,23 +235,23 @@ export default function HourlyTrendsPage() {
             </section>
 
             {/* Chart Area */}
-            <div className="lg:col-span-2 rounded-2xl border border-slate-200/80 bg-white/70 backdrop-blur-lg shadow-sm p-6 flex flex-col">
+            <div className="lg:col-span-2 rounded-2xl border border-brand-border/80 bg-white/70 backdrop-blur-lg shadow-sm p-6 flex flex-col">
               <div className="mb-6">
-                <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider">
+                <h3 className="text-sm font-black text-brand-dark uppercase tracking-wider">
                   Sales Velocity vs Revenue
                 </h3>
-                <p className="text-xs text-slate-500 font-medium mt-1">
+                <p className="text-xs text-brand-muted font-medium mt-1">
                   Correlation between number of orders and total sales generated
                   per hour.
                 </p>
               </div>
               <div className="h-[400px] w-full">
                 {hourlyTrendsLoading ? (
-                  <div className="w-full h-full flex items-center justify-center text-slate-400 font-medium">
+                  <div className="w-full h-full flex items-center justify-center text-brand-muted/70 font-medium">
                     Loading chart data...
                   </div>
                 ) : formattedData.length === 0 ? (
-                  <div className="w-full h-full flex items-center justify-center text-slate-400 font-medium">
+                  <div className="w-full h-full flex items-center justify-center text-brand-muted/70 font-medium">
                     No data available for selected criteria
                   </div>
                 ) : (
@@ -332,11 +332,11 @@ export default function HourlyTrendsPage() {
             </div>
 
             {/* Data Table */}
-            <div className="lg:col-span-1 rounded-2xl border border-slate-200/80 bg-white/70 backdrop-blur-lg shadow-sm overflow-hidden flex flex-col h-full lg:max-h-[515px]">
+            <div className="lg:col-span-1 rounded-2xl border border-brand-border/80 bg-white/70 backdrop-blur-lg shadow-sm overflow-hidden flex flex-col h-full lg:max-h-[515px]">
               <div className="overflow-x-auto overflow-y-auto flex-1 custom-scrollbar scroll-smooth relative">
                 <table className="w-full text-left border-collapse">
-                  <thead className="sticky top-0 z-10 bg-slate-50/90 backdrop-blur-md shadow-sm">
-                    <tr className="border-b border-slate-200 text-[11px] font-black text-slate-400 uppercase tracking-wider">
+                  <thead className="sticky top-0 z-10 bg-brand-bg/90 backdrop-blur-md shadow-sm">
+                    <tr className="border-b border-brand-border text-[11px] font-black text-brand-muted/70 uppercase tracking-wider">
                       <th className="py-3.5 px-6">Hour of Day</th>
                       <th className="py-3.5 px-4 text-right">Orders Count</th>
                       <th className="py-3.5 px-4 text-right">
@@ -345,14 +345,14 @@ export default function HourlyTrendsPage() {
                       <th className="py-3.5 px-6 text-right">Total Revenue</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 text-xs">
+                  <tbody className="divide-y divide-brand-border text-xs">
                     {hourlyTrendsLoading ? (
                       <tr>
                         <td
                           colSpan="4"
-                          className="py-12 text-center text-slate-400"
+                          className="py-12 text-center text-brand-muted/70"
                         >
-                          <p className="font-bold text-slate-600">
+                          <p className="font-bold text-brand-dark">
                             Loading data...
                           </p>
                         </td>
@@ -361,13 +361,13 @@ export default function HourlyTrendsPage() {
                       <tr>
                         <td
                           colSpan="4"
-                          className="py-12 text-center text-slate-400"
+                          className="py-12 text-center text-brand-muted/70"
                         >
                           <Clock
                             size={36}
-                            className="mx-auto mb-2 text-slate-300"
+                            className="mx-auto mb-2 text-brand-muted/70"
                           />
-                          <p className="font-bold text-slate-600">
+                          <p className="font-bold text-brand-dark">
                             No data found
                           </p>
                         </td>
@@ -379,20 +379,20 @@ export default function HourlyTrendsPage() {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: Math.min(idx * 0.02, 0.5) }}
                           key={hr.hour}
-                          className="hover:bg-slate-50/60 transition-colors duration-150"
+                          className="hover:bg-brand-bg/60 transition-colors duration-150"
                         >
-                          <td className="py-3 px-6 text-slate-600 font-medium">
+                          <td className="py-3 px-6 text-brand-dark font-medium">
                             {hr.timeLabel}
                           </td>
-                          <td className="py-3 px-4 text-right text-slate-700">
-                            <span className="font-bold text-slate-800 text-sm bg-slate-100 px-2 py-0.5 rounded-md">
+                          <td className="py-3 px-4 text-right text-brand-dark">
+                            <span className="font-bold text-brand-dark text-sm bg-brand-light px-2 py-0.5 rounded-md">
                               {hr.orderCount}
                             </span>
                           </td>
-                          <td className="py-3 px-4 text-right text-slate-700">
+                          <td className="py-3 px-4 text-right text-brand-dark">
                             ₹{fmt(hr.averageOrderValue.toFixed(2))}
                           </td>
-                          <td className="py-3 px-6 text-right font-bold text-emerald-600 text-sm">
+                          <td className="py-3 px-6 text-right font-bold text-brand-success text-sm">
                             ₹{fmt(hr.totalSales.toFixed(2))}
                           </td>
                         </motion.tr>
@@ -401,7 +401,7 @@ export default function HourlyTrendsPage() {
                   </tbody>
                 </table>
               </div>
-              <div className="p-4 border-t border-slate-100 bg-white/90 backdrop-blur-sm z-10 relative">
+              <div className="p-4 border-t border-brand-border bg-white/90 backdrop-blur-sm z-10 relative">
                 <PosAdminPagination
                   currentPage={currentPage}
                   totalPages={totalPages}

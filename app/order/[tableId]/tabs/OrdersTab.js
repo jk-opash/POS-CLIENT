@@ -10,17 +10,17 @@ const EmptyState = ({ title, desc, onGoToMenu }) => (
       transition={{ type: "spring", stiffness: 200, damping: 20 }}
       className="w-24 h-24 bg-white/80 backdrop-blur-xl rounded-[2rem] flex items-center justify-center mb-6 shadow-sm border border-white"
     >
-      <div className="w-16 h-16 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-[1.4rem] flex items-center justify-center border border-indigo-100">
-        <Coffee size={30} className="text-indigo-300" />
+      <div className="w-16 h-16 bg-gradient-to-br from-brand-primaryLight to-brand-purple rounded-[1.4rem] flex items-center justify-center border border-brand-primaryLight">
+        <Coffee size={30} className="text-brand-primary" />
       </div>
     </motion.div>
     <h2
-      className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-black via-slate-800 to-slate-700 drop-shadow-sm mb-2 tracking-tight"
+      className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-black via-slate-800 to-brand-dark drop-shadow-sm mb-2 tracking-tight"
       style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
     >
       {title}
     </h2>
-    <p className="text-slate-500 max-w-[240px] mx-auto text-sm leading-relaxed mb-7">
+    <p className="text-brand-muted max-w-[240px] mx-auto text-sm leading-relaxed mb-7">
       {desc}
     </p>
     {onGoToMenu && (
@@ -28,7 +28,7 @@ const EmptyState = ({ title, desc, onGoToMenu }) => (
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.97 }}
         onClick={onGoToMenu}
-        className="px-7 py-3.5 bg-gradient-to-r from-black to-slate-700 text-white font-bold rounded-2xl shadow-lg shadow-indigo-500/25 text-sm tracking-wide"
+        className="px-7 py-3.5 bg-gradient-to-r from-black to-brand-dark text-white font-bold rounded-2xl shadow-lg shadow-brand-primary/25 text-sm tracking-wide"
       >
         Browse Menu
       </motion.button>
@@ -39,27 +39,27 @@ const EmptyState = ({ title, desc, onGoToMenu }) => (
 const statusConfig = {
   new: {
     label: "New",
-    bg: "bg-amber-100",
-    text: "text-amber-700",
-    border: "border-amber-200",
+    bg: "bg-brand-warningLight",
+    text: "text-brand-warning",
+    border: "border-brand-warningLight",
   },
   preparing: {
     label: "Preparing",
-    bg: "bg-blue-100",
-    text: "text-blue-700",
-    border: "border-blue-200",
+    bg: "bg-brand-primaryLight",
+    text: "text-brand-primary",
+    border: "border-brand-primaryLight",
   },
   accepted: {
     label: "Accepted",
-    bg: "bg-indigo-100",
-    text: "text-indigo-700",
-    border: "border-indigo-200",
+    bg: "bg-brand-primaryLight",
+    text: "text-brand-primary",
+    border: "border-brand-primaryLight",
   },
   served: {
     label: "Served",
-    bg: "bg-emerald-100",
-    text: "text-emerald-700",
-    border: "border-emerald-200",
+    bg: "bg-brand-successLight",
+    text: "text-brand-success",
+    border: "border-brand-successLight",
   },
 };
 
@@ -106,19 +106,19 @@ export default function OrdersTab({ placedOrders, onGoToMenu }) {
       {/* Active Orders Card */}
       <div className="bg-white/70 backdrop-blur-xl rounded-[2rem] border border-white shadow-sm overflow-hidden">
         {/* Card Header */}
-        <div className="px-5 pt-5 pb-4 flex items-center justify-between border-b border-slate-100/80">
+        <div className="px-5 pt-5 pb-4 flex items-center justify-between border-b border-brand-light/80">
           <div>
             <h2
-              className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-black via-slate-800 to-slate-700 tracking-tight"
+              className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-black via-slate-800 to-brand-dark tracking-tight"
               style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
             >
               Active Orders
             </h2>
-            <p className="text-[10px] font-bold text-slate-400 mt-0.5 uppercase tracking-widest">
+            <p className="text-[10px] font-bold text-brand-muted mt-0.5 uppercase tracking-widest">
               Currently being prepared
             </p>
           </div>
-          <div className="bg-amber-50 text-amber-500 p-3 rounded-2xl border border-amber-100 shadow-sm">
+          <div className="bg-brand-warningLight text-brand-warning p-3 rounded-2xl border border-brand-warningLight shadow-sm">
             <ChefHat size={22} />
           </div>
         </div>
@@ -140,9 +140,9 @@ export default function OrdersTab({ placedOrders, onGoToMenu }) {
             const statusKey = item.status?.toLowerCase();
             const cfg = statusConfig[statusKey] || {
               label: item.status,
-              bg: "bg-slate-100",
-              text: "text-slate-600",
-              border: "border-slate-200",
+              bg: "bg-brand-light",
+              text: "text-brand-dark",
+              border: "border-brand-light",
             };
             const isServed = statusKey === "served";
 
@@ -159,22 +159,22 @@ export default function OrdersTab({ placedOrders, onGoToMenu }) {
                 }}
                 className={`relative flex gap-3 items-start p-3.5 rounded-2xl border transition-all ${
                   isServed
-                    ? "bg-emerald-50/60 border-emerald-200/50"
-                    : "bg-white/80 border-slate-100"
+                    ? "bg-brand-successLight/60 border-brand-successLight/50"
+                    : "bg-white/80 border-brand-light"
                 }`}
               >
                 {/* Qty badge */}
                 <div
                   className={`w-11 h-11 rounded-xl border flex flex-col items-center justify-center shrink-0 shadow-sm ${
                     isServed
-                      ? "bg-emerald-50 border-emerald-100"
-                      : "bg-slate-50 border-slate-100"
+                      ? "bg-brand-successLight border-brand-successLight"
+                      : "bg-brand-light border-brand-light"
                   }`}
                 >
-                  <span className="text-base font-black text-slate-700 leading-none">
+                  <span className="text-base font-black text-brand-dark leading-none">
                     {item.quantity}
                   </span>
-                  <span className="text-[9px] font-bold text-slate-400 leading-none">
+                  <span className="text-[9px] font-bold text-brand-muted leading-none">
                     ×
                   </span>
                 </div>
@@ -182,7 +182,7 @@ export default function OrdersTab({ placedOrders, onGoToMenu }) {
                 {/* Name + details */}
                 <div className="flex-1 min-w-0">
                   <div className="overflow-hidden mb-1">
-                    <p className="font-black text-transparent bg-clip-text bg-gradient-to-r from-black via-slate-800 to-slate-700 text-[14px] leading-tight drop-shadow-sm inline-block">
+                    <p className="font-black text-transparent bg-clip-text bg-gradient-to-r from-black via-slate-800 to-brand-dark text-[14px] leading-tight drop-shadow-sm inline-block">
                       {item.product?.name || item.item?.name || "Unknown Item"}
                     </p>
                   </div>
@@ -193,12 +193,12 @@ export default function OrdersTab({ placedOrders, onGoToMenu }) {
                     item.spiceLevel) && (
                     <div className="flex flex-wrap gap-1">
                       {item.variant && (
-                        <span className="inline-flex bg-indigo-50 text-indigo-600 text-[11px] font-bold px-1.5 py-0.5 rounded-full">
+                        <span className="inline-flex bg-brand-primaryLight text-brand-primary text-[11px] font-bold px-1.5 py-0.5 rounded-full">
                           {item.variant.name}
                         </span>
                       )}
                       {item.addons?.length > 0 && (
-                        <span className="inline-flex bg-slate-100 text-slate-500 text-[11px] font-bold px-1.5 py-0.5 rounded-full">
+                        <span className="inline-flex bg-brand-light text-brand-muted text-[11px] font-bold px-1.5 py-0.5 rounded-full">
                           {item.addons.map((a) => a.name).join(", ")}
                         </span>
                       )}
@@ -222,7 +222,7 @@ export default function OrdersTab({ placedOrders, onGoToMenu }) {
 
                 {/* Price */}
                 <div className="shrink-0 text-right mt-auto">
-                  <p className="text-[15px] font-black text-slate-800">
+                  <p className="text-[15px] font-black text-brand-dark">
                     ₹{calculatedTotal.toFixed(2)}
                   </p>
                 </div>
@@ -236,26 +236,26 @@ export default function OrdersTab({ placedOrders, onGoToMenu }) {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-[2rem] border border-slate-800 shadow-2xl shadow-indigo-900/25"
+        className="relative overflow-hidden rounded-[2rem] border border-brand-dark shadow-2xl shadow-brand-primary/25"
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900" />
-        <div className="absolute top-0 right-0 w-40 h-40 bg-indigo-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-600/15 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-dark via-slate-950 to-brand-dark" />
+        <div className="absolute top-0 right-0 w-40 h-40 bg-brand-primary/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-brand-purple/15 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
         <div className="relative p-6 text-white">
           <div className="flex items-center gap-2 mb-5">
-            <Sparkles size={14} className="text-indigo-300" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-300">
+            <Sparkles size={14} className="text-brand-primary" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-brand-primary">
               Running Total
             </span>
           </div>
 
           <div className="flex items-end justify-between mb-6">
             <div>
-              <p className="text-sm font-medium text-slate-400 mb-1">
+              <p className="text-sm font-medium text-brand-muted mb-1">
                 Total so far
               </p>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-brand-muted">
                 Includes all active items
               </p>
             </div>
@@ -266,8 +266,8 @@ export default function OrdersTab({ placedOrders, onGoToMenu }) {
 
           <div className="h-px bg-gradient-to-r from-transparent via-slate-600 to-transparent mb-5" />
 
-          <button className="w-full py-4 bg-white text-slate-900 text-[15px] font-black rounded-2xl flex items-center justify-center gap-2 hover:bg-indigo-50 active:scale-[0.98] transition-all shadow-sm">
-            <CheckCircle size={18} className="text-emerald-500" />
+          <button className="w-full py-4 bg-white text-brand-dark text-[15px] font-black rounded-2xl flex items-center justify-center gap-2 hover:bg-brand-primaryLight active:scale-[0.98] transition-all shadow-sm">
+            <CheckCircle size={18} className="text-brand-success" />
             Request Bill
           </button>
         </div>

@@ -68,7 +68,7 @@ export default function DashboardPage() {
   const discounts = stats?.discounts || 0;
 
   return (
-    <div className="flex flex-col bg-slate-50">
+    <div className="flex flex-col bg-brand-bg">
       <div className="flex flex-1 min-w-0 flex-col">
         <main className="flex-1 px-6 py-6">
           <div className="space-y-6 pb-12">
@@ -112,7 +112,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Tabs */}
-            <div className="rounded-t-2xl border-b border-slate-200 bg-white/60 px-2 backdrop-blur">
+            <div className="rounded-t-2xl border-b border-brand-border bg-white/60 px-2 backdrop-blur">
               <nav className="-mb-px flex space-x-6 overflow-x-auto">
                 {[
                   {
@@ -134,8 +134,8 @@ export default function DashboardPage() {
                     className={cn(
                       "border-b-2 px-2 py-4 text-sm font-bold whitespace-nowrap transition",
                       activeTab === tab.id
-                        ? "border-indigo-500 text-indigo-600"
-                        : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800",
+                        ? "border-brand-primary text-brand-primary"
+                        : "border-transparent text-brand-muted hover:border-brand-borderHover hover:text-brand-dark",
                     )}
                   >
                     {tab.label}

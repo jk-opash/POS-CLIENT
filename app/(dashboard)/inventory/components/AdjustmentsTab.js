@@ -37,30 +37,30 @@ export default function AdjustmentsTab({ branchId }) {
   }, [branchId]);
 
   return (
-    <div className="rounded-2xl border border-slate-200/80 bg-white/70 backdrop-blur-lg shadow-sm overflow-hidden">
+    <div className="rounded-2xl border border-brand-border/80 bg-white/70 backdrop-blur-lg shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
         <table
           className="w-full text-left border-collapse"
           style={{ minWidth: 800 }}
         >
           <thead>
-            <tr className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-black text-slate-400 uppercase tracking-wider">
-              <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider">
+            <tr className="border-b border-brand-border bg-brand-bg/80 text-[11px] font-black text-brand-muted/70 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-bold text-brand-muted/70 uppercase tracking-wider">
                 Reference
               </th>
-              <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-bold text-brand-muted/70 uppercase tracking-wider">
                 Date & Time
               </th>
-              <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-bold text-brand-muted/70 uppercase tracking-wider">
                 Product
               </th>
-              <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-bold text-brand-muted/70 uppercase tracking-wider">
                 Reason
               </th>
-              <th className="px-4 py-3 text-right text-xs font-bold text-slate-400 uppercase tracking-wider">
+              <th className="px-4 py-3 text-right text-xs font-bold text-brand-muted/70 uppercase tracking-wider">
                 Qty Adjusted
               </th>
-              <th className="px-4 py-3 text-right text-xs font-bold text-slate-400 uppercase tracking-wider">
+              <th className="px-4 py-3 text-right text-xs font-bold text-brand-muted/70 uppercase tracking-wider">
                 Performed By
               </th>
             </tr>
@@ -74,14 +74,14 @@ export default function AdjustmentsTab({ branchId }) {
               </tr>
             ) : error ? (
               <tr>
-                <td colSpan={6} className="py-16 text-center text-red-500">
+                <td colSpan={6} className="py-16 text-center text-brand-danger">
                   <AlertCircle className="w-8 h-8 mx-auto mb-3 opacity-50" />
                   <div>{error}</div>
                 </td>
               </tr>
             ) : adjustments.length === 0 ? (
               <tr>
-                <td colSpan={6} className="py-16 text-center text-slate-400">
+                <td colSpan={6} className="py-16 text-center text-brand-muted/70">
                   <ClipboardList
                     size={40}
                     className="mx-auto mb-3 opacity-30"
@@ -95,13 +95,13 @@ export default function AdjustmentsTab({ branchId }) {
                 return (
                   <tr
                     key={entry.id}
-                    className={`border-b border-slate-100 hover:bg-slate-50 transition-colors ${i % 2 === 1 ? "bg-slate-50/50" : ""}`}
+                    className={`border-b border-brand-border hover:bg-brand-bg transition-colors ${i % 2 === 1 ? "bg-brand-bg/50" : ""}`}
                   >
-                    <td className="px-4 py-3 text-blue-600 font-mono text-xs font-bold truncate max-w-[120px]">
+                    <td className="px-4 py-3 text-brand-primary font-mono text-xs font-bold truncate max-w-[120px]">
                       {entry.id}
                     </td>
                     <td className="px-4 py-3">
-                      <div className="flex items-center gap-1.5 text-slate-500 text-xs">
+                      <div className="flex items-center gap-1.5 text-brand-muted text-xs">
                         <Clock size={12} />
                         {new Date(entry.created_at).toLocaleString("en-IN", {
                           dateStyle: "medium",
@@ -109,25 +109,25 @@ export default function AdjustmentsTab({ branchId }) {
                         })}
                       </div>
                     </td>
-                    <td className="px-4 py-3 font-bold text-slate-800">
+                    <td className="px-4 py-3 font-bold text-brand-dark">
                       {entry.item?.name || "Unknown Item"}
-                      <div className="text-xs text-slate-400 font-medium">
+                      <div className="text-xs text-brand-muted/70 font-medium">
                         {entry.item?.sku}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-slate-500 text-xs">
+                    <td className="px-4 py-3 text-brand-muted text-xs">
                       {entry.reason || "-"}
                     </td>
                     <td className="px-4 py-3 text-right">
                       <span
-                        className={`font-black text-base ${qtyChange > 0 ? "text-emerald-600" : "text-red-500"}`}
+                        className={`font-black text-base ${qtyChange > 0 ? "text-brand-success" : "text-brand-danger"}`}
                       >
                         {qtyChange > 0 ? "+" : ""}
-                        {qtyChange} <span className="text-xs font-medium text-slate-500 ml-1">{entry.item?.unit || "pcs"}</span>
+                        {qtyChange} <span className="text-xs font-medium text-brand-muted ml-1">{entry.item?.unit || "pcs"}</span>
                       </span>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <span className="text-xs font-semibold bg-slate-100 text-slate-600 px-2 py-1 rounded-md border border-slate-200">
+                      <span className="text-xs font-semibold bg-brand-light text-brand-dark px-2 py-1 rounded-md border border-brand-border">
                         {entry.performed_by || "System"}
                       </span>
                     </td>

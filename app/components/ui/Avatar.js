@@ -12,7 +12,7 @@ export function Avatar({ src, alt, name, size = 'md', className }) {
   return (
     <div
       className={cn(
-        'relative flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 font-bold text-[var(--color-brand-muted)]',
+        'relative flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-light font-bold text-brand-muted',
         sizeStyles[size],
         className
       )}

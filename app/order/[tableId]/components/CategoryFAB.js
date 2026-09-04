@@ -16,7 +16,7 @@ export default function CategoryFAB({
       <div className="z-40">
         <button
           onClick={() => setShowCategoryMenu(true)}
-          className="w-14 h-14 bg-slate-900 text-white rounded-full flex items-center justify-center shadow-[0_10px_25px_-5px_rgba(0,0,0,0.3)] active:scale-95 transition-all"
+          className="w-14 h-14 bg-brand-dark text-white rounded-full flex items-center justify-center shadow-[0_10px_25px_-5px_rgba(0,0,0,0.3)] active:scale-95 transition-all"
         >
           <BookOpenText size={24} />
         </button>
@@ -48,11 +48,11 @@ export default function CategoryFAB({
           }}
         >
           {/* Header */}
-          <div className="p-5 border-b border-slate-100 flex items-center justify-between">
-            <h2 className="text-xl font-black text-slate-900">Categories</h2>
+          <div className="p-5 border-b border-brand-light flex items-center justify-between">
+            <h2 className="text-xl font-black text-brand-dark">Categories</h2>
             <button
               onClick={handleClose}
-              className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-200 transition-colors"
+              className="w-10 h-10 bg-brand-light rounded-full flex items-center justify-center text-brand-muted hover:bg-brand-light transition-colors"
             >
               <X size={20} />
             </button>
@@ -67,8 +67,8 @@ export default function CategoryFAB({
               }}
               className={`flex items-center justify-between p-3.5 rounded-2xl transition-all ${
                 activeCategory === "all"
-                  ? "bg-slate-900 text-white font-bold"
-                  : "bg-slate-50 text-slate-600 font-medium hover:bg-slate-100"
+                  ? "bg-brand-dark text-white font-bold"
+                  : "bg-brand-light text-brand-dark font-medium hover:bg-brand-light"
               }`}
             >
               <span>All Items</span>
@@ -84,8 +84,8 @@ export default function CategoryFAB({
                 }}
                 className={`flex items-center justify-between p-3.5 rounded-2xl transition-all ${
                   activeCategory === category.id
-                    ? "bg-slate-900 text-white font-bold"
-                    : "bg-slate-50 text-slate-600 font-medium hover:bg-slate-100"
+                    ? "bg-brand-dark text-white font-bold"
+                    : "bg-brand-light text-brand-dark font-medium hover:bg-brand-light"
                 }`}
               >
                 <span>{category.name}</span>

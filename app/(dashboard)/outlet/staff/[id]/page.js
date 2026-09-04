@@ -154,7 +154,7 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="text-xs text-slate-500 block mb-1">
+            <label className="text-xs text-brand-muted block mb-1">
               First Name *
             </label>
             <input
@@ -164,13 +164,13 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
               required
             />
             {errors.first_name && (
-              <span className="text-red-500 text-xs mt-1 block">
+              <span className="text-brand-danger text-xs mt-1 block">
                 {errors.first_name}
               </span>
             )}
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">
+            <label className="text-xs text-brand-muted block mb-1">
               Last Name
             </label>
             <input
@@ -180,7 +180,7 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
             />
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">Status</label>
+            <label className="text-xs text-brand-muted block mb-1">Status</label>
             <select
               className="input select"
               value={form.status}
@@ -191,7 +191,7 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
             </select>
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">Role *</label>
+            <label className="text-xs text-brand-muted block mb-1">Role *</label>
             <select
               className="input select"
               value={form.role_name}
@@ -205,20 +205,20 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
             </select>
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">Phone</label>
+            <label className="text-xs text-brand-muted block mb-1">Phone</label>
             <input
               className="input"
               value={form.phone}
               onChange={(e) => set("phone", e.target.value)}
             />
             {errors.phone && (
-              <span className="text-red-500 text-xs mt-1 block">
+              <span className="text-brand-danger text-xs mt-1 block">
                 {errors.phone}
               </span>
             )}
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">Email</label>
+            <label className="text-xs text-brand-muted block mb-1">Email</label>
             <input
               className="input"
               type="email"
@@ -226,13 +226,13 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
               onChange={(e) => set("email", e.target.value)}
             />
             {errors.email && (
-              <span className="text-red-500 text-xs mt-1 block">
+              <span className="text-brand-danger text-xs mt-1 block">
                 {errors.email}
               </span>
             )}
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">Branch</label>
+            <label className="text-xs text-brand-muted block mb-1">Branch</label>
             <select
               className="input select"
               value={form.branch_id}
@@ -247,7 +247,7 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
             </select>
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">
+            <label className="text-xs text-brand-muted block mb-1">
               4-Digit PIN
             </label>
             <div className="relative">
@@ -260,21 +260,21 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
                 placeholder="••••"
               />
               {errors.pin && (
-                <span className="text-red-500 text-xs mt-1 block">
+                <span className="text-brand-danger text-xs mt-1 block">
                   {errors.pin}
                 </span>
               )}
               <button
                 type="button"
                 onClick={() => setShowPin(!showPin)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-muted hover:text-brand-dark"
               >
                 {showPin ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">
+            <label className="text-xs text-brand-muted block mb-1">
               Password {member ? "(Leave blank to keep)" : ""}
             </label>
             <div className="relative">
@@ -286,14 +286,14 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
                 placeholder="Enter password"
               />
               {errors.password && (
-                <span className="text-red-500 text-xs mt-1 block">
+                <span className="text-brand-danger text-xs mt-1 block">
                   {errors.password}
                 </span>
               )}
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-muted hover:text-brand-dark"
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -301,7 +301,7 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
           </div>
         </div>
         <div>
-          <label className="text-xs text-slate-500 block mb-2">
+          <label className="text-xs text-brand-muted block mb-2">
             Permissions
           </label>
           <div className="flex flex-wrap gap-2">
@@ -321,8 +321,8 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
                   }}
                   className={`flex items-center gap-1.5 text-xs border px-2 py-1 rounded ${
                     isDefault
-                      ? "bg-slate-100 border-slate-200 text-slate-400 opacity-70 cursor-not-allowed"
-                      : "bg-slate-50 border-slate-200 text-slate-700 cursor-pointer hover:bg-slate-100"
+                      ? "bg-brand-light border-brand-border text-brand-muted opacity-70 cursor-not-allowed"
+                      : "bg-brand-bg border-brand-border text-brand-dark cursor-pointer hover:bg-brand-light"
                   }`}
                 >
                   <input
@@ -332,7 +332,7 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
                     onChange={() => {
                       if (!isDefault) togglePermission(p);
                     }}
-                    className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 disabled:opacity-50"
+                    className="rounded border-brand-border text-brand-primary focus:ring-brand-primary disabled:opacity-50"
                   />
                   <span className="capitalize">{p}</span>
                 </label>
@@ -340,7 +340,7 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
             })}
           </div>
         </div>
-        <div className="flex gap-3 justify-end mt-4 pt-4 border-t border-slate-100">
+        <div className="flex gap-3 justify-end mt-4 pt-4 border-t border-brand-border">
           <Button type="button" variant="surface" onClick={onClose}>
             Cancel
           </Button>
@@ -447,18 +447,18 @@ export default function StaffDetailsPage() {
   };
   if (loading && !currentTeamMember) {
     return (
-      <div className="flex h-screen bg-slate-50 items-center justify-center font-sans">
+      <div className="flex h-screen bg-brand-bg items-center justify-center font-sans">
         <LottieLoader text="Loading staff details..." />
       </div>
     );
   }
   if (error && !currentTeamMember) {
     return (
-      <div className="flex h-screen bg-slate-50 items-center justify-center font-sans">
+      <div className="flex h-screen bg-brand-bg items-center justify-center font-sans">
         <div className="text-center space-y-4">
-          <AlertCircle className="w-12 h-12 text-red-500 mx-auto" />
-          <h2 className="text-lg font-bold text-slate-800">Staff Not Found</h2>
-          <p className="text-slate-500 text-sm max-w-sm">{error}</p>
+          <AlertCircle className="w-12 h-12 text-brand-danger mx-auto" />
+          <h2 className="text-lg font-bold text-brand-dark">Staff Not Found</h2>
+          <p className="text-brand-muted text-sm max-w-sm">{error}</p>
           <Button variant="primary" onClick={() => router.push("/outlet")}>
             Back to Team Members
           </Button>
@@ -469,7 +469,7 @@ export default function StaffDetailsPage() {
   const m = currentTeamMember;
   if (!m) return null;
   return (
-    <div className="flex flex-col bg-slate-50 font-sans">
+    <div className="flex flex-col bg-brand-bg font-sans">
       <div className="flex-1 flex flex-col min-w-0">
         <main className="flex-1 p-6 md:p-8">
           <div className="space-y-6 pb-12">
@@ -477,7 +477,7 @@ export default function StaffDetailsPage() {
             <div>
               <button
                 onClick={() => router.push("/outlet")}
-                className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
+                className="inline-flex items-center text-sm font-medium text-brand-muted hover:text-brand-dark transition-colors"
               >
                 <ChevronLeft className="mr-1 h-4 w-4" />
                 Back to Branches & Staff
@@ -487,7 +487,7 @@ export default function StaffDetailsPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-3">
-                  <h1 className="text-2xl font-bold text-slate-900">
+                  <h1 className="text-2xl font-bold text-brand-dark">
                     {m.first_name} {m.last_name || ""}
                   </h1>
                   <Badge
@@ -501,10 +501,10 @@ export default function StaffDetailsPage() {
                     {m.status || "Active"}
                   </Badge>
                 </div>
-                <p className="mt-1 flex items-center gap-2 text-sm text-slate-500 capitalize">
+                <p className="mt-1 flex items-center gap-2 text-sm text-brand-muted capitalize">
                   <Shield className="h-4 w-4" />{" "}
                   {m.role?.name || m.role || "Staff"}
-                  <span className="text-slate-300">|</span>
+                  <span className="text-brand-muted">|</span>
                   Joined{" "}
                   {m.join_date || m.created_at
                     ? new Date(m.join_date || m.created_at).toLocaleDateString()
@@ -518,7 +518,7 @@ export default function StaffDetailsPage() {
                   <Button
                     variant="danger"
                     onClick={handleDeleteStaff}
-                    className="bg-red-50 text-red-600 hover:bg-red-100 border-none shadow-none"
+                    className="bg-brand-dangerLight text-brand-danger hover:bg-brand-dangerLight border-none shadow-none"
                   >
                     Delete Member
                   </Button>
@@ -533,7 +533,7 @@ export default function StaffDetailsPage() {
               </div>
             </div>
             {/* Tabs */}
-            <div className="border-b border-slate-200">
+            <div className="border-b border-brand-border">
               <nav
                 className="-mb-px flex space-x-6 overflow-x-auto"
                 aria-label="Tabs"
@@ -549,8 +549,8 @@ export default function StaffDetailsPage() {
                     className={cn(
                       "whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors",
                       activeTab === tab.id
-                        ? "border-slate-900 text-slate-900"
-                        : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-900",
+                        ? "border-brand-dark text-brand-dark"
+                        : "border-transparent text-brand-muted hover:border-brand-border hover:text-brand-dark",
                     )}
                   >
                     {tab.label}
@@ -564,49 +564,49 @@ export default function StaffDetailsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-300 ease-spring">
                   <div className="md:col-span-1 space-y-6">
                     <Card>
-                      <h3 className="text-sm font-bold text-slate-900 mb-4">
+                      <h3 className="text-sm font-bold text-brand-dark mb-4">
                         Contact Information
                       </h3>
                       <div className="space-y-3">
                         <div className="flex items-center gap-3 text-sm">
-                          <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                          <div className="h-8 w-8 rounded-full bg-brand-light flex items-center justify-center text-brand-muted">
                             <span className="font-bold">
                               {m.first_name?.charAt(0) || "U"}
                             </span>
                           </div>
                           <div>
-                            <p className="font-medium text-slate-900">
+                            <p className="font-medium text-brand-dark">
                               {m.first_name} {m.last_name || ""}
                             </p>
-                            <p className="text-xs text-slate-400 capitalize">
+                            <p className="text-xs text-brand-muted capitalize">
                               {m.role?.name || m.role || "Staff"}
                             </p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-3 text-sm text-slate-500">
-                          <Mail className="h-4 w-4 text-slate-300" />
+                        <div className="flex items-center gap-3 text-sm text-brand-muted">
+                          <Mail className="h-4 w-4 text-brand-muted" />
                           {m.email || "Not Provided"}
                         </div>
-                        <div className="flex items-center gap-3 text-sm text-slate-500">
-                          <Phone className="h-4 w-4 text-slate-300" />
+                        <div className="flex items-center gap-3 text-sm text-brand-muted">
+                          <Phone className="h-4 w-4 text-brand-muted" />
                           {m.phone || "Not Provided"}
                         </div>
                       </div>
                     </Card>
                     <Card>
-                      <h3 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
-                        <Shield className="h-4 w-4 text-slate-300" />
+                      <h3 className="text-sm font-bold text-brand-dark mb-4 flex items-center gap-2">
+                        <Shield className="h-4 w-4 text-brand-muted" />
                         Role Details
                       </h3>
                       <div className="space-y-3">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-sm">
-                          <span className="text-slate-500">Role</span>
+                          <span className="text-brand-muted">Role</span>
                           <span className="font-medium capitalize">
                             {m.role?.name || m.role || "N/A"}
                           </span>
                         </div>
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-sm">
-                          <span className="text-slate-500">Branch</span>
+                          <span className="text-brand-muted">Branch</span>
                           <span className="font-medium">
                             {m.branch?.name ||
                               (m.branch_id
@@ -615,13 +615,13 @@ export default function StaffDetailsPage() {
                           </span>
                         </div>
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-sm">
-                          <span className="text-slate-500">Salary</span>
+                          <span className="text-brand-muted">Salary</span>
                           <span className="font-medium">
                             {m.salary ? `$${m.salary}` : "N/A"}
                           </span>
                         </div>
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-sm">
-                          <span className="text-slate-500">PIN Code</span>
+                          <span className="text-brand-muted">PIN Code</span>
                           <span className="font-medium">
                             {m.pin ? "****" : "Not Set"}
                           </span>
@@ -631,8 +631,8 @@ export default function StaffDetailsPage() {
                   </div>
                   <div className="md:col-span-2 space-y-6">
                     <Card>
-                      <h3 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
-                        <KeyRound className="h-4 w-4 text-slate-300" /> Access &
+                      <h3 className="text-sm font-bold text-brand-dark mb-4 flex items-center gap-2">
+                        <KeyRound className="h-4 w-4 text-brand-muted" /> Access &
                         Permissions
                       </h3>
                       <div className="flex flex-wrap gap-2">
@@ -647,18 +647,18 @@ export default function StaffDetailsPage() {
                             </Badge>
                           ))
                         ) : (
-                          <span className="text-slate-500 text-sm">
+                          <span className="text-brand-muted text-sm">
                             No specific permissions set.
                           </span>
                         )}
                       </div>
                     </Card>
                     <Card className="h-full">
-                      <h3 className="text-sm font-bold text-slate-900 mb-4">
+                      <h3 className="text-sm font-bold text-brand-dark mb-4">
                         Activity Overview
                       </h3>
-                      <div className="flex h-64 items-center justify-center rounded-lg border border-dashed border-slate-200 bg-slate-50">
-                        <p className="text-sm text-slate-400">
+                      <div className="flex h-64 items-center justify-center rounded-lg border border-dashed border-brand-border bg-brand-bg">
+                        <p className="text-sm text-brand-muted">
                           Activity charts will be implemented here
                         </p>
                       </div>
@@ -668,31 +668,31 @@ export default function StaffDetailsPage() {
               )}
               {activeTab === "permissions" && (
                 <Card>
-                  <h3 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
-                    <Shield className="h-4 w-4 text-indigo-600" />
+                  <h3 className="text-sm font-bold text-brand-dark mb-4 flex items-center gap-2">
+                    <Shield className="h-4 w-4 text-brand-primary" />
                     Role & Permissions
                   </h3>
                   <div className="space-y-6">
                     <div>
-                      <h4 className="text-sm font-medium text-slate-700 mb-2">
+                      <h4 className="text-sm font-medium text-brand-dark mb-2">
                         Current Role
                       </h4>
                       <div className="flex items-center gap-3">
                         <Badge
                           variant="primary"
-                          className="text-sm capitalize px-3 py-1 bg-indigo-100 text-indigo-700"
+                          className="text-sm capitalize px-3 py-1 bg-brand-primary/10 text-brand-primary"
                         >
                           {m.role?.name || m.role || "Staff"}
                         </Badge>
-                        <p className="text-sm text-slate-500">
+                        <p className="text-sm text-brand-muted">
                           This role determines the default permissions for the
                           team member.
                         </p>
                       </div>
                     </div>
-                    <div className="border-t border-slate-100 pt-6">
+                    <div className="border-t border-brand-border pt-6">
                       <div className="flex items-center justify-between mb-4">
-                        <h4 className="text-sm font-medium text-slate-700">
+                        <h4 className="text-sm font-medium text-brand-dark">
                           Assigned Permissions
                         </h4>
                         <Button
@@ -726,16 +726,16 @@ export default function StaffDetailsPage() {
                               className={cn(
                                 "flex items-center gap-3 p-3 rounded-lg border",
                                 hasPermission
-                                  ? "bg-indigo-50/50 border-indigo-100"
-                                  : "bg-slate-50 border-slate-100 opacity-60",
+                                  ? "bg-brand-primary/5 border-brand-primary/20"
+                                  : "bg-brand-bg border-brand-border opacity-60",
                               )}
                             >
                               <div
                                 className={cn(
                                   "h-5 w-5 rounded-full flex items-center justify-center shrink-0",
                                   hasPermission
-                                    ? "bg-indigo-500 text-white"
-                                    : "bg-slate-200 text-slate-400",
+                                    ? "bg-brand-primary text-white"
+                                    : "bg-brand-border text-brand-muted",
                                 )}
                               >
                                 {hasPermission ? (
@@ -748,8 +748,8 @@ export default function StaffDetailsPage() {
                                 className={cn(
                                   "text-sm capitalize",
                                   hasPermission
-                                    ? "font-medium text-slate-900"
-                                    : "text-slate-500",
+                                    ? "font-medium text-brand-dark"
+                                    : "text-brand-muted",
                                 )}
                               >
                                 {p}
@@ -766,17 +766,17 @@ export default function StaffDetailsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-6">
                     <Card>
-                      <h3 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
-                        <KeyRound className="h-4 w-4 text-slate-400" />
+                      <h3 className="text-sm font-bold text-brand-dark mb-4 flex items-center gap-2">
+                        <KeyRound className="h-4 w-4 text-brand-muted" />
                         Security & Authentication
                       </h3>
                       <div className="space-y-4">
-                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 p-3 border border-slate-100 rounded-lg bg-slate-50/50 hover:bg-slate-50 transition-colors">
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 p-3 border border-brand-border rounded-lg bg-brand-bg/50 hover:bg-brand-bg transition-colors">
                           <div className="flex-1">
-                            <p className="text-sm font-medium text-slate-800">
+                            <p className="text-sm font-medium text-brand-dark">
                               POS PIN Code
                             </p>
-                            <p className="text-xs text-slate-500 mb-2">
+                            <p className="text-xs text-brand-muted mb-2">
                               Set a custom 4-digit PIN or leave blank to
                               generate a random one.
                             </p>
@@ -805,17 +805,17 @@ export default function StaffDetailsPage() {
                               </Button>
                             </div>
                             {newPinResult && (
-                              <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-md">
-                                <p className="text-sm text-green-800 font-medium">
+                              <div className="mt-3 p-3 bg-brand-successLight border border-brand-successLight rounded-md">
+                                <p className="text-sm text-brand-success font-medium">
                                   PIN reset successful!
                                 </p>
-                                <p className="text-sm text-green-900 mt-1">
+                                <p className="text-sm text-brand-success mt-1">
                                   New PIN:{" "}
                                   <span className="font-bold font-mono bg-white px-2 py-1 rounded tracking-widest">
                                     {newPinResult}
                                   </span>
                                 </p>
-                                <p className="text-xs text-green-700 mt-1">
+                                <p className="text-xs text-brand-success mt-1">
                                   Please copy this PIN and share it with the
                                   staff member securely.
                                 </p>
@@ -823,12 +823,12 @@ export default function StaffDetailsPage() {
                             )}
                           </div>
                         </div>
-                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 p-3 border border-slate-100 rounded-lg bg-slate-50/50 hover:bg-slate-50 transition-colors">
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 p-3 border border-brand-border rounded-lg bg-brand-bg/50 hover:bg-brand-bg transition-colors">
                           <div className="flex-1">
-                            <p className="text-sm font-medium text-slate-800">
+                            <p className="text-sm font-medium text-brand-dark">
                               Password
                             </p>
-                            <p className="text-xs text-slate-500 mb-2">
+                            <p className="text-xs text-brand-muted mb-2">
                               Set a custom password or leave blank to generate a
                               random one.
                             </p>
@@ -855,17 +855,17 @@ export default function StaffDetailsPage() {
                               </Button>
                             </div>
                             {newPassword && (
-                              <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-md">
-                                <p className="text-sm text-green-800 font-medium">
+                              <div className="mt-3 p-3 bg-brand-successLight border border-brand-successLight rounded-md">
+                                <p className="text-sm text-brand-success font-medium">
                                   Password reset successful!
                                 </p>
-                                <p className="text-sm text-green-900 mt-1">
+                                <p className="text-sm text-brand-success mt-1">
                                   New Password:{" "}
                                   <span className="font-bold font-mono bg-white px-2 py-1 rounded">
                                     {newPassword}
                                   </span>
                                 </p>
-                                <p className="text-xs text-green-700 mt-1">
+                                <p className="text-xs text-brand-success mt-1">
                                   Please copy this password and share it with
                                   the staff member securely.
                                 </p>
@@ -878,17 +878,17 @@ export default function StaffDetailsPage() {
                   </div>
                   <div className="space-y-6">
                     <Card>
-                      <h3 className="text-sm font-bold text-red-600 mb-4 flex items-center gap-2">
-                        <AlertCircle className="h-4 w-4 text-red-500" />
+                      <h3 className="text-sm font-bold text-brand-danger mb-4 flex items-center gap-2">
+                        <AlertCircle className="h-4 w-4 text-brand-danger" />
                         Danger Zone
                       </h3>
                       <div className="space-y-4">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-red-50/50 border border-red-100 rounded-lg hover:bg-red-50 transition-colors">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-brand-dangerLight/50 border border-brand-dangerLight rounded-lg hover:bg-brand-dangerLight transition-colors">
                           <div>
-                            <p className="text-sm font-medium text-red-800">
+                            <p className="text-sm font-medium text-brand-danger">
                               Account Status
                             </p>
-                            <p className="text-xs text-red-600/80">
+                            <p className="text-xs text-brand-danger/80">
                               {m.status === "Active" || m.status === "active"
                                 ? "Deactivate to temporarily block access"
                                 : "Activate to restore access to the system"}
@@ -898,11 +898,11 @@ export default function StaffDetailsPage() {
                             variant="outline"
                             size="sm"
                             className={cn(
-                              "border-red-200 text-red-600 hover:bg-red-100",
+                              "border-brand-dangerLight text-brand-danger hover:bg-brand-dangerLight",
                               !(
                                 m.status === "Active" || m.status === "active"
                               ) &&
-                                "border-emerald-200 text-emerald-600 hover:bg-emerald-50",
+                                "border-brand-successLight text-brand-success hover:bg-brand-successLight",
                             )}
                             onClick={() => {
                               const newStatus =
@@ -917,12 +917,12 @@ export default function StaffDetailsPage() {
                               : "Activate Account"}
                           </Button>
                         </div>
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-brand-dangerLight border border-brand-dangerLight rounded-lg">
                           <div>
-                            <p className="text-sm font-medium text-red-800">
+                            <p className="text-sm font-medium text-brand-danger">
                               Delete Member
                             </p>
-                            <p className="text-xs text-red-600/80">
+                            <p className="text-xs text-brand-danger/80">
                               Permanently remove this account and data
                             </p>
                           </div>

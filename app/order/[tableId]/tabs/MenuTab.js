@@ -25,11 +25,11 @@ export default function MenuTab({
 }) {
   if (!displayItems || displayItems.length === 0) {
     return (
-      <div className="text-center py-10 bg-white rounded-3xl border border-dashed border-slate-200 flex flex-col items-center">
-        <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
-          <UtensilsCrossed size={24} className="text-slate-300" />
+      <div className="text-center py-10 bg-white rounded-3xl border border-dashed border-brand-light flex flex-col items-center">
+        <div className="w-16 h-16 bg-brand-light rounded-full flex items-center justify-center mb-4">
+          <UtensilsCrossed size={24} className="text-brand-muted" />
         </div>
-        <p className="text-base font-bold text-slate-800">No items available</p>
+        <p className="text-base font-bold text-brand-dark">No items available</p>
       </div>
     );
   }
@@ -70,7 +70,7 @@ export default function MenuTab({
       {Object.entries(grouped).map(([catId, categoryData]) => (
         <div key={catId} className="space-y-4">
           {hasMultipleCategories && (
-            <h2 className="text-xl font-black text-slate-900 px-1 border-b border-slate-200 pb-2">
+            <h2 className="text-xl font-black text-brand-dark px-1 border-b border-brand-light pb-2">
               {categoryData.name}
             </h2>
           )}
@@ -82,7 +82,7 @@ export default function MenuTab({
                   {/* Only show subcategory title if it's explicitly set, or if there's more than one subcat */}
                   {(subCat !== "Other" ||
                     Object.keys(categoryData.subcategories).length > 1) && (
-                    <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider px-2">
+                    <h3 className="text-sm font-bold text-brand-muted uppercase tracking-wider px-2">
                       {subCat} ({items.length})
                     </h3>
                   )}
@@ -99,11 +99,11 @@ export default function MenuTab({
                           onClick={() => handleQuickAdd(item)}
                           className={`group relative bg-white rounded-2xl shadow-sm overflow-hidden border flex flex-col transition-all duration-300 hover:shadow-md cursor-pointer ${
                             inCartCount > 0
-                              ? "border-indigo-600"
-                              : "border-slate-100"
+                              ? "border-brand-primary"
+                              : "border-brand-light"
                           }`}
                         >
-                          <div className="relative w-full aspect-[16/9] bg-slate-50">
+                          <div className="relative w-full aspect-[16/9] bg-brand-light">
                             {item.image_url ? (
                               <img
                                 src={getImageUrl(item.image_url)}
@@ -111,21 +111,21 @@ export default function MenuTab({
                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                               />
                             ) : (
-                              <div className="w-full h-full flex items-center justify-center text-slate-300">
+                              <div className="w-full h-full flex items-center justify-center text-brand-muted">
                                 <UtensilsCrossed size={32} strokeWidth={1.5} />
                               </div>
                             )}
 
                             {/* Best Seller Badge Example */}
                             {item.is_best_seller && (
-                              <div className="absolute bottom-0 right-0 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-tl-lg">
+                              <div className="absolute bottom-0 right-0 bg-brand-danger text-white text-[10px] font-bold px-2 py-0.5 rounded-tl-lg">
                                 Best Seller
                               </div>
                             )}
 
                             {/* In Cart Badge */}
                             {inCartCount > 0 && (
-                              <div className="absolute top-2 right-2 bg-indigo-600 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full shadow-md z-10">
+                              <div className="absolute top-2 right-2 bg-brand-primary text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full shadow-md z-10">
                                 {inCartCount}
                               </div>
                             )}
@@ -133,15 +133,15 @@ export default function MenuTab({
 
                           <div className="p-3 flex flex-col justify-between flex-1">
                             <div className="w-full overflow-hidden">
-                              <h3 className=" font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-slate-700 to-slate-500 text-[13px] leading-tight mb-1 drop-shadow-sm inline-block">
+                              <h3 className=" font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-dark via-slate-700 to-brand-muted text-[13px] leading-tight mb-1 drop-shadow-sm inline-block">
                                 {item.name}
                               </h3>
                             </div>
 
                             <div className="flex items-center justify-between mt-auto">
-                              <span className="font-bold text-slate-900 text-sm">
+                              <span className="font-bold text-brand-dark text-sm">
                                 {branch?.currency}{" "}
-                                <span className="font-black text-green-700 text-lg">
+                                <span className="font-black text-brand-success text-lg">
                                   {parseFloat(item.base_price).toFixed(2)}
                                 </span>
                               </span>
@@ -153,14 +153,14 @@ export default function MenuTab({
                                 {inCartCount > 0 && (
                                   <button
                                     onClick={() => handleQuickRemove(item)}
-                                    className="w-6 h-6 bg-slate-100 text-slate-600 rounded-full flex items-center justify-center hover:bg-slate-200 transition-colors"
+                                    className="w-6 h-6 bg-brand-light text-brand-dark rounded-full flex items-center justify-center hover:bg-brand-light transition-colors"
                                   >
                                     <Minus size={12} strokeWidth={2.5} />
                                   </button>
                                 )}
                                 <button
                                   onClick={() => handleQuickAdd(item)}
-                                  className="w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center hover:bg-indigo-700 transition-colors"
+                                  className="w-6 h-6 bg-brand-primary text-white rounded-full flex items-center justify-center hover:bg-brand-primary transition-colors"
                                 >
                                   <Plus size={12} strokeWidth={2.5} />
                                 </button>

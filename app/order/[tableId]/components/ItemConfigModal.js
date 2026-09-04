@@ -49,7 +49,7 @@ export default function ItemConfigModal({ item, currency, onClose, onAdd }) {
     <div className="fixed inset-0 z-50 flex flex-col justify-end">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"
+        className="absolute inset-0 bg-brand-dark/40 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
@@ -58,14 +58,14 @@ export default function ItemConfigModal({ item, currency, onClose, onAdd }) {
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 z-10 hover:bg-slate-200"
+          className="absolute top-4 right-4 w-10 h-10 bg-brand-light rounded-full flex items-center justify-center text-brand-muted z-10 hover:bg-brand-light"
         >
           <X size={20} />
         </button>
 
         <div className="overflow-y-auto px-4 pt-6 pb-24">
           {item.image_url && (
-            <div className="w-full h-40 rounded-2xl overflow-hidden bg-slate-100 mb-4">
+            <div className="w-full h-40 rounded-2xl overflow-hidden bg-brand-light mb-4">
               <img
                 src={getImageUrl(item.image_url)}
                 alt={item.name}
@@ -74,44 +74,44 @@ export default function ItemConfigModal({ item, currency, onClose, onAdd }) {
             </div>
           )}
 
-          <h2 className="text-xl font-black text-slate-900 mb-1">
+          <h2 className="text-xl font-black text-brand-dark mb-1">
             {item.name}
           </h2>
           {item.description && (
-            <p className="text-slate-500 text-sm mb-4">{item.description}</p>
+            <p className="text-brand-muted text-sm mb-4">{item.description}</p>
           )}
 
           {/* Variants */}
           {item.variants && item.variants.length > 0 && (
             <div className="mb-5">
-              <h3 className="font-bold text-slate-900 mb-2">Size / Variant</h3>
+              <h3 className="font-bold text-brand-dark mb-2">Size / Variant</h3>
               <div className="flex flex-col gap-2">
                 {item.variants.map((v, idx) => (
                   <label
                     key={idx}
                     className={`flex items-center justify-between p-3 rounded-2xl border-2 transition-all ${
                       selectedVariant?.name === v.name
-                        ? "border-indigo-600 bg-indigo-50"
-                        : "border-slate-100 bg-white"
+                        ? "border-brand-primary bg-brand-primaryLight"
+                        : "border-brand-light bg-white"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <div
                         className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                           selectedVariant?.name === v.name
-                            ? "border-indigo-600"
-                            : "border-slate-300"
+                            ? "border-brand-primary"
+                            : "border-brand-muted"
                         }`}
                       >
                         {selectedVariant?.name === v.name && (
-                          <div className="w-2.5 h-2.5 bg-indigo-600 rounded-full" />
+                          <div className="w-2.5 h-2.5 bg-brand-primary rounded-full" />
                         )}
                       </div>
-                      <span className="font-bold text-sm text-slate-800">
+                      <span className="font-bold text-sm text-brand-dark">
                         {v.name}
                       </span>
                     </div>
-                    <span className="font-bold text-slate-900">
+                    <span className="font-bold text-brand-dark">
                       {currency} {parseFloat(v.price).toFixed(2)}
                     </span>
                     <input
@@ -129,7 +129,7 @@ export default function ItemConfigModal({ item, currency, onClose, onAdd }) {
           {/* Addons */}
           {item.addon_categories && item.addon_categories.length > 0 && (
             <div className="mb-5">
-              <h3 className="font-bold text-slate-900 mb-2">Add-ons</h3>
+              <h3 className="font-bold text-brand-dark mb-2">Add-ons</h3>
               <div className="flex flex-col gap-2">
                 {item.addon_categories.flatMap((cat) =>
                   cat.options?.map((addon, idx) => {
@@ -141,16 +141,16 @@ export default function ItemConfigModal({ item, currency, onClose, onAdd }) {
                         key={`${cat.name}-${idx}`}
                         className={`flex items-center justify-between p-3 rounded-2xl border-2 transition-all ${
                           isSelected
-                            ? "border-indigo-600 bg-indigo-50"
-                            : "border-slate-100 bg-white"
+                            ? "border-brand-primary bg-brand-primaryLight"
+                            : "border-brand-light bg-white"
                         }`}
                       >
                         <div className="flex items-center gap-3">
                           <div
                             className={`w-5 h-5 rounded-md border-2 flex items-center justify-center ${
                               isSelected
-                                ? "border-indigo-600 bg-indigo-600"
-                                : "border-slate-300"
+                                ? "border-brand-primary bg-brand-primary"
+                                : "border-brand-muted"
                             }`}
                           >
                             {isSelected && (
@@ -161,11 +161,11 @@ export default function ItemConfigModal({ item, currency, onClose, onAdd }) {
                               />
                             )}
                           </div>
-                          <span className="font-bold text-sm text-slate-800">
+                          <span className="font-bold text-sm text-brand-dark">
                             {addon.name}
                           </span>
                         </div>
-                        <span className="font-bold text-slate-900">
+                        <span className="font-bold text-brand-dark">
                           + {currency} {parseFloat(addon.price).toFixed(2)}
                         </span>
                         <input
@@ -185,7 +185,7 @@ export default function ItemConfigModal({ item, currency, onClose, onAdd }) {
           {/* Spice Level */}
           {item.spice_level_enabled && (
             <div className="mb-5">
-              <h3 className="font-bold text-slate-900 mb-2">Spice Level</h3>
+              <h3 className="font-bold text-brand-dark mb-2">Spice Level</h3>
               <div className="flex flex-wrap gap-2">
                 {["Mild", "Medium", "Spicy", "Extra Spicy"].map((level) => (
                   <button
@@ -194,7 +194,7 @@ export default function ItemConfigModal({ item, currency, onClose, onAdd }) {
                     className={`px-4 py-2 rounded-xl text-sm font-bold border-2 transition-all ${
                       spiceLevel === level
                         ? "border-orange-500 bg-orange-50 text-orange-700"
-                        : "border-slate-100 bg-white text-slate-600"
+                        : "border-brand-light bg-white text-brand-dark"
                     }`}
                   >
                     {level}
@@ -206,21 +206,21 @@ export default function ItemConfigModal({ item, currency, onClose, onAdd }) {
         </div>
 
         {/* Bottom Actions */}
-        <div className="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-slate-100 p-4 flex items-center gap-3">
+        <div className="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-brand-light p-4 flex items-center gap-3">
           {/* Quantity Selector */}
-          <div className="flex items-center bg-slate-100 rounded-xl p-1 shrink-0">
+          <div className="flex items-center bg-brand-light rounded-xl p-1 shrink-0">
             <button
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="w-10 h-10 flex items-center justify-center bg-white rounded-lg shadow-sm text-slate-600 active:scale-95"
+              className="w-10 h-10 flex items-center justify-center bg-white rounded-lg shadow-sm text-brand-dark active:scale-95"
             >
               <Minus size={18} strokeWidth={3} />
             </button>
-            <span className="w-10 text-center font-bold text-slate-900">
+            <span className="w-10 text-center font-bold text-brand-dark">
               {quantity}
             </span>
             <button
               onClick={() => setQuantity(quantity + 1)}
-              className="w-10 h-10 flex items-center justify-center bg-white rounded-lg shadow-sm text-slate-600 active:scale-95"
+              className="w-10 h-10 flex items-center justify-center bg-white rounded-lg shadow-sm text-brand-dark active:scale-95"
             >
               <Plus size={18} strokeWidth={3} />
             </button>
@@ -228,7 +228,7 @@ export default function ItemConfigModal({ item, currency, onClose, onAdd }) {
 
           <button
             onClick={handleAdd}
-            className="flex-1 bg-slate-900 text-white font-bold py-3.5 rounded-xl flex items-center justify-between px-5 hover:bg-slate-800 transition-colors active:scale-95 shadow-lg shadow-slate-900/20"
+            className="flex-1 bg-brand-dark text-white font-bold py-3.5 rounded-xl flex items-center justify-between px-5 hover:bg-brand-dark transition-colors active:scale-95 shadow-lg shadow-brand-dark/20"
           >
             <span>Add Item</span>
             <span>

@@ -104,7 +104,7 @@ function EditBranchModal({ branch, onClose, onSave }) {
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="text-xs text-slate-500 block mb-1">
+            <label className="text-xs text-brand-muted block mb-1">
               Branch Name *
             </label>
             <input
@@ -114,13 +114,13 @@ function EditBranchModal({ branch, onClose, onSave }) {
               required
             />
             {errors.name && (
-              <span className="text-red-500 text-xs mt-1 block">
+              <span className="text-brand-danger text-xs mt-1 block">
                 {errors.name}
               </span>
             )}
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">
+            <label className="text-xs text-brand-muted block mb-1">
               Branch Code *
             </label>
             <input
@@ -130,13 +130,13 @@ function EditBranchModal({ branch, onClose, onSave }) {
               onChange={(e) => set("code", e.target.value)}
             />
             {errors.code && (
-              <span className="text-red-500 text-xs mt-1 block">
+              <span className="text-brand-danger text-xs mt-1 block">
                 {errors.code}
               </span>
             )}
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">Status</label>
+            <label className="text-xs text-brand-muted block mb-1">Status</label>
             <select
               className="input select"
               value={form.status}
@@ -148,7 +148,7 @@ function EditBranchModal({ branch, onClose, onSave }) {
             </select>
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">
+            <label className="text-xs text-brand-muted block mb-1">
               Branch Type
             </label>
             <input
@@ -159,7 +159,7 @@ function EditBranchModal({ branch, onClose, onSave }) {
             />
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">
+            <label className="text-xs text-brand-muted block mb-1">
               Contact Phone
             </label>
             <input
@@ -168,13 +168,13 @@ function EditBranchModal({ branch, onClose, onSave }) {
               onChange={(e) => set("contact", e.target.value)}
             />
             {errors.contact && (
-              <span className="text-red-500 text-xs mt-1 block">
+              <span className="text-brand-danger text-xs mt-1 block">
                 {errors.contact}
               </span>
             )}
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">
+            <label className="text-xs text-brand-muted block mb-1">
               Email Address
             </label>
             <input
@@ -184,13 +184,13 @@ function EditBranchModal({ branch, onClose, onSave }) {
               onChange={(e) => set("email", e.target.value)}
             />
             {errors.email && (
-              <span className="text-red-500 text-xs mt-1 block">
+              <span className="text-brand-danger text-xs mt-1 block">
                 {errors.email}
               </span>
             )}
           </div>
           <div className="md:col-span-2">
-            <label className="text-xs text-slate-500 block mb-1">Address</label>
+            <label className="text-xs text-brand-muted block mb-1">Address</label>
             <textarea
               className="input min-h-[80px]"
               value={form.address}
@@ -198,33 +198,33 @@ function EditBranchModal({ branch, onClose, onSave }) {
             />
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">City</label>
+            <label className="text-xs text-brand-muted block mb-1">City</label>
             <input
               className="input"
               value={form.city}
               onChange={(e) => set("city", e.target.value)}
             />
             {errors.city && (
-              <span className="text-red-500 text-xs mt-1 block">
+              <span className="text-brand-danger text-xs mt-1 block">
                 {errors.city}
               </span>
             )}
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">State</label>
+            <label className="text-xs text-brand-muted block mb-1">State</label>
             <input
               className="input"
               value={form.state}
               onChange={(e) => set("state", e.target.value)}
             />
             {errors.state && (
-              <span className="text-red-500 text-xs mt-1 block">
+              <span className="text-brand-danger text-xs mt-1 block">
                 {errors.state}
               </span>
             )}
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">
+            <label className="text-xs text-brand-muted block mb-1">
               Capacity (Persons)
             </label>
             <input
@@ -235,7 +235,7 @@ function EditBranchModal({ branch, onClose, onSave }) {
             />
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">
+            <label className="text-xs text-brand-muted block mb-1">
               Tables Count
             </label>
             <input
@@ -248,7 +248,7 @@ function EditBranchModal({ branch, onClose, onSave }) {
             />
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">
+            <label className="text-xs text-brand-muted block mb-1">
               Tax Jurisdiction
             </label>
             <input
@@ -259,7 +259,7 @@ function EditBranchModal({ branch, onClose, onSave }) {
             />
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">
+            <label className="text-xs text-brand-muted block mb-1">
               Tax Registration No.
             </label>
             <input
@@ -270,7 +270,7 @@ function EditBranchModal({ branch, onClose, onSave }) {
             />
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">
+            <label className="text-xs text-brand-muted block mb-1">
               Tax Rate (%)
             </label>
             <input
@@ -285,7 +285,7 @@ function EditBranchModal({ branch, onClose, onSave }) {
             />
           </div>
         </div>
-        <div className="flex gap-3 justify-end mt-4 pt-4 border-t border-slate-100">
+        <div className="flex gap-3 justify-end mt-4 pt-4 border-t border-brand-border">
           <Button type="button" variant="surface" onClick={onClose}>
             Cancel
           </Button>
@@ -301,13 +301,13 @@ function EditBranchModal({ branch, onClose, onSave }) {
 // Info Item Component
 function InfoItem({ icon: Icon, label, value }) {
   return (
-    <div className="flex gap-3 items-start p-4 rounded-lg bg-slate-50/50 border border-slate-100">
-      <div className="p-2 bg-white rounded border border-slate-200 text-slate-400 mt-0.5">
+    <div className="flex gap-3 items-start p-4 rounded-lg bg-brand-bg/50 border border-brand-border">
+      <div className="p-2 bg-white rounded border border-brand-border text-brand-muted/70 mt-0.5">
         <Icon className="w-4 h-4" />
       </div>
       <div>
-        <p className="text-xs font-medium text-slate-500 mb-0.5">{label}</p>
-        <p className="text-sm font-semibold text-slate-800">
+        <p className="text-xs font-medium text-brand-muted mb-0.5">{label}</p>
+        <p className="text-sm font-semibold text-brand-dark">
           {value || "Not specified"}
         </p>
       </div>
@@ -367,11 +367,11 @@ export default function BranchDetailsPage() {
 
   if (error && !currentBranch) {
     return (
-      <div className="flex h-screen bg-slate-50 items-center justify-center font-sans">
+      <div className="flex h-screen bg-brand-bg items-center justify-center font-sans">
         <div className="text-center space-y-4">
-          <AlertCircle className="w-12 h-12 text-red-500 mx-auto" />
-          <h2 className="text-lg font-bold text-slate-800">Branch Not Found</h2>
-          <p className="text-slate-500 text-sm max-w-sm">{error}</p>
+          <AlertCircle className="w-12 h-12 text-brand-danger mx-auto" />
+          <h2 className="text-lg font-bold text-brand-dark">Branch Not Found</h2>
+          <p className="text-brand-muted text-sm max-w-sm">{error}</p>
           <Button variant="primary" onClick={() => router.push("/outlet")}>
             Back to Branches
           </Button>
@@ -384,7 +384,7 @@ export default function BranchDetailsPage() {
   if (!b) return null;
 
   return (
-    <div className="flex flex-col bg-slate-50 font-sans">
+    <div className="flex flex-col bg-brand-bg font-sans">
       <div className="flex-1 flex flex-col min-w-0">
         <main className="flex-1 px-6 py-6">
           <div className="space-y-6 pb-12">
@@ -393,7 +393,7 @@ export default function BranchDetailsPage() {
             <div>
               <button
                 onClick={() => router.push("/outlet")}
-                className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
+                className="inline-flex items-center text-sm font-medium text-brand-muted hover:text-brand-dark transition-colors"
               >
                 <ChevronLeft className="mr-1 h-4 w-4" />
                 Back to Branches
@@ -404,7 +404,7 @@ export default function BranchDetailsPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-3">
-                  <h1 className="text-2xl font-bold text-slate-900">
+                  <h1 className="text-2xl font-bold text-brand-dark">
                     {b.name}
                   </h1>
                   <Badge
@@ -418,9 +418,9 @@ export default function BranchDetailsPage() {
                     {b.status || "Operational"}
                   </Badge>
                 </div>
-                <p className="mt-1 flex items-center gap-2 text-sm text-slate-500 capitalize">
+                <p className="mt-1 flex items-center gap-2 text-sm text-brand-muted capitalize">
                   <Building2 className="h-4 w-4" /> {b.branch_type || "Branch"}
-                  <span className="text-slate-300">|</span>
+                  <span className="text-brand-placeholder">|</span>
                   Joined{" "}
                   {b.created_at
                     ? new Date(b.created_at).toLocaleDateString()
@@ -435,7 +435,7 @@ export default function BranchDetailsPage() {
                   <Button
                     variant="danger"
                     onClick={handleDeleteBranch}
-                    className="bg-red-50 text-red-600 hover:bg-red-100 border-none shadow-none"
+                    className="bg-brand-dangerLight text-brand-danger hover:bg-brand-dangerLight border-none shadow-none"
                   >
                     Delete Branch
                   </Button>
@@ -451,7 +451,7 @@ export default function BranchDetailsPage() {
             </div>
 
             {/* Tabs */}
-            <div className="border-b border-slate-200">
+            <div className="border-b border-brand-border">
               <nav
                 className="-mb-px flex space-x-6 overflow-x-auto"
                 aria-label="Tabs"
@@ -467,8 +467,8 @@ export default function BranchDetailsPage() {
                     className={cn(
                       "whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors",
                       activeTab === tab.id
-                        ? "border-slate-900 text-slate-900"
-                        : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-900",
+                        ? "border-brand-dark text-brand-dark"
+                        : "border-transparent text-brand-muted hover:border-brand-border hover:text-brand-dark",
                     )}
                   >
                     {tab.label}
@@ -483,43 +483,43 @@ export default function BranchDetailsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-300 ease-spring">
                   <div className="md:col-span-1 space-y-6">
                     <Card>
-                      <h3 className="text-sm font-bold text-slate-900 mb-4">
+                      <h3 className="text-sm font-bold text-brand-dark mb-4">
                         Contact Information
                       </h3>
                       <div className="space-y-3">
                         <div className="flex items-center gap-3 text-sm">
-                          <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                          <div className="h-8 w-8 rounded-full bg-brand-light flex items-center justify-center text-brand-muted">
                             <span className="font-bold">
                               {b.name.charAt(0)}
                             </span>
                           </div>
                           <div>
-                            <p className="font-medium text-slate-900">
+                            <p className="font-medium text-brand-dark">
                               {b.name}
                             </p>
-                            <p className="text-xs text-slate-400">
+                            <p className="text-xs text-brand-muted/70">
                               Primary Outlet
                             </p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-3 text-sm text-slate-500">
-                          <Mail className="h-4 w-4 text-slate-300" />
+                        <div className="flex items-center gap-3 text-sm text-brand-muted">
+                          <Mail className="h-4 w-4 text-brand-placeholder" />
                           {b.email || "Not Provided"}
                         </div>
-                        <div className="flex items-center gap-3 text-sm text-slate-500">
-                          <Phone className="h-4 w-4 text-slate-300" />
+                        <div className="flex items-center gap-3 text-sm text-brand-muted">
+                          <Phone className="h-4 w-4 text-brand-placeholder" />
                           {b.contact || "Not Provided"}
                         </div>
                       </div>
                     </Card>
 
                     <Card>
-                      <h3 className="text-sm font-bold text-slate-900 mb-4">
+                      <h3 className="text-sm font-bold text-brand-dark mb-4">
                         Location Details
                       </h3>
                       <div className="space-y-3">
-                        <div className="flex items-start gap-3 text-sm text-slate-500">
-                          <MapPin className="h-4 w-4 text-slate-300 mt-0.5 shrink-0" />
+                        <div className="flex items-start gap-3 text-sm text-brand-muted">
+                          <MapPin className="h-4 w-4 text-brand-placeholder mt-0.5 shrink-0" />
                           <span>
                             {b.address || "No Address"}
                             <br />
@@ -528,20 +528,20 @@ export default function BranchDetailsPage() {
                             {b.country}
                           </span>
                         </div>
-                        <div className="pt-3 mt-3 border-t border-slate-200 space-y-2">
+                        <div className="pt-3 mt-3 border-t border-brand-border space-y-2">
                           <div className="flex justify-between text-sm">
-                            <span className="text-slate-500">
+                            <span className="text-brand-muted">
                               Tax Jurisdiction
                             </span>
-                            <span className="font-medium text-slate-900">
+                            <span className="font-medium text-brand-dark">
                               {b.tax_jurisdiction || "Not Provided"}
                             </span>
                           </div>
                           <div className="flex justify-between text-sm">
-                            <span className="text-slate-500">
+                            <span className="text-brand-muted">
                               Tax Registration
                             </span>
-                            <span className="font-medium text-slate-900">
+                            <span className="font-medium text-brand-dark">
                               {b.tax_registration || "Not Provided"}
                             </span>
                           </div>
@@ -550,25 +550,25 @@ export default function BranchDetailsPage() {
                     </Card>
 
                     <Card>
-                      <h3 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
-                        <FileCheck className="h-4 w-4 text-slate-300" />{" "}
+                      <h3 className="text-sm font-bold text-brand-dark mb-4 flex items-center gap-2">
+                        <FileCheck className="h-4 w-4 text-brand-placeholder" />{" "}
                         Operational Info
                       </h3>
                       <div className="space-y-3">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-sm">
-                          <span className="text-slate-500">Store Size</span>
+                          <span className="text-brand-muted">Store Size</span>
                           <span className="font-medium">
                             {b.store_size || "N/A"}
                           </span>
                         </div>
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-sm">
-                          <span className="text-slate-500">Capacity</span>
+                          <span className="text-brand-muted">Capacity</span>
                           <span className="font-medium">
                             {b.capacity ? `${b.capacity} Persons` : "N/A"}
                           </span>
                         </div>
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-sm">
-                          <span className="text-slate-500">Tables Count</span>
+                          <span className="text-brand-muted">Tables Count</span>
                           <span className="font-medium">
                             {b.tables_count || "N/A"}
                           </span>
@@ -579,11 +579,11 @@ export default function BranchDetailsPage() {
 
                   <div className="md:col-span-2 space-y-6">
                     <Card className="h-full">
-                      <h3 className="text-sm font-bold text-slate-900 mb-4">
+                      <h3 className="text-sm font-bold text-brand-dark mb-4">
                         Activity Overview
                       </h3>
-                      <div className="flex h-64 items-center justify-center rounded-lg border border-dashed border-slate-200 bg-slate-50">
-                        <p className="text-sm text-slate-400">
+                      <div className="flex h-64 items-center justify-center rounded-lg border border-dashed border-brand-border bg-brand-bg">
+                        <p className="text-sm text-brand-muted">
                           Activity charts will be implemented here
                         </p>
                       </div>
@@ -594,10 +594,10 @@ export default function BranchDetailsPage() {
 
               {activeTab === "staff" && (
                 <Card padding="none">
-                  <div className="p-5 border-b border-slate-100 flex items-center justify-between">
+                  <div className="p-5 border-b border-brand-border flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Users className="h-5 w-5 text-indigo-600" />
-                      <h3 className="text-lg font-bold text-slate-900">
+                      <Users className="h-5 w-5 text-brand-primary" />
+                      <h3 className="text-lg font-bold text-brand-dark">
                         Staff & Permissions
                       </h3>
                     </div>
@@ -625,20 +625,20 @@ export default function BranchDetailsPage() {
                           staffList.map((staff, i) => (
                             <TableRow
                               key={staff.id || i}
-                              className="hover:bg-slate-50 transition-colors"
+                              className="hover:bg-brand-bg/50 transition-colors"
                             >
-                              <TableCell className="font-medium text-slate-800">
+                              <TableCell className="font-medium text-brand-dark">
                                 {staff.name ||
                                   (staff.first_name
                                     ? `${staff.first_name} ${staff.last_name || ""}`
                                     : "Unnamed Staff")}
                               </TableCell>
                               <TableCell>
-                                <div className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
+                                <div className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-md bg-brand-light text-brand-muted border border-brand-border">
                                   {staff.role?.name || staff.role || "Staff"}
                                 </div>
                               </TableCell>
-                              <TableCell className="text-slate-500">
+                              <TableCell className="text-brand-muted">
                                 {staff.email || "N/A"}
                               </TableCell>
                               <TableCell>
@@ -658,8 +658,8 @@ export default function BranchDetailsPage() {
                         ) : (
                           <TableRow>
                             <TableCell colSpan={4} className="text-center py-8">
-                              <div className="flex flex-col items-center justify-center text-slate-500">
-                                <Users className="h-8 w-8 text-slate-300 mb-2" />
+                              <div className="flex flex-col items-center justify-center text-brand-muted/70">
+                                <Users className="h-8 w-8 text-brand-placeholder mb-2" />
                                 <p>No staff members assigned to this branch</p>
                               </div>
                             </TableCell>
@@ -673,23 +673,23 @@ export default function BranchDetailsPage() {
 
               {activeTab === "settings" && (
                 <Card>
-                  <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-                    <Settings className="w-5 h-5 text-indigo-600" />
+                  <h3 className="text-lg font-bold text-brand-dark mb-6 flex items-center gap-2">
+                    <Settings className="w-5 h-5 text-brand-primary" />
                     Branch Settings
                   </h3>
 
                   <div className="space-y-6">
                     <div>
-                      <h4 className="text-sm font-semibold text-slate-800 mb-3">
+                      <h4 className="text-sm font-semibold text-brand-dark mb-3">
                         General Settings
                       </h4>
                       <div className="space-y-3">
-                        <div className="flex items-center justify-between p-4 bg-slate-50/50 rounded-lg border border-slate-100">
+                        <div className="flex items-center justify-between p-4 bg-brand-bg/50 rounded-lg border border-brand-border">
                           <div>
-                            <p className="font-medium text-slate-800">
+                            <p className="font-medium text-brand-dark">
                               Accept Online Orders
                             </p>
-                            <p className="text-xs text-slate-500 mt-1">
+                            <p className="text-xs text-brand-muted mt-1">
                               Allow customers to place orders online for this
                               branch
                             </p>
@@ -708,15 +708,15 @@ export default function BranchDetailsPage() {
                                 })
                               }
                             />
-                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                            <div className="w-11 h-6 bg-brand-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-brand-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-primary"></div>
                           </label>
                         </div>
-                        <div className="flex items-center justify-between p-4 bg-slate-50/50 rounded-lg border border-slate-100">
+                        <div className="flex items-center justify-between p-4 bg-brand-bg/50 rounded-lg border border-brand-border">
                           <div>
-                            <p className="font-medium text-slate-800">
+                            <p className="font-medium text-brand-dark">
                               Enable Table Booking
                             </p>
-                            <p className="text-xs text-slate-500 mt-1">
+                            <p className="text-xs text-brand-muted mt-1">
                               Allow customers to reserve tables in advance
                             </p>
                           </div>
@@ -734,23 +734,23 @@ export default function BranchDetailsPage() {
                                 })
                               }
                             />
-                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                            <div className="w-11 h-6 bg-brand-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-brand-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-primary"></div>
                           </label>
                         </div>
                       </div>
                     </div>
 
                     <div>
-                      <h4 className="text-sm font-semibold text-slate-800 mb-3">
+                      <h4 className="text-sm font-semibold text-brand-dark mb-3">
                         Notification Preferences
                       </h4>
                       <div className="space-y-3">
-                        <div className="flex items-center justify-between p-4 bg-slate-50/50 rounded-lg border border-slate-100">
+                        <div className="flex items-center justify-between p-4 bg-brand-bg/50 rounded-lg border border-brand-border">
                           <div>
-                            <p className="font-medium text-slate-800">
+                            <p className="font-medium text-brand-dark">
                               Daily Sales Summary
                             </p>
-                            <p className="text-xs text-slate-500 mt-1">
+                            <p className="text-xs text-brand-muted mt-1">
                               Receive daily email summaries for this branch
                             </p>
                           </div>
@@ -768,7 +768,7 @@ export default function BranchDetailsPage() {
                                 })
                               }
                             />
-                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                            <div className="w-11 h-6 bg-brand-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-brand-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-primary"></div>
                           </label>
                         </div>
                       </div>

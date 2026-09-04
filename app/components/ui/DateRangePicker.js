@@ -72,7 +72,7 @@ function CalendarGrid({ year, month, startDate, endDate, hoverDate, onDayClick, 
     <div className="flex-1 min-w-0">
       <div className="grid grid-cols-7 mb-1">
         {DAYS.map(d=>(
-          <div key={d} className="text-center text-[11px] font-semibold text-slate-400 py-1">{d}</div>
+          <div key={d} className="text-center text-[11px] font-semibold text-brand-muted py-1">{d}</div>
         ))}
       </div>
       <div className="grid grid-cols-7">
@@ -87,14 +87,14 @@ function CalendarGrid({ year, month, startDate, endDate, hoverDate, onDayClick, 
           let btnCls  = "w-7 h-7 flex items-center justify-center text-[13px] rounded-full ";
 
           if (!cell.current) {
-            btnCls += "text-slate-300 cursor-default";
+            btnCls += "text-brand-muted cursor-default";
           } else {
-            if (inRange) wrapCls += "bg-indigo-50 ";
-            if (isStart&&(inRange||(selecting&&hoverDate&&hoverDate>startDate))) wrapCls += "rounded-l-full bg-indigo-50 ";
-            if (isEnd&&(inRange||isStart)) wrapCls += "rounded-r-full bg-indigo-50 ";
-            if (isStart||isEnd) btnCls += "bg-indigo-600 text-white font-semibold cursor-pointer ";
-            else if (inRange) btnCls += "text-indigo-700 cursor-pointer ";
-            else btnCls += "text-slate-700 cursor-pointer hover:bg-slate-100 ";
+            if (inRange) wrapCls += "bg-brand-primaryLight ";
+            if (isStart&&(inRange||(selecting&&hoverDate&&hoverDate>startDate))) wrapCls += "rounded-l-full bg-brand-primaryLight ";
+            if (isEnd&&(inRange||isStart)) wrapCls += "rounded-r-full bg-brand-primaryLight ";
+            if (isStart||isEnd) btnCls += "bg-brand-primary text-white font-semibold cursor-pointer ";
+            else if (inRange) btnCls += "text-brand-primary cursor-pointer ";
+            else btnCls += "text-brand-dark cursor-pointer hover:bg-brand-light ";
           }
 
           return (
@@ -199,10 +199,10 @@ export default function DateRangePicker({ value, onChange, placeholder="Select D
       <button
         type="button"
         onClick={handleOpen}
-        className="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-indigo-400 transition-colors min-w-[200px] whitespace-nowrap"
+        className="flex items-center gap-2 bg-white border border-brand-light rounded-xl px-4 py-2 text-sm font-semibold text-brand-dark shadow-sm hover:border-brand-primary transition-colors min-w-[200px] whitespace-nowrap"
       >
-        <CalendarDays size={15} className="text-indigo-500 shrink-0" />
-        <span className={displayValue?"text-slate-700":"text-slate-400 font-normal"}>
+        <CalendarDays size={15} className="text-brand-primary shrink-0" />
+        <span className={displayValue?"text-brand-dark":"text-brand-muted font-normal"}>
           {displayValue||placeholder}
         </span>
       </button>
@@ -210,12 +210,12 @@ export default function DateRangePicker({ value, onChange, placeholder="Select D
       {/* Dropdown — right-aligned so it never overflows the right edge */}
       {open&&(
         <div
-          className="absolute right-0 top-full mt-2 z-[9999] bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden"
+          className="absolute right-0 top-full mt-2 z-[9999] bg-white border border-brand-light rounded-2xl shadow-2xl overflow-hidden"
           style={{width:620}}
         >
           <div className="flex">
             {/* Shortcuts sidebar */}
-            <div className="flex flex-col border-r border-slate-100 py-4 px-2 shrink-0" style={{width:130}}>
+            <div className="flex flex-col border-r border-brand-light py-4 px-2 shrink-0" style={{width:130}}>
               {SHORTCUTS.map(s=>(
                 <button
                   key={s.label}
@@ -223,8 +223,8 @@ export default function DateRangePicker({ value, onChange, placeholder="Select D
                   onClick={()=>handleShortcut(s)}
                   className={`text-left px-3 py-[7px] rounded-lg text-[13px] transition-colors mb-0.5 ${
                     activeShortcut===s.label
-                      ?"bg-indigo-50 text-indigo-700 font-semibold"
-                      :"text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                      ?"bg-brand-primaryLight text-brand-primary font-semibold"
+                      :"text-brand-dark hover:bg-brand-light hover:text-brand-dark"
                   }`}
                 >
                   {s.label}
@@ -235,15 +235,15 @@ export default function DateRangePicker({ value, onChange, placeholder="Select D
             {/* Dual calendars */}
             <div className="flex-1 px-4 pt-4 pb-0 min-w-0">
               <div className="flex items-center mb-3">
-                <button type="button" onClick={prevMonth} className="p-1 hover:bg-slate-100 rounded-lg shrink-0">
-                  <ChevronLeft size={15} className="text-slate-500" />
+                <button type="button" onClick={prevMonth} className="p-1 hover:bg-brand-light rounded-lg shrink-0">
+                  <ChevronLeft size={15} className="text-brand-muted" />
                 </button>
                 <div className="flex flex-1 justify-around">
-                  <span className="text-[13px] font-semibold text-slate-800">{MONTHS[leftMonth]} {leftYear}</span>
-                  <span className="text-[13px] font-semibold text-slate-800">{MONTHS[rightMonth]} {rightYear}</span>
+                  <span className="text-[13px] font-semibold text-brand-dark">{MONTHS[leftMonth]} {leftYear}</span>
+                  <span className="text-[13px] font-semibold text-brand-dark">{MONTHS[rightMonth]} {rightYear}</span>
                 </div>
-                <button type="button" onClick={nextMonth} className="p-1 hover:bg-slate-100 rounded-lg shrink-0">
-                  <ChevronRight size={15} className="text-slate-500" />
+                <button type="button" onClick={nextMonth} className="p-1 hover:bg-brand-light rounded-lg shrink-0">
+                  <ChevronRight size={15} className="text-brand-muted" />
                 </button>
               </div>
 
@@ -255,7 +255,7 @@ export default function DateRangePicker({ value, onChange, placeholder="Select D
                   onDayClick={handleDayClick}
                   onDayHover={d=>selecting&&setHoverDate(d)}
                 />
-                <div className="w-px bg-slate-100 my-1 shrink-0"/>
+                <div className="w-px bg-brand-light my-1 shrink-0"/>
                 <CalendarGrid
                   year={rightYear} month={rightMonth}
                   startDate={pendingStart} endDate={pendingEnd}
@@ -268,21 +268,21 @@ export default function DateRangePicker({ value, onChange, placeholder="Select D
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between border-t border-slate-100 px-4 py-3 gap-3">
+          <div className="flex items-center justify-between border-t border-brand-light px-4 py-3 gap-3">
             <div className="flex items-center gap-2">
-              <div className="border border-slate-200 rounded-lg px-3 py-1.5 bg-slate-50 text-[11px] font-mono text-slate-600 min-w-[115px]">
-                {pendingStart?formatInput(pendingStart):<span className="text-slate-400">Start date</span>}
+              <div className="border border-brand-light rounded-lg px-3 py-1.5 bg-brand-light text-[11px] font-mono text-brand-dark min-w-[115px]">
+                {pendingStart?formatInput(pendingStart):<span className="text-brand-muted">Start date</span>}
               </div>
-              <span className="text-slate-400 text-xs">–</span>
-              <div className="border border-slate-200 rounded-lg px-3 py-1.5 bg-slate-50 text-[11px] font-mono text-slate-600 min-w-[115px]">
-                {pendingEnd?formatInput(pendingEnd):<span className="text-slate-400">End date</span>}
+              <span className="text-brand-muted text-xs">–</span>
+              <div className="border border-brand-light rounded-lg px-3 py-1.5 bg-brand-light text-[11px] font-mono text-brand-dark min-w-[115px]">
+                {pendingEnd?formatInput(pendingEnd):<span className="text-brand-muted">End date</span>}
               </div>
             </div>
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={handleCancel}
-                className="px-4 py-1.5 text-sm font-medium text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors"
+                className="px-4 py-1.5 text-sm font-medium text-brand-dark border border-brand-light rounded-xl hover:bg-brand-light transition-colors"
               >
                 Cancel
               </button>
@@ -290,7 +290,7 @@ export default function DateRangePicker({ value, onChange, placeholder="Select D
                 type="button"
                 onClick={handleApply}
                 disabled={!pendingStart||!pendingEnd}
-                className="px-5 py-1.5 text-sm font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="px-5 py-1.5 text-sm font-semibold text-white bg-brand-primary rounded-xl hover:bg-brand-primary transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 Apply
               </button>

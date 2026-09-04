@@ -24,7 +24,7 @@ export default function RevenueLeakageWidget() {
           <select 
             value={timeRange}
             onChange={handleFilterChange}
-            className="bg-slate-50 text-xs px-2 h-7 border border-slate-200 rounded-md text-slate-700 outline-none focus:ring-2 focus:ring-blue-100"
+            className="bg-brand-light text-xs px-2 h-7 border border-brand-light rounded-md text-brand-dark outline-none focus:ring-2 focus:ring-brand-primary/20"
           >
             <option value="">All Time</option>
             <option value="today">Today</option>
@@ -37,7 +37,7 @@ export default function RevenueLeakageWidget() {
               setTimeRange("");
               dispatch(fetchDashboardAnalytics({}));
             }}
-            className="bg-slate-50 border border-slate-200 text-slate-500 rounded-md w-7 h-7 flex items-center justify-center hover:bg-slate-100 transition-colors"
+            className="bg-brand-light border border-brand-light text-brand-muted rounded-md w-7 h-7 flex items-center justify-center hover:bg-brand-light transition-colors"
           >
             <RefreshCcw size={14} />
           </button>
@@ -47,14 +47,14 @@ export default function RevenueLeakageWidget() {
         {[
           { val: "0", label: "Bills Modified" },
           { val: "0", label: "Bills Re-Printed" },
-          { val: "₹ 0", label: "Waived Off", color: "text-rose-500" },
+          { val: "₹ 0", label: "Waived Off", color: "text-brand-danger" },
           { val: cancelledOrders.toString(), label: "KOTs Cancelled" },
           { val: "0", label: "Modified KOTs" },
           { val: "0", label: "Not Used In Bills" },
         ].map((item, i) => (
-          <div key={i} className="border-l-2 border-slate-100 pl-3">
-            <div className={`text-[22px] font-bold tracking-tight mb-0.5 ${item.color || 'text-slate-800'}`}>{item.val}</div>
-            <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider leading-tight">{item.label}</div>
+          <div key={i} className="border-l-2 border-brand-light pl-3">
+            <div className={`text-[22px] font-bold tracking-tight mb-0.5 ${item.color || 'text-brand-dark'}`}>{item.val}</div>
+            <div className="text-[10px] text-brand-muted font-semibold uppercase tracking-wider leading-tight">{item.label}</div>
           </div>
         ))}
       </div>

@@ -16,7 +16,7 @@ export default function LottieLoader({
         <DotLottieReact data={SpoonLoaderData} loop={true} autoplay={true} />
       </div>
       {text && (
-        <span className="text-sm font-semibold text-slate-500 mt-2">
+        <span className="text-sm font-semibold text-brand-muted mt-2">
           {text}
         </span>
       )}

@@ -67,30 +67,30 @@ export default function OnlineOrdersWidget() {
           >
             <defs>
               <linearGradient id="colorDineIn" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
+                <stop offset="5%" stopColor="#D97706" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#D97706" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="colorTakeAway" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                <stop offset="5%" stopColor="#2563EB" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#2563EB" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid
               strokeDasharray="3 3"
               vertical={false}
-              stroke="#e2e8f0"
+              stroke="#E2E8F0"
             />
             <XAxis
               dataKey="date"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#64748b", fontSize: 12, fontWeight: 500 }}
+              tick={{ fill: "#4B5563", fontSize: 12, fontWeight: 500 }}
               dy={10}
             />
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#64748b", fontSize: 12, fontWeight: 500 }}
+              tick={{ fill: "#4B5563", fontSize: 12, fontWeight: 500 }}
               tickFormatter={(value) => `₹${(value / 1000).toFixed(0)}k`}
               dx={-10}
             />
@@ -145,7 +145,7 @@ export default function OnlineOrdersWidget() {
             <Area
               type="monotone"
               dataKey="val3"
-              stroke="#f59e0b"
+              stroke="#D97706"
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#colorDineIn)"
@@ -154,7 +154,7 @@ export default function OnlineOrdersWidget() {
             <Area
               type="monotone"
               dataKey="val2"
-              stroke="#3b82f6"
+              stroke="#2563EB"
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#colorTakeAway)"

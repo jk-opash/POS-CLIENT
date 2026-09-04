@@ -4,13 +4,13 @@ import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Cell } from 
 
 export default function TotalSalesBreakdownWidget() {
   const data = [
-    { label: "Cash", val: 18472.5, color: "#38bdf8" },
-    { label: "Card", val: 12250.0, color: "#3b82f6" },
-    { label: "Wallet", val: 2718.0, color: "#10b981" },
-    { label: "Due", val: 0, color: "#e2e8f0" },
-    { label: "Other", val: 0, color: "#e2e8f0" },
-    { label: "Paid", val: 12450.0, color: "#f59e0b" },
-    { label: "COD", val: 0, color: "#e2e8f0" },
+    { label: "Cash", val: 18472.5, color: "#14B8A6" },
+    { label: "Card", val: 12250.0, color: "#2563EB" },
+    { label: "Wallet", val: 2718.0, color: "#059669" },
+    { label: "Due", val: 0, color: "#E2E8F0" },
+    { label: "Other", val: 0, color: "#E2E8F0" },
+    { label: "Paid", val: 12450.0, color: "#D97706" },
+    { label: "COD", val: 0, color: "#E2E8F0" },
   ];
 
   return (
@@ -47,10 +47,10 @@ export default function TotalSalesBreakdownWidget() {
               dataKey="label" 
               axisLine={false} 
               tickLine={false} 
-              tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }} 
+              tick={{ fill: '#4B5563', fontSize: 12, fontWeight: 600 }} 
             />
             <Tooltip 
-              cursor={{ fill: '#f8fafc' }}
+              cursor={{ fill: '#F8F9FA' }}
               content={({ active, payload, label }) => {
                 if (active && payload && payload.length) {
                   return (

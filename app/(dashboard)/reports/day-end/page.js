@@ -102,30 +102,30 @@ export default function DayEndReport() {
       type: "Cash",
       amount: cashCol,
       icon: Coins,
-      color: "text-amber-600",
-      bg: "bg-amber-50 border-amber-200",
-      progressBg: "bg-amber-500",
+      color: "text-brand-warning",
+      bg: "bg-brand-warningLight border-brand-warning/20",
+      progressBg: "bg-brand-warning",
     },
     {
       type: "Credit/Debit Card",
       amount: cardCol,
       icon: CreditCard,
-      color: "text-blue-600",
-      bg: "bg-blue-50 border-blue-200",
-      progressBg: "bg-blue-500",
+      color: "text-brand-info",
+      bg: "bg-brand-info/10 border-brand-info/20",
+      progressBg: "bg-brand-info",
     },
     {
       type: "UPI / Digital",
       amount: upiCol,
       icon: Wallet,
-      color: "text-emerald-600",
-      bg: "bg-emerald-50 border-emerald-200",
-      progressBg: "bg-emerald-500",
+      color: "text-brand-success",
+      bg: "bg-brand-successLight border-brand-success/20",
+      progressBg: "bg-brand-success",
     },
   ];
 
   return (
-    <div className="flex flex-col bg-slate-50">
+    <div className="flex flex-col bg-brand-bg">
       <div className="flex flex-1 min-w-0 flex-col">
         <main className="flex-1 px-6 py-6">
           <div className="space-y-6 pb-12">
@@ -143,12 +143,12 @@ export default function DayEndReport() {
 
               <div className="flex flex-wrap items-center gap-3">
                 {/* Branch Selector (Matched with menu/page.js) */}
-                <div className="relative flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 shadow-sm">
-                  <Building2 size={14} className="text-slate-500 shrink-0" />
+                <div className="relative flex items-center gap-2 bg-white border border-brand-border rounded-xl px-3 py-2 shadow-sm">
+                  <Building2 size={14} className="text-brand-muted shrink-0" />
                   <select
                     value={branchFilter}
                     onChange={(e) => setBranchFilter(e.target.value)}
-                    className="text-sm font-semibold text-slate-700 outline-none bg-transparent cursor-pointer pr-2"
+                    className="text-sm font-semibold text-brand-dark outline-none bg-transparent cursor-pointer pr-2"
                   >
                     {branches?.map((b) => (
                       <option key={b.id} value={b.id}>
@@ -160,7 +160,7 @@ export default function DayEndReport() {
 
                 <button
                   onClick={() => window.print()}
-                  className="px-4 py-2 text-xs font-bold rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2"
+                  className="px-4 py-2 text-xs font-bold rounded-xl bg-brand-dark text-white hover:bg-brand-dark/90 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2"
                 >
                   <Printer size={16} /> Print Z-Report
                 </button>
@@ -210,7 +210,7 @@ export default function DayEndReport() {
                     <h3 className="text-sm font-semibold uppercase tracking-wider text-brand-dark">
                       Tender / Payment Breakdown
                     </h3>
-                    <span className="text-[10px] font-bold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full border border-slate-200">
+                    <span className="text-[10px] font-bold bg-brand-light text-brand-dark px-2.5 py-1 rounded-full border border-brand-border">
                       Channels
                     </span>
                   </div>
@@ -231,7 +231,7 @@ export default function DayEndReport() {
 
                           <div className="flex-1">
                             <div className="flex justify-between items-center mb-1.5">
-                              <span className="text-sm font-bold text-slate-700">
+                              <span className="text-sm font-bold text-brand-dark">
                                 {tender.type}
                               </span>
                               <span className="text-sm font-black text-brand-dark">
@@ -240,7 +240,7 @@ export default function DayEndReport() {
                             </div>
 
                             <div className="flex items-center gap-3">
-                              <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                              <div className="flex-1 h-2 bg-brand-light rounded-full overflow-hidden">
                                 <motion.div
                                   initial={{ width: 0 }}
                                   animate={{ width: `${pct}%` }}
@@ -248,7 +248,7 @@ export default function DayEndReport() {
                                   className={`h-full rounded-full ${tender.progressBg}`}
                                 />
                               </div>
-                              <span className="text-xs font-bold text-slate-500 w-8 text-right">
+                              <span className="text-xs font-bold text-brand-muted w-8 text-right">
                                 {pct}%
                               </span>
                             </div>
@@ -286,10 +286,10 @@ export default function DayEndReport() {
 
                       const colors = [
                         "bg-brand-primary",
-                        "bg-emerald-500",
-                        "bg-purple-500",
-                        "bg-amber-500",
-                        "bg-rose-500",
+                        "bg-brand-success",
+                        "bg-brand-purple",
+                        "bg-brand-warning",
+                        "bg-brand-danger",
                       ];
                       const color = colors[i % colors.length];
                       return (
@@ -307,7 +307,7 @@ export default function DayEndReport() {
                               </span>
                             </div>
                           </div>
-                          <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                          <div className="w-full h-2 bg-brand-light rounded-full overflow-hidden">
                             <motion.div
                               initial={{ width: 0 }}
                               animate={{ width: `${barWidth}%` }}
@@ -330,7 +330,7 @@ export default function DayEndReport() {
                     <h3 className="text-sm font-semibold uppercase tracking-wider text-brand-dark">
                       Cash Reconciliation
                     </h3>
-                    <span className="text-[10px] font-bold bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-full border border-emerald-200">
+                    <span className="text-[10px] font-bold bg-brand-successLight text-brand-success px-2.5 py-1 rounded-full border border-brand-success/20">
                       Live
                     </span>
                   </div>
@@ -394,7 +394,7 @@ export default function DayEndReport() {
                       )}
                     </div>
 
-                    <div className="flex justify-between items-center text-emerald-600">
+                    <div className="flex justify-between items-center text-brand-success">
                       <span className="font-medium flex items-center gap-1.5">
                         <ArrowUpRight size={16} /> Cash Sales
                       </span>
@@ -403,7 +403,7 @@ export default function DayEndReport() {
 
                     <div className="space-y-1 pt-1 border-t border-brand-border">
                       <span className="text-xs font-bold text-brand-muted flex items-center gap-1.5">
-                        <ArrowDownRight size={14} className="text-rose-500" />{" "}
+                        <ArrowDownRight size={14} className="text-brand-danger" />{" "}
                         Petty Cash Payouts
                       </span>
                       {pettyCash.length === 0 && (
@@ -414,7 +414,7 @@ export default function DayEndReport() {
                       {pettyCash.map((pc, i) => (
                         <div
                           key={i}
-                          className="flex justify-between text-xs text-rose-500 pl-5"
+                          className="flex justify-between text-xs text-brand-danger pl-5"
                         >
                           <span>- {pc.label}</span>
                           <span>-₹{fmt(pc.val)}</span>
@@ -438,7 +438,7 @@ export default function DayEndReport() {
                   <h3 className="text-sm font-semibold uppercase tracking-wider text-brand-dark mb-4">
                     Key Order Metrics
                   </h3>
-                  <div className="divide-y divide-slate-100">
+                  <div className="divide-y divide-brand-border">
                     <div className="flex justify-between items-center py-3">
                       <span className="text-sm font-semibold text-brand-muted">
                         Total Orders
@@ -451,7 +451,7 @@ export default function DayEndReport() {
                       <span className="text-sm font-semibold text-brand-muted">
                         Cancelled / Voided
                       </span>
-                      <span className="font-black text-rose-500 text-base">
+                      <span className="font-black text-brand-danger text-base">
                         {cancelledOrders}
                       </span>
                     </div>

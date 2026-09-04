@@ -32,11 +32,11 @@ export default function InventoryTabTable({
 }) {
   const router = useRouter();
   return (
-    <div className="rounded-2xl border border-slate-200/80 bg-white/70 backdrop-blur-lg shadow-sm overflow-hidden">
+    <div className="rounded-2xl border border-brand-border/80 bg-white/70 backdrop-blur-lg shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-black text-slate-400 uppercase tracking-wider">
+            <tr className="border-b border-brand-border bg-brand-bg/80 text-[11px] font-black text-brand-muted/70 uppercase tracking-wider">
               <th className="py-3.5 px-6">Item</th>
               <th className="py-3.5 px-4">SKU</th>
               <th className="py-3.5 px-4">Category</th>
@@ -47,13 +47,13 @@ export default function InventoryTabTable({
               <th className="py-3.5 px-6 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 text-xs">
+          <tbody className="divide-y divide-brand-border text-xs">
             {paginatedItems.length === 0 ? (
               <tr>
-                <td colSpan={8} className="py-12 text-center text-slate-400">
-                  <Package size={36} className="mx-auto mb-2 text-slate-300" />
-                  <p className="font-bold text-slate-600">No items found</p>
-                  <p className="text-xs text-slate-400 mt-0.5">
+                <td colSpan={8} className="py-12 text-center text-brand-muted/70">
+                  <Package size={36} className="mx-auto mb-2 text-brand-muted/70" />
+                  <p className="font-bold text-brand-dark">No items found</p>
+                  <p className="text-xs text-brand-muted/70 mt-0.5">
                     Try resetting filters or adding a new item.
                   </p>
                 </td>
@@ -66,23 +66,23 @@ export default function InventoryTabTable({
                 const isLow =
                   !isZero && !isCrit && item.currentStock <= item.reorderLevel;
                 const stockColor = isZero
-                  ? "text-red-600"
+                  ? "text-brand-danger"
                   : isCrit
                     ? "text-orange-600"
                     : isLow
-                      ? "text-amber-600"
-                      : "text-emerald-600";
+                      ? "text-brand-warning"
+                      : "text-brand-success";
 
                 return (
                   <tr
                     key={item.id}
-                    className="hover:bg-slate-50/60 transition-colors duration-150 cursor-pointer"
+                    className="hover:bg-brand-bg/60 transition-colors duration-150 cursor-pointer"
                     onClick={() => router.push("/inventory/" + item.id)}
                   >
-                    <td className="py-3 px-6 font-bold text-slate-900">
+                    <td className="py-3 px-6 font-bold text-brand-dark">
                       {item.name}
                     </td>
-                    <td className="py-3 px-4 text-slate-400 font-mono text-xs">
+                    <td className="py-3 px-4 text-brand-muted/70 font-mono text-xs">
                       {item.sku}
                     </td>
                     <td className="py-3 px-4">
@@ -91,7 +91,7 @@ export default function InventoryTabTable({
                     <td className={`py-3 px-4 text-right font-black ${stockColor}`}>
                       {item.currentStock} {item.unit}
                     </td>
-                    <td className="py-3 px-4 text-right text-slate-400">
+                    <td className="py-3 px-4 text-right text-brand-muted/70">
                       {item.reorderLevel} {item.unit}
                     </td>
                     <td className="py-3 px-4 text-center">
@@ -99,7 +99,7 @@ export default function InventoryTabTable({
                         {item.status.toUpperCase()}
                       </PosAdminBadge>
                     </td>
-                    <td className="py-3 px-4 text-right font-bold text-slate-700">
+                    <td className="py-3 px-4 text-right font-bold text-brand-dark">
                       ₹
                       {(item.currentStock * item.cost).toLocaleString("en-IN", {
                         maximumFractionDigits: 0,
@@ -112,14 +112,14 @@ export default function InventoryTabTable({
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => onAdjust(item)}
-                          className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-1.5 text-brand-muted/70 hover:text-brand-primary hover:bg-brand-primaryLight rounded-lg transition-colors"
                           title="Adjust Stock"
                         >
                           <Settings2 size={15} />
                         </button>
                         <button
                           onClick={() => onDelete(item)}
-                          className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          className="p-1.5 text-brand-muted/70 hover:text-brand-danger hover:bg-brand-dangerLight rounded-lg transition-colors"
                           title="Delete Item"
                         >
                           <Trash2 size={15} />
@@ -134,7 +134,7 @@ export default function InventoryTabTable({
         </table>
       </div>
 
-      <div className="p-4 border-t border-slate-100">
+      <div className="p-4 border-t border-brand-border">
         <PosAdminPagination
           currentPage={currentPage}
           totalPages={totalPages}

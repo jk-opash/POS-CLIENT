@@ -257,7 +257,7 @@ function TableWidget({
 
       {/* Table Body */}
       <div
-        className={`flex items-center justify-center shadow-md border-[1.5px] ${isMergeSelected ? "ring-4 ring-blue-400 ring-offset-2 ring-offset-slate-50" : ""} ${isEditMode && !isMergeMode ? "ring-2 ring-emerald-500 ring-offset-2 ring-offset-slate-50" : ""}`}
+        className={`flex items-center justify-center shadow-md border-[1.5px] ${isMergeSelected ? "ring-4 ring-brand-primary ring-offset-2 ring-offset-brand-bg" : ""} ${isEditMode && !isMergeMode ? "ring-2 ring-brand-success ring-offset-2 ring-offset-brand-bg" : ""}`}
         style={{
           width: "100%",
           height: bodyHeight,
@@ -284,7 +284,7 @@ function TableWidget({
       {isSquare && renderSquareChairs()}
 
       {isMergeSelected && (
-        <div className="absolute -top-1 -right-1 bg-blue-500 rounded-full w-5 h-5 flex items-center justify-center shadow-lg z-20">
+        <div className="absolute -top-1 -right-1 bg-brand-primary rounded-full w-5 h-5 flex items-center justify-center shadow-lg z-20">
           <Check size={10} color="white" />
         </div>
       )}
@@ -292,7 +292,7 @@ function TableWidget({
       {isEditMode && !isMergeMode && (
         <>
           <div
-            className="absolute -top-3 -right-3 bg-emerald-500 rounded-full w-7 h-7 flex items-center justify-center shadow-md cursor-pointer hover:bg-emerald-600 z-20"
+            className="absolute -top-3 -right-3 bg-brand-success rounded-full w-7 h-7 flex items-center justify-center shadow-md cursor-pointer hover:bg-brand-success z-20"
             onClick={(e) => {
               e.stopPropagation();
               onClick("rotate");
@@ -301,7 +301,7 @@ function TableWidget({
             <RotateCw size={13} color="white" />
           </div>
           <div
-            className="absolute -top-3 -left-3 bg-blue-500 rounded-full w-7 h-7 flex items-center justify-center shadow-md cursor-pointer hover:bg-blue-600 z-20"
+            className="absolute -top-3 -left-3 bg-brand-primary rounded-full w-7 h-7 flex items-center justify-center shadow-md cursor-pointer hover:bg-brand-primary z-20"
             onClick={(e) => {
               e.stopPropagation();
               onClick("edit");
@@ -611,26 +611,26 @@ export default function ZonesPage() {
 
   return (
     <div
-      className="flex h-[calc(100vh-73px)] bg-slate-50/50 font-sans overflow-hidden"
+      className="flex h-[calc(100vh-73px)] bg-brand-bg/50 font-sans overflow-hidden"
       onMouseMove={onMouseMove}
       onMouseUp={onMouseUp}
       onMouseLeave={onMouseUp}
     >
-      {/* Sidebar - Zones List */}
-      <div className="w-64 flex-shrink-0 flex flex-col gap-4 p-4 border-r border-slate-200 bg-white shadow-sm z-20 relative">
-        <div
-          className="flex items-center gap-2 mb-4 cursor-pointer"
-          onClick={() => router.push("/outlet")}
+      {/* ─ Left Sidebar (Zones List) ───────────────────────────────────────── */}
+      <div className="w-64 flex-shrink-0 flex flex-col gap-4 p-4 border-r border-brand-border bg-white shadow-sm z-20 relative">
+        <button
+          onClick={() => router.push(`/outlet/${id}`)}
+          className="flex items-center gap-2 mb-2 group w-fit"
         >
-          <ArrowLeft className="h-5 w-5 text-slate-500" />
-          <h2 className="text-lg font-bold text-slate-800">Back</h2>
-        </div>
+          <ArrowLeft className="h-5 w-5 text-brand-muted" />
+          <h2 className="text-lg font-bold text-brand-dark">Back</h2>
+        </button>
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wider">
-            Zones
+          <h2 className="text-sm font-semibold text-brand-dark uppercase tracking-wider">
+            Dining Zones
           </h2>
           <button
-            className="p-1 hover:bg-slate-100 rounded text-slate-500"
+            className="p-1 hover:bg-brand-light rounded text-brand-muted"
             onClick={() => setShowAddZone(true)}
           >
             <Plus className="h-4 w-4" />
@@ -638,25 +638,25 @@ export default function ZonesPage() {
         </div>
 
         {showAddZone && (
-          <div className="p-3 border rounded-lg shadow-sm">
+          <div className="p-3 border border-brand-border rounded-lg shadow-sm">
             <input
               autoFocus
               type="text"
               placeholder="Zone name (e.g. Patio)"
-              className="w-full text-sm border border-slate-200 rounded-md p-2 mb-2"
+              className="w-full text-sm border border-brand-border rounded-md p-2 mb-2"
               value={newZoneName}
               onChange={(e) => setNewZoneName(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleAddZone()}
             />
             <div className="flex justify-end gap-2">
               <button
-                className="px-2 py-1 text-xs text-slate-600 font-medium"
+                className="px-2 py-1 text-xs text-brand-muted font-medium"
                 onClick={() => setShowAddZone(false)}
               >
                 Cancel
               </button>
               <button
-                className="px-2 py-1 text-xs bg-indigo-500 text-white font-medium rounded"
+                className="px-2 py-1 text-xs bg-brand-primary text-white font-medium rounded"
                 onClick={handleAddZone}
               >
                 Save
@@ -669,14 +669,14 @@ export default function ZonesPage() {
           {zones.map((zone) => (
             <div
               key={zone.id}
-              className={`w-full flex flex-col px-3 py-2 rounded-lg border transition-all ${activeZone?.id === zone.id ? "bg-indigo-50 border-indigo-200 text-indigo-700 shadow-sm font-bold" : "bg-white border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50 font-medium"}`}
+              className={`w-full flex flex-col px-3 py-2 rounded-lg border transition-all ${activeZone?.id === zone.id ? "bg-brand-primary/10 border-brand-primary/20 text-brand-primary shadow-sm font-bold" : "bg-white border-brand-border text-brand-dark hover:border-brand-border/80 hover:bg-brand-light font-medium"}`}
             >
               {editingZoneId === zone.id ? (
                 <div className="flex flex-col gap-2">
                   <input
                     autoFocus
                     type="text"
-                    className="w-full text-sm border border-slate-200 rounded-md p-1.5"
+                    className="w-full text-sm border border-brand-border rounded-md p-1.5"
                     value={editZoneName}
                     onChange={(e) => setEditZoneName(e.target.value)}
                     onKeyDown={(e) =>
@@ -685,13 +685,13 @@ export default function ZonesPage() {
                   />
                   <div className="flex justify-end gap-2">
                     <button
-                      className="px-2 py-1 text-xs text-slate-500 hover:bg-slate-100 rounded"
+                      className="px-2 py-1 text-xs text-brand-muted hover:bg-brand-light rounded"
                       onClick={() => setEditingZoneId(null)}
                     >
                       Cancel
                     </button>
                     <button
-                      className="px-2 py-1 text-xs bg-indigo-500 text-white font-medium rounded"
+                      className="px-2 py-1 text-xs bg-brand-primary text-white font-medium rounded"
                       onClick={() => handleUpdateZone(zone.id)}
                     >
                       Save
@@ -707,14 +707,14 @@ export default function ZonesPage() {
                     <MapPin className="h-4 w-4 shrink-0" />
                     <span className="truncate">{zone.name}</span>
                   </button>
-                  <div className="flex items-center gap-1 shrink-0">
+                  <div className="flex gap-1">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         setEditingZoneId(zone.id);
                         setEditZoneName(zone.name);
                       }}
-                      className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors"
+                      className="p-1.5 text-brand-muted hover:text-brand-primary hover:bg-brand-primary/10 rounded transition-colors"
                     >
                       <Edit2 size={14} />
                     </button>
@@ -723,7 +723,7 @@ export default function ZonesPage() {
                         e.stopPropagation();
                         handleDeleteZone(zone.id);
                       }}
-                      className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded transition-colors"
+                      className="p-1.5 text-brand-muted hover:text-rose-500 hover:bg-rose-50 rounded transition-colors"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -733,7 +733,7 @@ export default function ZonesPage() {
             </div>
           ))}
           {zones.length === 0 && !loading && !showAddZone && (
-            <div className="text-center p-4 text-sm text-slate-500 border border-dashed rounded-lg">
+            <div className="text-center p-4 text-sm text-brand-muted border border-dashed border-brand-border rounded-lg">
               No zones yet.
             </div>
           )}
@@ -753,7 +753,7 @@ export default function ZonesPage() {
             {!isEditMode && !isMergeMode && activeZone && (
               <button
                 onClick={() => setIsMergeMode(true)}
-                className="bg-emerald-600 border border-emerald-500 text-white font-bold text-sm px-4 py-2 rounded-full shadow hover:bg-emerald-700 flex items-center gap-2 pointer-events-auto"
+                className="bg-brand-success border border-brand-success text-white font-bold text-sm px-4 py-2 rounded-full shadow hover:bg-brand-success flex items-center gap-2 pointer-events-auto"
               >
                 <GitMerge size={16} /> Merge Tables
               </button>
@@ -785,7 +785,7 @@ export default function ZonesPage() {
               >
                 {/* Floor boundary to show 1000x1000 area limit */}
                 <div
-                  className="absolute border-2 border-dashed border-slate-300 bg-white/40 pointer-events-none"
+                  className="absolute border-2 border-dashed border-brand-border bg-white/40 pointer-events-none"
                   style={{ width: 1000, height: 1000, top: 0, left: 0 }}
                 />
                 {localTables.map((table) => (
@@ -803,8 +803,8 @@ export default function ZonesPage() {
             </div>
           ) : (
             <div className="flex h-full items-center justify-center">
-              <AlertCircle className="h-12 w-12 text-slate-300 mr-3" />
-              <h2 className="text-xl font-bold text-slate-400">
+              <AlertCircle className="h-12 w-12 text-brand-muted/30 mr-3" />
+              <h2 className="text-xl font-bold text-brand-muted">
                 Please select or create a zone
               </h2>
             </div>
@@ -813,40 +813,40 @@ export default function ZonesPage() {
 
         {/* Legend */}
         {activeZone && (
-          <div className="absolute bottom-8 left-8 bg-white/90 backdrop-blur border border-slate-200 p-4 rounded-2xl shadow-2xl z-10 flex flex-col gap-2.5 min-w-[180px]">
-            <h3 className="text-slate-500 text-[10px] font-black uppercase tracking-widest border-b border-slate-100 pb-2 mb-1">
-              Floor Status
+          <div className="absolute bottom-8 left-8 bg-white/90 backdrop-blur border border-brand-border p-4 rounded-2xl shadow-2xl z-10 flex flex-col gap-2.5 min-w-[180px]">
+            <h3 className="text-brand-muted text-[10px] font-black uppercase tracking-widest border-b border-brand-border pb-2 mb-1">
+              Table Status
             </h3>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-white border border-slate-300"></div>
-                <span className="text-slate-600 text-xs font-semibold">
+                <div className="w-3 h-3 rounded-full bg-white border border-brand-muted"></div>
+                <span className="text-brand-dark text-xs font-semibold">
                   Available
                 </span>
               </div>
-              <span className="text-slate-800 font-black text-sm">
+              <span className="text-brand-dark font-black text-sm">
                 {availableCount}
               </span>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                <span className="text-slate-600 text-xs font-semibold">
+                <div className="w-3 h-3 rounded-full bg-brand-primary shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
+                <span className="text-brand-dark text-xs font-semibold">
                   Occupied
                 </span>
               </div>
-              <span className="text-slate-800 font-black text-sm">
+              <span className="text-brand-dark font-black text-sm">
                 {occupiedCount}
               </span>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-rose-500"></div>
-                <span className="text-slate-600 text-xs font-semibold">
+                <div className="w-3 h-3 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(225,29,72,0.5)]"></div>
+                <span className="text-brand-dark text-xs font-semibold">
                   Reserved
                 </span>
               </div>
-              <span className="text-slate-800 font-black text-sm">
+              <span className="text-brand-dark font-black text-sm">
                 {reservedCount}
               </span>
             </div>
@@ -854,22 +854,22 @@ export default function ZonesPage() {
         )}
 
         {/* Zoom Controls */}
-        <div className="absolute bottom-8 left-64 ml-4 flex items-center bg-white/90 backdrop-blur border border-slate-200 rounded-full p-1 gap-1 shadow-2xl z-10">
+        <div className="absolute bottom-8 left-64 ml-4 flex items-center bg-white/90 backdrop-blur border border-brand-border rounded-full p-1 gap-1 shadow-2xl z-10">
           <button
-            onClick={handleZoomOut}
-            className="w-9 h-9 flex items-center justify-center text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors"
+            onClick={() => handleZoom(-0.1)}
+            className="w-9 h-9 flex items-center justify-center text-brand-dark hover:text-brand-dark hover:bg-brand-light rounded-full transition-colors"
           >
             <ZoomOut size={18} />
           </button>
           <button
             onClick={handleResetZoom}
-            className="px-3 h-9 flex items-center justify-center text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors text-xs font-bold"
+            className="px-3 h-9 flex items-center justify-center text-brand-dark hover:text-brand-dark hover:bg-brand-light rounded-full transition-colors text-xs font-bold"
           >
             Reset
           </button>
           <button
             onClick={handleZoomIn}
-            className="w-9 h-9 flex items-center justify-center text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors"
+            className="w-9 h-9 flex items-center justify-center text-brand-dark hover:text-brand-dark hover:bg-brand-light rounded-full transition-colors"
           >
             <ZoomIn size={18} />
           </button>
@@ -887,7 +887,7 @@ export default function ZonesPage() {
                     setIsMergeMode(false);
                     setMergeSelection([]);
                   }}
-                  className="flex items-center gap-2 px-5 py-3.5 bg-white border border-slate-200 rounded-full text-slate-800 font-bold text-sm shadow-xl hover:bg-slate-50"
+                  className="flex items-center gap-2 px-5 py-3.5 bg-white border border-brand-border rounded-full text-brand-dark font-bold text-sm shadow-xl hover:bg-brand-bg"
                 >
                   <X size={16} /> Cancel
                 </motion.button>
@@ -896,7 +896,7 @@ export default function ZonesPage() {
                   animate={{ scale: 1, opacity: 1 }}
                   onClick={executeMerge}
                   disabled={mergeSelection.length < 2}
-                  className="flex items-center gap-2 px-5 py-3.5 bg-emerald-600 border border-emerald-500 rounded-full text-white font-bold text-sm shadow-xl hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 px-5 py-3.5 bg-brand-success border border-brand-success rounded-full text-white font-bold text-sm shadow-xl hover:bg-brand-success disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <GitMerge size={16} /> Merge ({mergeSelection.length})
                 </motion.button>
@@ -908,7 +908,7 @@ export default function ZonesPage() {
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   onClick={() => setIsMergeMode(true)}
-                  className="flex items-center gap-2 px-5 py-3.5 bg-purple-600 border border-purple-500 rounded-full text-white font-bold text-sm shadow-xl hover:bg-purple-700"
+                  className="flex items-center gap-2 px-5 py-3.5 bg-brand-purple border border-brand-purple rounded-full text-white font-bold text-sm shadow-xl hover:bg-brand-purple"
                 >
                   <GitMerge size={16} /> Merge
                 </motion.button>
@@ -916,7 +916,7 @@ export default function ZonesPage() {
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   onClick={openAddModal}
-                  className="flex items-center gap-2 px-5 py-3.5 bg-white border border-slate-200 rounded-full text-slate-800 font-bold text-sm shadow-xl hover:bg-slate-50"
+                  className="flex items-center gap-2 px-5 py-3.5 bg-white border border-brand-border rounded-full text-brand-dark font-bold text-sm shadow-xl hover:bg-brand-bg"
                 >
                   <Plus size={18} /> Add Table
                 </motion.button>
@@ -927,7 +927,7 @@ export default function ZonesPage() {
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => setIsEditMode(!isEditMode)}
-                className={`flex items-center gap-2 px-5 py-3.5 rounded-full text-white font-bold text-sm shadow-xl transition-colors ${isEditMode ? "bg-emerald-600 border border-emerald-500 hover:bg-emerald-700" : "bg-blue-600 border border-blue-500 hover:bg-blue-700"}`}
+                className={`flex items-center gap-2 px-5 py-3.5 rounded-full text-white font-bold text-sm shadow-xl transition-colors ${isEditMode ? "bg-brand-success border border-brand-success hover:bg-brand-success" : "bg-brand-primary border border-brand-primary hover:bg-brand-primary"}`}
               >
                 {isEditMode ? (
                   <>
@@ -958,21 +958,21 @@ export default function ZonesPage() {
                 className="bg-white rounded-2xl shadow-2xl w-[420px] overflow-hidden"
               >
                 <div className="p-6 border-b flex justify-between items-center">
-                  <h2 className="text-xl font-black text-slate-800">
+                  <h2 className="text-xl font-black text-brand-dark">
                     {detailsModalMode === "edit"
                       ? "Edit Table"
                       : "Add New Table"}
                   </h2>
                   <button
                     onClick={() => setShowDetailsModal(false)}
-                    className="text-slate-400 hover:bg-slate-100 p-2 rounded-xl"
+                    className="text-brand-muted hover:bg-brand-light p-2 rounded-xl"
                   >
                     <X size={20} />
                   </button>
                 </div>
                 <div className="p-6 flex flex-col gap-5">
                   <div>
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 block">
+                    <label className="text-xs font-bold text-brand-muted uppercase tracking-wider mb-2 block">
                       Table Name / Label
                     </label>
                     <input
@@ -980,22 +980,22 @@ export default function ZonesPage() {
                       value={editName}
                       onChange={(e) => setEditName(e.target.value)}
                       placeholder="e.g. A12"
-                      className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
+                      className="w-full border border-brand-border rounded-xl px-4 py-3 text-sm font-bold text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-primary bg-brand-bg"
                     />
                     {tableErrors.name && (
-                      <span className="text-red-500 text-xs mt-1 block">
+                      <span className="text-brand-danger text-xs mt-1 block">
                         {tableErrors.name}
                       </span>
                     )}
                   </div>
                   <div>
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 block">
+                    <label className="text-xs font-bold text-brand-muted uppercase tracking-wider mb-2 block">
                       Capacity
                     </label>
                     <select
                       value={editCapacity}
                       onChange={(e) => setEditCapacity(Number(e.target.value))}
-                      className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                      className="w-full border border-brand-border rounded-xl px-4 py-3 text-sm font-bold text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-primary bg-white"
                     >
                       {CAPACITY_OPTIONS.map((o) => (
                         <option key={o.value} value={o.value}>
@@ -1005,7 +1005,7 @@ export default function ZonesPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 block">
+                    <label className="text-xs font-bold text-brand-muted uppercase tracking-wider mb-3 block">
                       Shape
                     </label>
                     <div className="grid grid-cols-2 gap-3">
@@ -1013,7 +1013,7 @@ export default function ZonesPage() {
                         <button
                           key={s}
                           onClick={() => setEditShape(s)}
-                          className={`flex items-center gap-2 px-4 py-3 rounded-xl border-2 font-bold text-sm capitalize transition-all ${editShape === s ? "bg-emerald-500 border-emerald-500 text-white" : "bg-slate-50 border-slate-200 text-slate-700 hover:border-emerald-300"}`}
+                          className={`flex items-center gap-2 px-4 py-3 rounded-xl border-2 font-bold text-sm capitalize transition-all ${editShape === s ? "bg-brand-success border-brand-success text-white" : "bg-brand-bg border-brand-border text-brand-dark hover:border-brand-success"}`}
                         >
                           {s === "circle" || s === "oval" ? (
                             <div className="w-4 h-4 rounded-full border-2 border-current" />
@@ -1026,7 +1026,7 @@ export default function ZonesPage() {
                     </div>
                   </div>
                 </div>
-                <div className="p-4 bg-slate-50 border-t flex justify-between items-center">
+                <div className="p-4 bg-brand-bg border-t flex justify-between items-center">
                   {detailsModalMode === "edit" ? (
                     <button
                       onClick={deleteTable}
@@ -1040,13 +1040,13 @@ export default function ZonesPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => setShowDetailsModal(false)}
-                      className="px-4 py-2 text-slate-600 font-bold hover:bg-slate-200 rounded-xl text-sm"
+                      className="px-4 py-2 text-brand-dark font-bold hover:bg-brand-border rounded-xl text-sm"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={saveTableDetails}
-                      className="px-6 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl text-sm shadow-sm"
+                      className="px-6 py-2 bg-brand-success hover:bg-brand-success text-white font-bold rounded-xl text-sm shadow-sm"
                     >
                       Save
                     </button>
@@ -1088,7 +1088,7 @@ export default function ZonesPage() {
                     <div className="p-5 border-b flex justify-between items-start">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-1">
-                          <h2 className="text-2xl font-black text-slate-800">
+                          <h2 className="text-2xl font-black text-brand-dark">
                             {t.name}
                           </h2>
                           <span
@@ -1101,13 +1101,13 @@ export default function ZonesPage() {
                             {t.status}
                           </span>
                         </div>
-                        <p className="text-sm text-slate-500 font-semibold">
+                        <p className="text-sm text-brand-muted font-semibold">
                           Capacity: {t.capacity} Persons
                         </p>
                       </div>
                       <button
                         onClick={() => setShowActionModal(false)}
-                        className="text-slate-400 hover:bg-slate-100 p-1.5 rounded-xl"
+                        className="text-brand-muted hover:bg-brand-light p-1.5 rounded-xl"
                       >
                         <X size={20} />
                       </button>
@@ -1118,7 +1118,7 @@ export default function ZonesPage() {
                           <div className="flex gap-3">
                             <button
                               onClick={() => updateStatus(t.id, "Occupied")}
-                              className="flex-1 flex items-center justify-center gap-2 py-3 bg-blue-50 border border-blue-200 text-blue-700 font-bold rounded-xl text-sm"
+                              className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-primaryLight border border-brand-primaryLight text-brand-primary font-bold rounded-xl text-sm"
                             >
                               <CalendarDays size={16} /> Mark Occupied
                             </button>
@@ -1128,13 +1128,13 @@ export default function ZonesPage() {
                           <div className="flex gap-3">
                             <button
                               onClick={() => updateStatus(t.id, "Occupied")}
-                              className="flex-1 flex items-center justify-center gap-2 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl shadow-sm text-sm"
+                              className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-success hover:bg-brand-success text-white font-bold rounded-xl shadow-sm text-sm"
                             >
                               Arrived (Occupy)
                             </button>
                             <button
                               onClick={() => updateStatus(t.id, "Available")}
-                              className="flex-1 flex items-center justify-center gap-2 py-3 border border-slate-200 text-slate-600 font-bold rounded-xl text-sm hover:bg-slate-50"
+                              className="flex-1 flex items-center justify-center gap-2 py-3 border border-brand-border text-brand-dark font-bold rounded-xl text-sm hover:bg-brand-bg"
                             >
                               Cancel Reservation
                             </button>
@@ -1144,7 +1144,7 @@ export default function ZonesPage() {
                           <div className="flex gap-3">
                             <button
                               onClick={() => updateStatus(t.id, "Available")}
-                              className="flex-1 flex items-center justify-center gap-2 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl shadow-sm text-sm"
+                              className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-success hover:bg-brand-success text-white font-bold rounded-xl shadow-sm text-sm"
                             >
                               Checkout Table
                             </button>
@@ -1154,7 +1154,7 @@ export default function ZonesPage() {
                         {(isAvail || isOcc) && (
                           <button
                             onClick={() => updateStatus(t.id, "Reserved")}
-                            className="w-full py-2.5 mt-2 text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors"
+                            className="w-full py-2.5 mt-2 text-sm font-bold text-brand-muted hover:text-brand-dark hover:bg-brand-light rounded-xl transition-colors"
                           >
                             Mark as Reserved
                           </button>

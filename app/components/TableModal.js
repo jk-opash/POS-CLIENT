@@ -33,15 +33,15 @@ export default function TableModal({ table, zones, onSave, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-dark/50 backdrop-blur-sm">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
-        <div className="flex items-center justify-between p-6 border-b border-slate-100">
-          <h2 className="text-xl font-bold text-slate-800">
+        <div className="flex items-center justify-between p-6 border-b border-brand-light">
+          <h2 className="text-xl font-bold text-brand-dark">
             {table ? "Edit Table" : "Add New Table"}
           </h2>
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
+            className="p-2 text-brand-muted hover:text-brand-dark hover:bg-brand-light rounded-xl transition-colors"
           >
             <X size={20} />
           </button>
@@ -49,7 +49,7 @@ export default function TableModal({ table, zones, onSave, onClose }) {
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-slate-700">
+            <label className="text-sm font-semibold text-brand-dark">
               Table Name / Number
             </label>
             <input
@@ -59,13 +59,13 @@ export default function TableModal({ table, zones, onSave, onClose }) {
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
               }
-              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+              className="w-full px-4 py-2.5 bg-brand-light border border-brand-light rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
               placeholder="e.g. Table 12, Window Seat"
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-slate-700">
+            <label className="text-sm font-semibold text-brand-dark">
               Zone
             </label>
             <select
@@ -74,7 +74,7 @@ export default function TableModal({ table, zones, onSave, onClose }) {
               onChange={(e) =>
                 setFormData({ ...formData, zone_id: e.target.value })
               }
-              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all cursor-pointer"
+              className="w-full px-4 py-2.5 bg-brand-light border border-brand-light rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all cursor-pointer"
             >
               <option value="" disabled>Select Zone</option>
               {zones.map((zone) => (
@@ -84,12 +84,12 @@ export default function TableModal({ table, zones, onSave, onClose }) {
               ))}
             </select>
             {zones.length === 0 && (
-              <p className="text-xs text-rose-500 mt-1">Please create a zone first.</p>
+              <p className="text-xs text-brand-danger mt-1">Please create a zone first.</p>
             )}
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-slate-700">
+            <label className="text-sm font-semibold text-brand-dark">
               Capacity
             </label>
             <input
@@ -99,13 +99,13 @@ export default function TableModal({ table, zones, onSave, onClose }) {
               onChange={(e) =>
                 setFormData({ ...formData, capacity: e.target.value })
               }
-              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+              className="w-full px-4 py-2.5 bg-brand-light border border-brand-light rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
               placeholder="Number of seats"
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-slate-700">
+            <label className="text-sm font-semibold text-brand-dark">
               Status
             </label>
             <select
@@ -113,7 +113,7 @@ export default function TableModal({ table, zones, onSave, onClose }) {
               onChange={(e) =>
                 setFormData({ ...formData, status: e.target.value })
               }
-              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all cursor-pointer"
+              className="w-full px-4 py-2.5 bg-brand-light border border-brand-light rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all cursor-pointer"
             >
               <option value="Available">Available</option>
               <option value="Occupied">Occupied</option>
@@ -125,14 +125,14 @@ export default function TableModal({ table, zones, onSave, onClose }) {
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 text-sm font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
+              className="px-5 py-2.5 text-sm font-bold text-brand-dark hover:bg-brand-light rounded-xl transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={!formData.zone_id}
-              className="px-5 py-2.5 text-sm font-bold text-white bg-slate-900 hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition-all shadow-sm active:scale-95"
+              className="px-5 py-2.5 text-sm font-bold text-white bg-brand-dark hover:bg-brand-dark disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition-all shadow-sm active:scale-95"
             >
               {table ? "Save Changes" : "Add Table"}
             </button>

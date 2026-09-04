@@ -10,6 +10,7 @@ import {
   clearSessionConflict,
 } from "./slices/authSlice";
 import { addNotification } from "./slices/notificationSlice";
+import { fetchAllOrders, fetchPendingOrders } from "./slices/orderSlice";
 
 export const socketMiddleware = (store) => (next) => (action) => {
   // Pass the action down first so state gets updated
@@ -52,6 +53,19 @@ export const socketMiddleware = (store) => (next) => (action) => {
         socketService.off("inventoryChanged");
         socketService.on("inventoryChanged", () => {
           store.dispatch(fetchInventoryItems(branchId));
+        });
+
+        // Listen for order updates
+        socketService.off("orderCreated");
+        socketService.on("orderCreated", () => {
+          store.dispatch(fetchPendingOrders(branchId));
+          store.dispatch(fetchAllOrders(branchId));
+        });
+
+        socketService.off("orderUpdated");
+        socketService.on("orderUpdated", () => {
+          store.dispatch(fetchPendingOrders(branchId));
+          store.dispatch(fetchAllOrders(branchId));
         });
 
         // Optional: Add listeners for team members if needed

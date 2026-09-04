@@ -16,10 +16,10 @@ export default function InventoryTabFilters({
 }) {
   return (
     <div className="flex flex-1 flex-col sm:flex-row items-stretch sm:items-center gap-3">
-      <div className="flex items-center gap-2 px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl flex-1">
-        <Search size={16} className="text-slate-400 shrink-0" />
+      <div className="flex items-center gap-2 px-3.5 py-2 bg-brand-bg border border-brand-border rounded-xl flex-1">
+        <Search size={16} className="text-brand-muted/70 shrink-0" />
         <input
-          className="w-full text-xs bg-transparent outline-none text-slate-700 placeholder:text-slate-400 font-medium"
+          className="w-full text-xs bg-transparent outline-none text-brand-dark placeholder:text-brand-muted/70 font-medium"
           placeholder="Search items by name or SKU..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -27,8 +27,8 @@ export default function InventoryTabFilters({
       </div>
 
       <div className="flex items-center gap-2">
-        <div className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 flex items-center gap-2">
-          <Filter size={14} className="text-slate-400" />
+        <div className="bg-brand-bg border border-brand-border rounded-xl px-3 py-2 text-xs font-bold text-brand-dark flex items-center gap-2">
+          <Filter size={14} className="text-brand-muted/70" />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}

@@ -174,29 +174,29 @@ export default function MenuItemModal({ item, onClose, onSave }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex justify-center items-start pt-[5vh] z-50 overflow-y-auto">
+    <div className="fixed inset-0 bg-brand-dark/40 backdrop-blur-sm flex justify-center items-start pt-[5vh] z-50 overflow-y-auto">
       <div className="bg-white w-[880px] max-w-[95vw] rounded-2xl shadow-2xl flex flex-col mb-[5vh] relative shrink-0">
         {/* Header */}
-        <div className="px-6 py-5 flex justify-between items-start border-b border-slate-100">
+        <div className="px-6 py-5 flex justify-between items-start border-b border-brand-light">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">
+            <h2 className="text-2xl font-bold text-brand-dark">
               {item ? "Edit Menu Item" : "Create New Menu Item"}
             </h2>
-            <p className="text-sm text-slate-600 font-medium mt-1">
+            <p className="text-sm text-brand-dark font-medium mt-1">
               Step {step} of 3: {steps[step - 1].title}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 transition-colors"
+            className="w-8 h-8 rounded-full bg-brand-light flex items-center justify-center text-brand-muted hover:bg-brand-light transition-colors"
           >
             <X size={18} />
           </button>
         </div>
 
-        <div className="flex flex-1 overflow-hidden border-b border-slate-100">
+        <div className="flex flex-1 overflow-hidden border-b border-brand-light">
           {/* Side Stepper */}
-          <div className="w-[240px] bg-slate-50 border-r border-slate-100 p-6 flex flex-col gap-2 shrink-0">
+          <div className="w-[240px] bg-brand-light border-r border-brand-light p-6 flex flex-col gap-2 shrink-0">
             {steps.map((s, i) => {
               const isCompleted = step > s.num;
               const isCurrent = step === s.num;
@@ -231,15 +231,15 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                   onClick={() => setStep(s.num)}
                   className={`w-full text-left flex items-start gap-3 p-3 rounded-xl transition-all duration-200 ${
                     isCurrent
-                      ? "bg-white shadow-sm border border-slate-200/60"
-                      : "hover:bg-slate-200/50 border border-transparent"
+                      ? "bg-white shadow-sm border border-brand-light/60"
+                      : "hover:bg-brand-light/50 border border-transparent"
                   }`}
                 >
                   <div
                     className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold transition-colors mt-0.5 ${
                       isCompleted || isCurrent
                         ? "bg-[#10B981] text-white shadow-sm"
-                        : "bg-slate-200 text-slate-400"
+                        : "bg-brand-light text-brand-muted"
                     }`}
                   >
                     {isCompleted ? <Check size={14} strokeWidth={3} /> : s.num}
@@ -248,13 +248,13 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                     <span
                       className={`text-sm font-bold transition-colors ${
                         isCompleted || isCurrent
-                          ? "text-slate-900"
-                          : "text-slate-500"
+                          ? "text-brand-dark"
+                          : "text-brand-muted"
                       }`}
                     >
                       {s.title}
                     </span>
-                    <span className="text-[10px] font-medium text-slate-400 mt-0.5">
+                    <span className="text-[10px] font-medium text-brand-muted mt-0.5">
                       {isCompleted
                         ? "Completed"
                         : isCurrent
@@ -272,27 +272,27 @@ export default function MenuItemModal({ item, onClose, onSave }) {
               {step === 1 && (
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-bold text-slate-900 mb-1.5">
+                    <label className="block text-sm font-bold text-brand-dark mb-1.5">
                       Menu Item Name *
                     </label>
                     <input
-                      className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 placeholder:text-slate-400 font-medium transition-colors bg-white"
+                      className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
                       placeholder="e.g. Masala Dosa"
                       value={formData.name}
                       onChange={(e) =>
                         setFormData({ ...formData, name: e.target.value })
                       }
                     />
-                      {errors.name && <span className="text-red-500 text-xs mt-1 block">{errors.name}</span>}
+                      {errors.name && <span className="text-brand-danger text-xs mt-1 block">{errors.name}</span>}
                   </div>
 
                   <div className="flex gap-4">
                     <div className="flex-1">
-                      <label className="block text-sm font-bold text-slate-900 mb-1.5">
+                      <label className="block text-sm font-bold text-brand-dark mb-1.5">
                         Category
                       </label>
                       <select
-                        className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 font-medium appearance-none bg-white transition-colors cursor-pointer"
+                        className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark font-medium appearance-none bg-white transition-colors cursor-pointer"
                         value={formData.categoryId}
                         onChange={(e) =>
                           setFormData({
@@ -310,14 +310,14 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                           </option>
                         ))}
                       </select>
-            {errors.categoryId && <span className="text-red-500 text-xs mt-1 block">{errors.categoryId}</span>}
+            {errors.categoryId && <span className="text-brand-danger text-xs mt-1 block">{errors.categoryId}</span>}
                     </div>
                     <div className="flex-1">
-                      <label className="block text-sm font-bold text-slate-900 mb-1.5">
+                      <label className="block text-sm font-bold text-brand-dark mb-1.5">
                         Sub Category
                       </label>
                       <select
-                        className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 font-medium appearance-none bg-white transition-colors cursor-pointer"
+                        className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark font-medium appearance-none bg-white transition-colors cursor-pointer"
                         value={formData.subCategoryId}
                         onChange={(e) =>
                           setFormData({
@@ -339,7 +339,7 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-slate-900 mb-1.5">
+                    <label className="block text-sm font-bold text-brand-dark mb-1.5">
                       Food Type
                     </label>
                     <div className="flex flex-wrap gap-2">
@@ -351,8 +351,8 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                           }
                           className={`px-5 py-2 rounded-xl text-sm font-bold transition-colors ${
                             formData.foodType === type
-                              ? "bg-emerald-50 text-emerald-600 border border-emerald-500"
-                              : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+                              ? "bg-brand-successLight text-brand-success border border-brand-success"
+                              : "bg-white text-brand-dark border border-brand-light hover:bg-brand-light"
                           }`}
                         >
                           {type}
@@ -362,12 +362,12 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-slate-900 mb-1.5">
+                    <label className="block text-sm font-bold text-brand-dark mb-1.5">
                       Item Image
                     </label>
-                    <div className="border-2 border-dashed border-slate-200 rounded-xl p-8 flex flex-col items-center justify-center text-slate-500 cursor-pointer hover:bg-slate-50 transition-colors bg-[#F8FAFC]">
-                      <Upload size={24} className="mb-2 text-slate-600" />
-                      <span className="text-sm font-bold text-slate-700">
+                    <div className="border-2 border-dashed border-brand-light rounded-xl p-8 flex flex-col items-center justify-center text-brand-muted cursor-pointer hover:bg-brand-light transition-colors bg-[#F8FAFC]">
+                      <Upload size={24} className="mb-2 text-brand-dark" />
+                      <span className="text-sm font-bold text-brand-dark">
                         Click to upload image
                       </span>
                     </div>
@@ -378,26 +378,26 @@ export default function MenuItemModal({ item, onClose, onSave }) {
               {step === 2 && (
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-bold text-slate-900 mb-1.5">
+                    <label className="block text-sm font-bold text-brand-dark mb-1.5">
                       Base Selling Price (₹) *
                     </label>
                     <input
                       type="number"
-                      className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 placeholder:text-slate-400 font-medium transition-colors bg-white"
+                      className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
                       placeholder="0.00"
                       value={formData.price}
                       onChange={(e) =>
                         setFormData({ ...formData, price: e.target.value })
                       }
                     />
-                      {errors.price && <span className="text-red-500 text-xs mt-1 block">{errors.price}</span>}
+                      {errors.price && <span className="text-brand-danger text-xs mt-1 block">{errors.price}</span>}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-slate-900 mb-0.5">
+                    <label className="block text-sm font-bold text-brand-dark mb-0.5">
                       Variants (Optional)
                     </label>
-                    <p className="text-xs font-medium text-slate-500 mb-4">
+                    <p className="text-xs font-medium text-brand-muted mb-4">
                       E.g., Half/Full, Small/Large. Variant prices will override
                       the base price in the POS.
                     </p>
@@ -406,7 +406,7 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                       {formData.variants.map((variant, index) => (
                         <div key={index} className="flex items-center gap-3">
                           <input
-                            className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 placeholder:text-slate-400 font-medium transition-colors bg-white"
+                            className="flex-1 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
                             placeholder="Variant Name"
                             value={variant.name}
                             onChange={(e) =>
@@ -415,7 +415,7 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                           />
                           <input
                             type="number"
-                            className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 placeholder:text-slate-400 font-medium transition-colors bg-white"
+                            className="flex-1 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
                             placeholder="Price (₹)"
                             value={variant.price}
                             onChange={(e) =>
@@ -424,7 +424,7 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                           />
                           <button
                             onClick={() => removeVariant(index)}
-                            className="p-2.5 text-red-500 hover:bg-red-50 rounded-xl transition-colors shrink-0"
+                            className="p-2.5 text-brand-danger hover:bg-brand-dangerLight rounded-xl transition-colors shrink-0"
                           >
                             <XIcon size={18} strokeWidth={2.5} />
                           </button>
@@ -434,7 +434,7 @@ export default function MenuItemModal({ item, onClose, onSave }) {
 
                     <button
                       onClick={addVariant}
-                      className="mt-4 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full text-sm font-bold text-slate-800 hover:bg-slate-50 transition-colors"
+                      className="mt-4 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-brand-light rounded-full text-sm font-bold text-brand-dark hover:bg-brand-light transition-colors"
                     >
                       <Plus size={16} strokeWidth={3} /> Add Variant
                     </button>
@@ -445,18 +445,18 @@ export default function MenuItemModal({ item, onClose, onSave }) {
               {step === 3 && (
                 <div className="space-y-6">
                   {/* Enable Spice Level Toggle */}
-                  <div className="bg-[#F8FAFC] border border-slate-200 rounded-xl p-4 flex items-center justify-between">
+                  <div className="bg-[#F8FAFC] border border-brand-light rounded-xl p-4 flex items-center justify-between">
                     <div>
-                      <h4 className="text-sm font-bold text-slate-900">
+                      <h4 className="text-sm font-bold text-brand-dark">
                         Enable Spice Level?
                       </h4>
-                      <p className="text-xs font-medium text-slate-500 mt-0.5">
+                      <p className="text-xs font-medium text-brand-muted mt-0.5">
                         Allows the customer to choose spice level (Mild, Medium,
                         Spicy, etc.)
                       </p>
                     </div>
                     <button
-                      className={`relative w-12 h-6 rounded-full transition-colors ${formData.spiceLevelEnabled ? "bg-[#10B981]" : "bg-slate-200"}`}
+                      className={`relative w-12 h-6 rounded-full transition-colors ${formData.spiceLevelEnabled ? "bg-[#10B981]" : "bg-brand-light"}`}
                       onClick={() =>
                         setFormData({
                           ...formData,
@@ -472,10 +472,10 @@ export default function MenuItemModal({ item, onClose, onSave }) {
 
                   {/* Custom Add-on Categories */}
                   <div>
-                    <h4 className="text-sm font-bold text-slate-900">
+                    <h4 className="text-sm font-bold text-brand-dark">
                       Custom Add-on Categories
                     </h4>
-                    <p className="text-xs font-medium text-slate-500 mt-0.5 mb-4">
+                    <p className="text-xs font-medium text-brand-muted mt-0.5 mb-4">
                       Build specific add-on groups for this item (e.g. "Choice
                       of Bread", "Extra Toppings").
                     </p>
@@ -484,12 +484,12 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                       {formData.addonCategories.map((cat, catIdx) => (
                         <div
                           key={catIdx}
-                          className="bg-[#F8FAFC] border border-slate-200 rounded-xl p-4"
+                          className="bg-[#F8FAFC] border border-brand-light rounded-xl p-4"
                         >
                           {/* Category Header */}
                           <div className="flex items-center gap-3 mb-4">
                             <input
-                              className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 placeholder:text-slate-400 font-medium transition-colors bg-white"
+                              className="flex-1 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
                               placeholder="Category Name (e.g. Extra Toppings)"
                               value={cat.name}
                               onChange={(e) =>
@@ -502,7 +502,7 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                             />
                             <button
                               onClick={() => removeAddonCategory(catIdx)}
-                              className="p-2.5 text-red-500 bg-red-50 hover:bg-red-100 rounded-xl transition-colors shrink-0"
+                              className="p-2.5 text-brand-danger bg-brand-dangerLight/50 hover:bg-brand-dangerLight rounded-xl transition-colors shrink-0"
                             >
                               <Trash2 size={18} strokeWidth={2.5} />
                             </button>
@@ -511,12 +511,12 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                           {/* Min/Max Selection */}
                           <div className="flex gap-4 mb-4">
                             <div className="flex-1">
-                              <label className="block text-xs font-semibold text-slate-600 mb-1.5">
+                              <label className="block text-xs font-semibold text-brand-dark mb-1.5">
                                 Min Selection
                               </label>
                               <input
                                 type="number"
-                                className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 font-medium transition-colors bg-white"
+                                className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark font-medium transition-colors bg-white"
                                 value={cat.minSelection}
                                 onChange={(e) =>
                                   updateAddonCategory(
@@ -528,12 +528,12 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                               />
                             </div>
                             <div className="flex-1">
-                              <label className="block text-xs font-semibold text-slate-600 mb-1.5">
+                              <label className="block text-xs font-semibold text-brand-dark mb-1.5">
                                 Max Selection
                               </label>
                               <input
                                 type="number"
-                                className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 font-medium transition-colors bg-white"
+                                className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark font-medium transition-colors bg-white"
                                 value={cat.maxSelection}
                                 onChange={(e) =>
                                   updateAddonCategory(
@@ -554,7 +554,7 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                                 className="flex items-center gap-3"
                               >
                                 <input
-                                  className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 placeholder:text-slate-400 font-medium transition-colors bg-white"
+                                  className="flex-1 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
                                   placeholder="Add-on Name"
                                   value={opt.name}
                                   onChange={(e) =>
@@ -568,7 +568,7 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                                 />
                                 <input
                                   type="number"
-                                  className="w-1/3 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-slate-800 placeholder:text-slate-400 font-medium transition-colors bg-white"
+                                  className="w-1/3 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
                                   placeholder="Price (₹)"
                                   value={opt.price}
                                   onChange={(e) =>
@@ -584,7 +584,7 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                                   onClick={() =>
                                     removeAddonOption(catIdx, optIdx)
                                   }
-                                  className="p-2.5 text-red-500 hover:bg-red-50 rounded-xl transition-colors shrink-0"
+                                  className="p-2.5 text-brand-danger hover:bg-brand-dangerLight rounded-xl transition-colors shrink-0"
                                 >
                                   <XIcon size={18} strokeWidth={2.5} />
                                 </button>
@@ -594,7 +594,7 @@ export default function MenuItemModal({ item, onClose, onSave }) {
 
                           <button
                             onClick={() => addAddonOption(catIdx)}
-                            className="mt-4 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full text-sm font-bold text-slate-800 hover:bg-slate-50 transition-colors shadow-sm"
+                            className="mt-4 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-brand-light rounded-full text-sm font-bold text-brand-dark hover:bg-brand-light transition-colors shadow-sm"
                           >
                             <Plus size={16} strokeWidth={3} /> Add Option
                           </button>
@@ -604,7 +604,7 @@ export default function MenuItemModal({ item, onClose, onSave }) {
 
                     <button
                       onClick={addAddonCategory}
-                      className="mt-4 flex items-center justify-center gap-2 px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-bold text-slate-800 hover:bg-slate-50 transition-colors shadow-sm"
+                      className="mt-4 flex items-center justify-center gap-2 px-5 py-2.5 bg-white border border-brand-light rounded-full text-sm font-bold text-brand-dark hover:bg-brand-light transition-colors shadow-sm"
                     >
                       <Plus size={16} strokeWidth={3} /> Create Add-on Category
                     </button>
@@ -621,7 +621,7 @@ export default function MenuItemModal({ item, onClose, onSave }) {
             {step > 1 && (
               <button
                 onClick={handleBack}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-brand-light text-sm font-bold text-brand-dark hover:bg-brand-light transition-colors"
               >
                 <ChevronLeft size={16} strokeWidth={2.5} /> Back
               </button>
@@ -630,14 +630,14 @@ export default function MenuItemModal({ item, onClose, onSave }) {
             {step < 3 ? (
               <button
                 onClick={handleNext}
-                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#1e293b] text-white text-sm font-bold hover:bg-slate-800 shadow-sm transition-colors ml-auto"
+                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#1e293b] text-white text-sm font-bold hover:bg-brand-dark shadow-sm transition-colors ml-auto"
               >
                 Next Step <ChevronRight size={16} strokeWidth={2.5} />
               </button>
             ) : (
               <button
                 onClick={() => { if (validateForm()) handleSubmit(); }}
-                className="px-6 py-3 rounded-xl bg-[#1e293b] text-white text-sm font-bold hover:bg-slate-800 shadow-sm transition-colors ml-auto"
+                className="px-6 py-3 rounded-xl bg-[#1e293b] text-white text-sm font-bold hover:bg-brand-dark shadow-sm transition-colors ml-auto"
               >
                 Create Menu Item
               </button>

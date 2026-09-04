@@ -143,7 +143,7 @@ export default function ItemWiseSalesReport() {
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="flex flex-col bg-slate-50 font-sans">
+    <div className="flex flex-col bg-brand-bg font-sans">
       <div className="flex flex-1 min-w-0 flex-col">
         <main className="flex-1 px-6 py-6">
           <div className="space-y-6 pb-12">
@@ -166,10 +166,10 @@ export default function ItemWiseSalesReport() {
               </div>
 
               <div className="flex flex-1 justify-end flex-wrap items-center gap-3">
-                <div className="flex flex-1 items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg max-w-md shadow-sm transition-colors focus-within:border-blue-500">
-                  <Search size={16} className="text-slate-400 shrink-0" />
+                <div className="flex flex-1 items-center gap-2 px-4 py-2 bg-white border border-brand-border rounded-lg max-w-md shadow-sm transition-colors focus-within:border-brand-border">
+                  <Search size={16} className="text-brand-muted/70 shrink-0" />
                   <input
-                    className="w-full text-sm bg-transparent outline-none text-slate-700 placeholder:text-slate-400"
+                    className="w-full text-sm bg-transparent outline-none text-brand-dark placeholder:text-brand-muted/70"
                     placeholder="Search by item name or category..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
@@ -182,12 +182,12 @@ export default function ItemWiseSalesReport() {
                   placeholder="Select Date Range"
                 />
 
-                <div className="relative flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 shadow-sm">
-                  <Building2 size={14} className="text-slate-500 shrink-0" />
+                <div className="relative flex items-center gap-2 bg-white border border-brand-border rounded-xl px-3 py-2 shadow-sm">
+                  <Building2 size={14} className="text-brand-muted shrink-0" />
                   <select
                     value={branchFilter}
                     onChange={(e) => setBranchFilter(e.target.value)}
-                    className="text-sm font-semibold text-slate-700 outline-none bg-transparent cursor-pointer pr-2 max-w-[150px] truncate"
+                    className="text-sm font-semibold text-brand-dark outline-none bg-transparent cursor-pointer pr-2 max-w-[150px] truncate"
                   >
                     {branches?.map((b) => (
                       <option key={b.id} value={b.id}>
@@ -197,7 +197,7 @@ export default function ItemWiseSalesReport() {
                   </select>
                 </div>
 
-                <button className="px-4 py-2 text-xs font-bold rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2">
+                <button className="px-4 py-2 text-xs font-bold rounded-xl bg-brand-dark text-white hover:bg-brand-dark/90 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2">
                   <Download size={16} /> Export
                 </button>
               </div>
@@ -228,40 +228,40 @@ export default function ItemWiseSalesReport() {
             </section>
 
             {/* Data Table Area */}
-            <div className="rounded-2xl border border-slate-200/80 bg-white/70 backdrop-blur-lg shadow-sm overflow-hidden flex flex-col">
+            <div className="rounded-2xl border border-brand-border/80 bg-white/70 backdrop-blur-lg shadow-sm overflow-hidden flex flex-col">
               {/* Search Bar */}
 
               {/* Table */}
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-black text-slate-400 uppercase tracking-wider">
+                    <tr className="border-b border-brand-border bg-brand-bg/80 text-[11px] font-black text-brand-muted/70 uppercase tracking-wider">
                       <th
-                        className="py-3.5 px-6 cursor-pointer hover:text-slate-600 transition-colors"
+                        className="py-3.5 px-6 cursor-pointer hover:text-brand-dark transition-colors"
                         onClick={() => handleSort("name")}
                       >
                         Item Name <SortIcon field="name" />
                       </th>
                       <th
-                        className="py-3.5 px-4 cursor-pointer hover:text-slate-600 transition-colors"
+                        className="py-3.5 px-4 cursor-pointer hover:text-brand-dark transition-colors"
                         onClick={() => handleSort("category")}
                       >
                         Category <SortIcon field="category" />
                       </th>
                       <th
-                        className="py-3.5 px-4 cursor-pointer hover:text-slate-600 transition-colors text-right"
+                        className="py-3.5 px-4 cursor-pointer hover:text-brand-dark transition-colors text-right"
                         onClick={() => handleSort("price")}
                       >
                         Base Price <SortIcon field="price" />
                       </th>
                       <th
-                        className="py-3.5 px-4 cursor-pointer hover:text-slate-600 transition-colors text-center"
+                        className="py-3.5 px-4 cursor-pointer hover:text-brand-dark transition-colors text-center"
                         onClick={() => handleSort("quantity")}
                       >
                         Qty Sold <SortIcon field="quantity" />
                       </th>
                       <th
-                        className="py-3.5 px-4 cursor-pointer hover:text-slate-600 transition-colors text-right"
+                        className="py-3.5 px-4 cursor-pointer hover:text-brand-dark transition-colors text-right"
                         onClick={() => handleSort("revenue")}
                       >
                         Net Revenue <SortIcon field="revenue" />
@@ -269,14 +269,14 @@ export default function ItemWiseSalesReport() {
                       <th className="py-3.5 px-6 text-right">% of Total</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 text-xs">
+                  <tbody className="divide-y divide-brand-border/50 text-xs">
                     {itemSalesLoading ? (
                       <tr>
                         <td
                           colSpan="6"
-                          className="py-12 text-center text-slate-400"
+                          className="py-12 text-center text-brand-muted/70"
                         >
-                          <p className="font-bold text-slate-600">
+                          <p className="font-bold text-brand-dark">
                             Loading data...
                           </p>
                         </td>
@@ -285,16 +285,16 @@ export default function ItemWiseSalesReport() {
                       <tr>
                         <td
                           colSpan="6"
-                          className="py-12 text-center text-slate-400"
+                          className="py-12 text-center text-brand-muted/70"
                         >
                           <UtensilsCrossed
                             size={36}
-                            className="mx-auto mb-2 text-slate-300"
+                            className="mx-auto mb-2 text-brand-muted/70"
                           />
-                          <p className="font-bold text-slate-600">
+                          <p className="font-bold text-brand-dark">
                             No items found
                           </p>
-                          <p className="text-xs text-slate-400 mt-0.5">
+                          <p className="text-xs text-brand-muted/70 mt-0.5">
                             Try adjusting your search query or selected branch.
                           </p>
                         </td>
@@ -306,39 +306,39 @@ export default function ItemWiseSalesReport() {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: Math.min(idx * 0.02, 0.5) }}
                           key={item.name}
-                          className="hover:bg-slate-50/60 transition-colors duration-150"
+                          className="hover:bg-brand-bg/60 transition-colors duration-150"
                         >
-                          <td className="py-3 px-6 font-medium text-slate-900">
-                            <span className="font-bold text-slate-800 text-sm block">
+                          <td className="py-3 px-6 font-medium text-brand-dark">
+                            <span className="font-bold text-brand-dark text-sm block">
                               {item.name}
                             </span>
                           </td>
                           <td className="py-3 px-4">
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase bg-slate-100 text-slate-500 border border-slate-200/60">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase bg-brand-light text-brand-dark border border-brand-border/60">
                               {item.category}
                             </span>
                           </td>
-                          <td className="py-3 px-4 text-right font-bold text-slate-900 text-sm">
+                          <td className="py-3 px-4 text-right font-bold text-brand-dark text-sm">
                             ₹{fmt(item.price)}
                           </td>
                           <td className="py-3 px-4 text-center">
-                            <span className="font-semibold text-slate-900 text-sm">
+                            <span className="font-semibold text-brand-dark text-sm">
                               {item.quantity}
                             </span>
                           </td>
                           <td className="py-3 px-4 text-right">
-                            <span className="font-bold text-emerald-600 text-sm">
+                            <span className="font-bold text-brand-primary text-sm">
                               ₹{fmt(item.revenue)}
                             </span>
                           </td>
                           <td className="py-3 px-6 text-right">
                             <div className="flex items-center justify-end gap-2">
-                              <span className="text-[11px] font-bold text-slate-500 w-10 text-right">
+                              <span className="text-[11px] font-bold text-brand-muted w-10 text-right">
                                 {item.percentage}%
                               </span>
-                              <div className="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
+                              <div className="w-16 h-1.5 bg-brand-light rounded-full overflow-hidden border border-brand-border">
                                 <div
-                                  className="h-full bg-blue-500 rounded-full"
+                                  className="h-full bg-brand-primary rounded-full"
                                   style={{ width: `${item.percentage}%` }}
                                 />
                               </div>
@@ -351,7 +351,7 @@ export default function ItemWiseSalesReport() {
                 </table>
               </div>
 
-              <div className="p-4 border-t border-slate-100">
+              <div className="p-4 border-t border-brand-border">
                 <PosAdminPagination
                   currentPage={currentPage}
                   totalPages={totalPages}

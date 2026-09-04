@@ -73,15 +73,15 @@ export default function KOTPage() {
   };
 
   return (
-    <div className="flex flex-col bg-slate-50 font-sans">
+    <div className="flex flex-col bg-brand-bg font-sans">
       <main className="flex-1 p-4 md:p-6 space-y-4 md:space-y-5">
         {/* Header & Global Actions */}
         <div className="flex flex-col gap-4 sm:flex-row justify-between items-start sm:items-center">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">
+            <h2 className="text-2xl font-bold text-brand-dark">
               Kitchen Display (KDS)
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-brand-muted">
               Real-time management of active Kitchen Order Tickets.
             </p>
           </div>
@@ -89,12 +89,12 @@ export default function KOTPage() {
           <div className="flex items-center gap-3 flex-wrap">
             {/* Branch Selector */}
             {branches && branches.length > 0 && (
-              <div className="relative flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 shadow-sm">
-                <Building2 size={14} className="text-slate-500 shrink-0" />
+              <div className="relative flex items-center gap-2 bg-white border border-brand-border rounded-xl px-3 py-2 shadow-sm">
+                <Building2 size={14} className="text-brand-muted shrink-0" />
                 <select
                   value={activeBranch?.id || ""}
                   onChange={(e) => setSelectedBranchId(e.target.value)}
-                  className="text-sm font-semibold text-slate-700 outline-none bg-transparent cursor-pointer pr-2"
+                  className="text-sm font-semibold text-brand-dark outline-none bg-transparent cursor-pointer pr-2"
                 >
                   {branches.map((b) => (
                     <option key={b.id} value={b.id}>
@@ -107,7 +107,7 @@ export default function KOTPage() {
 
             <button
               onClick={fetchKOTs}
-              className="px-4 py-2 text-xs font-bold rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2"
+              className="px-4 py-2 text-xs font-bold rounded-xl bg-brand-dark text-white hover:bg-brand-dark/90 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2"
             >
               <RefreshCcw size={16} className={loading ? "animate-spin" : ""} />
               Refresh KOTs
@@ -117,9 +117,9 @@ export default function KOTPage() {
 
         {/* KOT List / Table CONTENT */}
         {!activeBranch ? (
-          <div className="flex flex-col items-center justify-center text-slate-500 min-h-[400px] mt-4">
-            <Building2 size={64} className="mb-4 text-slate-200" />
-            <h3 className="text-xl font-bold text-slate-700">
+          <div className="flex flex-col items-center justify-center text-brand-muted min-h-[400px] mt-4">
+            <Building2 size={64} className="mb-4 text-brand-placeholder" />
+            <h3 className="text-xl font-bold text-brand-dark">
               No Branch Selected
             </h3>
             <p className="text-sm mt-2">
@@ -132,23 +132,23 @@ export default function KOTPage() {
             <LottieLoader text="Loading KOTs..." />
           </div>
         ) : orders.length === 0 && !loading ? (
-          <div className="flex flex-col items-center justify-center text-slate-400 min-h-[400px] mt-4">
+          <div className="flex flex-col items-center justify-center text-brand-muted/70 min-h-[400px] mt-4">
             <CheckCircle
               size={64}
-              className="mb-4 text-emerald-400 opacity-50"
+              className="mb-4 text-brand-success opacity-50"
             />
-            <h3 className="text-xl font-bold text-slate-700">All caught up!</h3>
+            <h3 className="text-xl font-bold text-brand-dark">All caught up!</h3>
             <p className="text-sm mt-2">
               No pending orders in the kitchen queue right now.
             </p>
           </div>
         ) : (
           <div className="space-y-4 md:space-y-5 mt-4">
-            <div className="rounded-2xl border border-slate-200/80 bg-white/70 backdrop-blur-lg shadow-sm overflow-hidden">
+            <div className="rounded-2xl border border-brand-border bg-white/70 backdrop-blur-lg shadow-sm overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-black text-slate-400 uppercase tracking-wider">
+                    <tr className="border-b border-brand-border bg-brand-light text-[11px] font-black text-brand-muted/70 uppercase tracking-wider">
                       <th className="py-3.5 px-6">Order ID / Type</th>
                       <th className="py-3.5 px-4">KOT Number</th>
                       <th className="py-3.5 px-4">Items Summary</th>
@@ -156,7 +156,7 @@ export default function KOTPage() {
                       <th className="py-3.5 px-6 text-right">Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 text-sm">
+                  <tbody className="divide-y divide-brand-border text-sm">
                     {orders.map((order) => {
                       let items = [];
                       try {
@@ -207,12 +207,12 @@ export default function KOTPage() {
                       return (
                         <tr
                           key={order.id}
-                          className="hover:bg-slate-50/60 transition-colors duration-150"
+                          className="hover:bg-brand-bg/60 transition-colors duration-150"
                         >
                           <td className="py-4 px-6">
                             <div className="flex items-center gap-3">
                               <div
-                                className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${isTable ? "bg-indigo-50 text-indigo-600" : "bg-amber-50 text-amber-600"}`}
+                                className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${isTable ? "bg-brand-light text-brand-primary" : "bg-brand-warning/10 text-brand-warning"}`}
                               >
                                 {isTable ? (
                                   <UtensilsCrossed size={18} />
@@ -221,18 +221,18 @@ export default function KOTPage() {
                                 )}
                               </div>
                               <div>
-                                <div className="font-bold text-slate-900">
+                                <div className="font-bold text-brand-dark">
                                   {orderLabel}
                                 </div>
-                                <div className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+                                <div className="text-xs font-medium text-brand-muted uppercase tracking-wider">
                                   #{order.order_number}
                                 </div>
                               </div>
                             </div>
                           </td>
 
-                          <td className="py-4 px-4 font-semibold text-slate-700">
-                            <span className="px-2.5 py-1 bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold rounded-lg">
+                          <td className="py-4 px-4 font-semibold text-brand-dark">
+                            <span className="px-2.5 py-1 bg-brand-light border border-brand-border text-brand-dark text-xs font-bold rounded-lg">
                               {currentKot}
                             </span>
                           </td>
@@ -250,7 +250,7 @@ export default function KOTPage() {
 
                               {/* Tooltip Matching MenuPage Style */}
                               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-50 pointer-events-none opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 ease-out">
-                                <div className="bg-gradient-to-br from-violet-500 to-violet-600 text-white text-[11px] font-medium p-3 rounded-xl shadow-[0_10px_25px_-5px_rgba(139,92,246,0.5)] border border-violet-400/50 w-max max-w-[260px] whitespace-pre-wrap text-left leading-relaxed relative">
+                                <div className="bg-gradient-to-br from-brand-primary/90 to-brand-primary text-white text-[11px] font-medium p-3 rounded-xl shadow-[0_10px_25px_-5px_rgba(139,92,246,0.5)] border border-brand-primary/50 w-max max-w-[260px] whitespace-pre-wrap text-left leading-relaxed relative">
                                   {pendingItems
                                     .map((item) => {
                                       const qty =
@@ -296,7 +296,7 @@ export default function KOTPage() {
                                       return text;
                                     })
                                     .join("\n")}
-                                  <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-violet-600 border-b border-r border-violet-400/50 rotate-45"></div>
+                                  <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-brand-primary border-b border-r border-brand-primary/50 rotate-45"></div>
                                 </div>
                               </div>
                             </div>
@@ -304,7 +304,7 @@ export default function KOTPage() {
 
                           <td className="py-4 px-4 text-center">
                             <div
-                              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${isDelayed ? "bg-red-100 text-red-700" : "bg-slate-100 text-slate-600"}`}
+                              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${isDelayed ? "bg-brand-danger/10 text-brand-danger" : "bg-brand-light text-brand-dark"}`}
                             >
                               <Clock size={14} />
                               {elapsedMinutes}m
@@ -317,7 +317,7 @@ export default function KOTPage() {
                                 const itemIds = pendingItems.map((i) => i.id);
                                 markAllReady(order.id, currentKot, itemIds);
                               }}
-                              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-all shadow-sm active:scale-95 flex items-center gap-2 ml-auto text-xs"
+                              className="px-4 py-2 bg-brand-primary hover:bg-brand-primary/90 text-white font-bold rounded-xl transition-all shadow-sm active:scale-95 flex items-center gap-2 ml-auto text-xs"
                             >
                               <CheckCircle size={14} />
                               Mark Ready

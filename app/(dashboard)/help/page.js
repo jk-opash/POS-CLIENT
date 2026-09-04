@@ -28,9 +28,9 @@ const TOPICS = [
     title: "Getting Started",
     desc: "Basic setup and orientation",
     icon: Book,
-    color: "text-blue-500",
-    bg: "bg-blue-50",
-    border: "border-blue-100",
+    color: "text-brand-info",
+    bg: "bg-brand-primaryLight",
+    border: "border-brand-primaryLight",
     count: 12,
   },
   {
@@ -38,9 +38,9 @@ const TOPICS = [
     title: "Billing & POS",
     desc: "Order management & payments",
     icon: FileText,
-    color: "text-emerald-500",
-    bg: "bg-emerald-50",
-    border: "border-emerald-100",
+    color: "text-brand-success",
+    bg: "bg-brand-successLight",
+    border: "border-brand-successLight",
     count: 24,
   },
   {
@@ -48,9 +48,9 @@ const TOPICS = [
     title: "Menu & Inventory",
     desc: "Items, categories & stock",
     icon: Settings,
-    color: "text-purple-500",
-    bg: "bg-purple-50",
-    border: "border-purple-100",
+    color: "text-brand-purple",
+    bg: "bg-brand-primaryLight",
+    border: "border-brand-primaryLight",
     count: 18,
   },
   {
@@ -58,9 +58,9 @@ const TOPICS = [
     title: "Hardware",
     desc: "Printers, scanners & drawers",
     icon: Printer,
-    color: "text-orange-500",
-    bg: "bg-orange-50",
-    border: "border-orange-100",
+    color: "text-brand-warning",
+    bg: "bg-brand-warningLight",
+    border: "border-brand-warningLight",
     count: 8,
   },
   {
@@ -68,9 +68,9 @@ const TOPICS = [
     title: "Reports & Analytics",
     desc: "Sales, taxes & staff performance",
     icon: PieChart,
-    color: "text-rose-500",
-    bg: "bg-rose-50",
-    border: "border-rose-100",
+    color: "text-brand-danger",
+    bg: "bg-brand-dangerLight",
+    border: "border-brand-dangerLight",
     count: 15,
   },
   {
@@ -78,9 +78,9 @@ const TOPICS = [
     title: "Taxes & GST",
     desc: "Compliance & tax rates",
     icon: FileText,
-    color: "text-indigo-500",
-    bg: "bg-indigo-50",
-    border: "border-indigo-100",
+    color: "text-brand-primary",
+    bg: "bg-brand-primaryLight",
+    border: "border-brand-borderHover",
     count: 6,
   },
 ];
@@ -130,8 +130,8 @@ const RECENT_TICKETS = [
     status: "In Progress",
     date: "5 hours ago",
     icon: Clock,
-    color: "text-amber-500",
-    bg: "bg-amber-50",
+    color: "text-brand-warning",
+    bg: "bg-brand-warningLight",
   },
   {
     id: "TCK-9021",
@@ -139,8 +139,8 @@ const RECENT_TICKETS = [
     status: "Resolved",
     date: "2 days ago",
     icon: CheckCircle2,
-    color: "text-emerald-500",
-    bg: "bg-emerald-50",
+    color: "text-brand-success",
+    bg: "bg-brand-successLight",
   },
 ];
 
@@ -149,22 +149,22 @@ const VIDEO_GUIDES = [
     id: "v1",
     title: "Mastering the POS Dashboard",
     duration: "5:20",
-    thumbBg: "bg-blue-100",
-    thumbColor: "text-blue-500",
+    thumbBg: "bg-brand-primaryLight",
+    thumbColor: "text-brand-info",
   },
   {
     id: "v2",
     title: "Setting up your first printer",
     duration: "3:45",
-    thumbBg: "bg-emerald-100",
-    thumbColor: "text-emerald-500",
+    thumbBg: "bg-brand-successLight",
+    thumbColor: "text-brand-success",
   },
   {
     id: "v3",
     title: "Managing employee permissions",
     duration: "4:15",
-    thumbBg: "bg-purple-100",
-    thumbColor: "text-purple-500",
+    thumbBg: "bg-brand-primaryLight",
+    thumbColor: "text-brand-purple",
   },
 ];
 
@@ -188,27 +188,27 @@ export default function HelpPage() {
   );
 
   return (
-    <div className="flex flex-col bg-slate-50 font-sans">
+    <div className="flex flex-col bg-brand-bg font-sans">
       <div className="flex-1 flex flex-col min-w-0">
         <main className="flex-1 p-4 md:p-6 space-y-4 md:space-y-5">
           {/* Header */}
           <div className="flex flex-col gap-4 sm:flex-row justify-between items-start sm:items-center">
             <div>
-              <h2 className="text-2xl font-bold text-slate-900">
+              <h2 className="text-2xl font-bold text-brand-dark">
                 Help & Support
               </h2>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-brand-muted">
                 Search our knowledge base, read guides, or contact support.
               </p>
             </div>
 
-            <button className="px-4 py-2 text-xs font-bold rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2">
+            <button className="px-4 py-2 text-xs font-bold rounded-xl bg-brand-dark text-white hover:bg-brand-muted transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2">
               <Ticket size={16} /> New Support Ticket
             </button>
           </div>
 
           {/* Tabs & Search */}
-          <div className="border-b border-slate-200 bg-white/50 flex flex-col md:flex-row gap-4 justify-between backdrop-blur-md rounded-t-2xl px-2 pt-2 md:pt-0">
+          <div className="border-b border-brand-border bg-white/50 flex flex-col md:flex-row gap-4 justify-between backdrop-blur-md rounded-t-2xl px-2 pt-2 md:pt-0">
             <nav className="-mb-px flex space-x-6 overflow-x-auto scrollbar-hide">
               {TABS.map((tab) => (
                 <button
@@ -216,8 +216,8 @@ export default function HelpPage() {
                   onClick={() => setActiveTab(tab.key)}
                   className={`whitespace-nowrap py-4 px-2 border-b-2 font-bold text-sm transition-all duration-300 ease-spring ${
                     activeTab === tab.key
-                      ? "border-indigo-500 text-indigo-600"
-                      : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
+                      ? "border-brand-primary text-brand-primary"
+                      : "border-transparent text-brand-muted hover:text-brand-dark hover:border-brand-borderHover"
                   }`}
                 >
                   <tab.icon size={16} className="inline mr-2 -mt-0.5" />
@@ -231,14 +231,14 @@ export default function HelpPage() {
               <div className="relative w-full md:w-64">
                 <Search
                   size={16}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-placeholder"
                 />
                 <input
                   type="text"
                   placeholder="Search help..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 w-full transition-all text-slate-700 placeholder:text-slate-400 shadow-sm"
+                  className="pl-9 pr-4 py-2 bg-white border border-brand-border rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary w-full transition-all text-brand-dark placeholder:text-brand-placeholder shadow-sm"
                 />
               </div>
             </div>
@@ -248,15 +248,15 @@ export default function HelpPage() {
           <div className="space-y-4 md:space-y-5">
             {/* Articles Tab */}
             {activeTab === "articles" && (
-              <div className="bg-white p-6 rounded-b-2xl md:rounded-2xl shadow-sm border border-slate-200">
-                <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-                  <Book size={20} className="text-indigo-500" /> Browse by Topic
+              <div className="bg-white p-6 rounded-b-2xl md:rounded-2xl shadow-sm border border-brand-border">
+                <h3 className="text-lg font-bold text-brand-dark mb-6 flex items-center gap-2">
+                  <Book size={20} className="text-brand-primary" /> Browse by Topic
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                   {TOPICS.map((topic) => (
                     <div
                       key={topic.id}
-                      className="group p-5 rounded-2xl border border-slate-100 hover:border-indigo-200 hover:shadow-md transition-all cursor-pointer flex flex-col gap-4 bg-slate-50/50 hover:bg-indigo-50/10"
+                      className="group p-5 rounded-2xl border border-brand-borderHover hover:border-brand-primaryLight hover:shadow-md transition-all cursor-pointer flex flex-col gap-4 bg-brand-bg hover:bg-brand-primaryLight"
                     >
                       <div className="flex items-center gap-4">
                         <div
@@ -265,15 +265,15 @@ export default function HelpPage() {
                           <topic.icon size={24} strokeWidth={2.5} />
                         </div>
                         <div>
-                          <h4 className="font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">
+                          <h4 className="font-bold text-brand-dark group-hover:text-brand-primary transition-colors">
                             {topic.title}
                           </h4>
-                          <span className="inline-block mt-1 text-[10px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">
+                          <span className="inline-block mt-1 text-[10px] font-bold text-brand-muted bg-brand-light border border-brand-border px-2 py-0.5 rounded-full">
                             {topic.count} articles
                           </span>
                         </div>
                       </div>
-                      <p className="text-slate-500 text-sm">{topic.desc}</p>
+                      <p className="text-brand-muted text-sm">{topic.desc}</p>
                     </div>
                   ))}
                 </div>
@@ -282,9 +282,9 @@ export default function HelpPage() {
 
             {/* FAQs Tab */}
             {activeTab === "faqs" && (
-              <div className="bg-white p-6 rounded-b-2xl md:rounded-2xl shadow-sm border border-slate-200">
-                <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-                  <LifeBuoy size={20} className="text-indigo-500" /> Frequently
+              <div className="bg-white p-6 rounded-b-2xl md:rounded-2xl shadow-sm border border-brand-border">
+                <h3 className="text-lg font-bold text-brand-dark mb-6 flex items-center gap-2">
+                  <LifeBuoy size={20} className="text-brand-primary" /> Frequently
                   Asked Questions
                 </h3>
                 <div className="space-y-3 max-w-4xl">
@@ -292,25 +292,25 @@ export default function HelpPage() {
                     filteredFaqs.map((faq) => (
                       <div
                         key={faq.id}
-                        className="border border-slate-100 rounded-2xl overflow-hidden bg-slate-50/50"
+                        className="border border-brand-borderHover rounded-2xl overflow-hidden bg-brand-bg"
                       >
                         <button
                           onClick={() =>
                             setActiveFaq(activeFaq === faq.id ? null : faq.id)
                           }
-                          className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-slate-100 transition-colors"
+                          className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-brand-light transition-colors"
                         >
                           <div>
-                            <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-1 block">
+                            <span className="text-[10px] font-bold text-brand-primary uppercase tracking-widest mb-1 block">
                               {faq.category}
                             </span>
-                            <h4 className="font-bold text-slate-800 text-sm">
+                            <h4 className="font-bold text-brand-dark text-sm">
                               {faq.question}
                             </h4>
                           </div>
                           <ChevronDown
                             size={18}
-                            className={`text-slate-400 shrink-0 transition-transform ${activeFaq === faq.id ? "rotate-180" : ""}`}
+                            className={`text-brand-placeholder shrink-0 transition-transform ${activeFaq === faq.id ? "rotate-180" : ""}`}
                           />
                         </button>
                         <AnimatePresence>
@@ -321,7 +321,7 @@ export default function HelpPage() {
                               exit={{ height: 0, opacity: 0 }}
                               className="overflow-hidden"
                             >
-                              <div className="px-5 py-4 text-slate-600 text-sm leading-relaxed border-t border-slate-100 bg-white">
+                              <div className="px-5 py-4 text-brand-muted text-sm leading-relaxed border-t border-brand-borderHover bg-white">
                                 {faq.answer}
                               </div>
                             </motion.div>
@@ -330,11 +330,11 @@ export default function HelpPage() {
                       </div>
                     ))
                   ) : (
-                    <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-2xl">
-                      <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <Search size={24} className="text-slate-400" />
+                    <div className="text-center py-12 border-2 border-dashed border-brand-border rounded-2xl">
+                      <div className="w-16 h-16 bg-brand-light rounded-full flex items-center justify-center mx-auto mb-3">
+                        <Search size={24} className="text-brand-placeholder" />
                       </div>
-                      <p className="text-slate-500 font-medium">
+                      <p className="text-brand-muted font-medium">
                         No results found for "{searchQuery}"
                       </p>
                     </div>
@@ -347,47 +347,47 @@ export default function HelpPage() {
             {activeTab === "support" && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-5">
                 {/* Contact Options */}
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                  <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-                    <MessageCircle size={20} className="text-indigo-500" />{" "}
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-brand-border">
+                  <h3 className="text-lg font-bold text-brand-dark mb-6 flex items-center gap-2">
+                    <MessageCircle size={20} className="text-brand-primary" />{" "}
                     Contact Support
                   </h3>
                   <div className="space-y-4">
-                    <button className="w-full flex items-center gap-4 p-4 rounded-2xl bg-indigo-50 border border-indigo-100 hover:bg-indigo-100 hover:border-indigo-200 transition-colors text-left group">
-                      <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-indigo-600 shadow-sm group-hover:scale-110 transition-transform">
+                    <button className="w-full flex items-center gap-4 p-4 rounded-2xl bg-brand-primaryLight border border-brand-borderHover hover:bg-brand-border hover:border-brand-borderHover transition-colors text-left group">
+                      <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-brand-primary shadow-sm group-hover:scale-110 transition-transform">
                         <MessageCircle size={20} />
                       </div>
                       <div>
-                        <div className="font-bold text-indigo-900 text-sm">
+                        <div className="font-bold text-brand-primaryDark text-sm">
                           Live Chat
                         </div>
-                        <div className="text-indigo-600/80 text-xs font-semibold mt-0.5">
+                        <div className="text-brand-primary/80 text-xs font-semibold mt-0.5">
                           Response in ~2 mins
                         </div>
                       </div>
                     </button>
-                    <button className="w-full flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 hover:bg-slate-100 hover:border-slate-300 transition-colors text-left group">
-                      <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-slate-600 shadow-sm group-hover:scale-110 transition-transform">
+                    <button className="w-full flex items-center gap-4 p-4 rounded-2xl bg-brand-bg border border-brand-border hover:bg-brand-light hover:border-brand-borderHover transition-colors text-left group">
+                      <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-brand-muted shadow-sm group-hover:scale-110 transition-transform">
                         <PhoneCall size={20} />
                       </div>
                       <div>
-                        <div className="font-bold text-slate-800 text-sm">
+                        <div className="font-bold text-brand-dark text-sm">
                           Phone Support
                         </div>
-                        <div className="text-slate-500 text-xs font-semibold mt-0.5">
+                        <div className="text-brand-muted text-xs font-semibold mt-0.5">
                           1-800-POS-HELP
                         </div>
                       </div>
                     </button>
-                    <button className="w-full flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 hover:bg-slate-100 hover:border-slate-300 transition-colors text-left group">
-                      <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-slate-600 shadow-sm group-hover:scale-110 transition-transform">
+                    <button className="w-full flex items-center gap-4 p-4 rounded-2xl bg-brand-bg border border-brand-border hover:bg-brand-light hover:border-brand-borderHover transition-colors text-left group">
+                      <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-brand-muted shadow-sm group-hover:scale-110 transition-transform">
                         <Mail size={20} />
                       </div>
                       <div>
-                        <div className="font-bold text-slate-800 text-sm">
+                        <div className="font-bold text-brand-dark text-sm">
                           Email Us
                         </div>
-                        <div className="text-slate-500 text-xs font-semibold mt-0.5">
+                        <div className="text-brand-muted text-xs font-semibold mt-0.5">
                           support@posystem.com
                         </div>
                       </div>
@@ -396,13 +396,13 @@ export default function HelpPage() {
                 </div>
 
                 {/* Recent Tickets */}
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-brand-border">
                   <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-                      <Ticket size={20} className="text-indigo-500" /> Your
+                    <h3 className="text-lg font-bold text-brand-dark flex items-center gap-2">
+                      <Ticket size={20} className="text-brand-primary" /> Your
                       Tickets
                     </h3>
-                    <button className="text-indigo-600 text-xs font-bold hover:underline">
+                    <button className="text-brand-primary text-xs font-bold hover:underline">
                       View All
                     </button>
                   </div>
@@ -410,7 +410,7 @@ export default function HelpPage() {
                     {RECENT_TICKETS.map((ticket) => (
                       <div
                         key={ticket.id}
-                        className="flex gap-4 items-start p-4 rounded-2xl border border-slate-100 bg-slate-50 hover:bg-white hover:border-indigo-100 transition-colors cursor-pointer group shadow-sm hover:shadow"
+                        className="flex gap-4 items-start p-4 rounded-2xl border border-brand-border bg-brand-bg hover:bg-white hover:border-brand-primaryLight transition-colors cursor-pointer group shadow-sm hover:shadow"
                       >
                         <div
                           className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border ${ticket.bg} ${ticket.color} border-current/10`}
@@ -419,7 +419,7 @@ export default function HelpPage() {
                         </div>
                         <div className="flex-1">
                           <div className="flex justify-between items-start mb-1">
-                            <h4 className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">
+                            <h4 className="text-sm font-bold text-brand-dark group-hover:text-brand-primary transition-colors">
                               {ticket.subject}
                             </h4>
                             <span
@@ -428,9 +428,9 @@ export default function HelpPage() {
                               {ticket.status}
                             </span>
                           </div>
-                          <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                          <div className="flex items-center gap-2 text-xs text-brand-muted font-medium">
                             <span>{ticket.id}</span>
-                            <span className="w-1 h-1 rounded-full bg-slate-300"></span>
+                            <span className="w-1 h-1 rounded-full bg-brand-placeholder"></span>
                             <span>{ticket.date}</span>
                           </div>
                         </div>
@@ -443,9 +443,9 @@ export default function HelpPage() {
 
             {/* Videos Tab */}
             {activeTab === "videos" && (
-              <div className="bg-white p-6 rounded-b-2xl md:rounded-2xl shadow-sm border border-slate-200">
-                <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-                  <Video size={20} className="text-indigo-500" /> Video
+              <div className="bg-white p-6 rounded-b-2xl md:rounded-2xl shadow-sm border border-brand-border">
+                <h3 className="text-lg font-bold text-brand-dark mb-6 flex items-center gap-2">
+                  <Video size={20} className="text-brand-primary" /> Video
                   Tutorials
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -465,10 +465,10 @@ export default function HelpPage() {
                       </div>
                       <div>
                         <div className="flex justify-between items-start gap-3 mb-1">
-                          <h4 className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition-colors leading-tight">
+                          <h4 className="text-sm font-bold text-brand-dark group-hover:text-brand-primary transition-colors leading-tight">
                             {video.title}
                           </h4>
-                          <span className="text-[10px] font-bold text-slate-600 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded whitespace-nowrap">
+                          <span className="text-[10px] font-bold text-brand-muted bg-brand-light border border-brand-border px-1.5 py-0.5 rounded whitespace-nowrap">
                             {video.duration}
                           </span>
                         </div>
