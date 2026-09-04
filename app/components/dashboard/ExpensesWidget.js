@@ -12,16 +12,16 @@ export default function ExpensesWidget() {
     rawCategories.length > 0
       ? rawCategories
       : [
-          { label: "Gas", color: "bg-emerald-400", val: 0 },
-          { label: "Electricity", color: "bg-sky-400", val: 0 },
-          { label: "Water", color: "bg-blue-500", val: 0 },
-          { label: "Petty Cash", color: "bg-amber-400", val: 0 },
+          { label: "Gas", color: "bg-brand-success", val: 0 },
+          { label: "Electricity", color: "bg-brand-info", val: 0 },
+          { label: "Water", color: "bg-brand-primary", val: 0 },
+          { label: "Petty Cash", color: "bg-brand-warning", val: 0 },
         ];
 
   const chartData = categories.map((cat, i) => ({
     name: cat.label,
     value: cat.val,
-    color: ["#34d399", "#38bdf8", "#3b82f6", "#fbbf24"][i % 4],
+    color: ["#059669", "#14B8A6", "#2563EB", "#D97706"][i % 4],
   }));
 
   return (
@@ -30,10 +30,10 @@ export default function ExpensesWidget() {
         <CardTitle>Expenses</CardTitle>
       </CardHeader>
       <div className="text-center mb-6">
-        <span className="text-sm text-slate-500 font-medium">
+        <span className="text-sm text-brand-muted font-medium">
           Total Expenses:{" "}
         </span>
-        <span className="text-xl text-slate-800 font-bold ml-1">
+        <span className="text-xl text-brand-dark font-bold ml-1">
           ₹{" "}
           {totalExpenses.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
         </span>
@@ -59,7 +59,7 @@ export default function ExpensesWidget() {
               <Tooltip
                 contentStyle={{
                   borderRadius: "8px",
-                  border: "1px solid #e2e8f0",
+                  border: "1px solid #E2E8F0",
                   boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
                   fontSize: 12,
                 }}
@@ -68,7 +68,7 @@ export default function ExpensesWidget() {
             </PieChart>
           </ResponsiveContainer>
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <span className="text-slate-800 font-bold text-sm">100%</span>
+            <span className="text-brand-dark font-bold text-sm">100%</span>
           </div>
         </div>
         <div className="flex flex-col gap-3 flex-1">
@@ -76,13 +76,13 @@ export default function ExpensesWidget() {
             <div key={e.label} className="flex justify-between items-center">
               <div className="flex items-center gap-2">
                 <span
-                  className={`w-2.5 h-2.5 rounded-full ${["bg-emerald-400", "bg-sky-400", "bg-blue-500", "bg-amber-400"][i % 4]}`}
+                  className={`w-2.5 h-2.5 rounded-full ${["bg-brand-success", "bg-brand-info", "bg-brand-primary", "bg-brand-warning"][i % 4]}`}
                 ></span>
-                <span className="text-xs text-slate-500 font-medium">
+                <span className="text-xs text-brand-muted font-medium">
                   {e.label}
                 </span>
               </div>
-              <span className="text-xs text-slate-800 font-bold">
+              <span className="text-xs text-brand-dark font-bold">
                 ₹ {e.val}
               </span>
             </div>

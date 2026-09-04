@@ -10,7 +10,7 @@ export function Table({ className, ...props }) {
 }
 
 export function TableHeader({ className, ...props }) {
-  return <thead className={cn('[&_tr]:border-b border-[var(--color-brand-border)] bg-[var(--color-brand-light)]', className)} {...props} />;
+  return <thead className={cn('[&_tr]:border-b border-brand-border bg-brand-light', className)} {...props} />;
 }
 
 export function TableBody({ className, ...props }) {
@@ -21,7 +21,7 @@ export function TableRow({ className, ...props }) {
   return (
     <tr
       className={cn(
-        'border-b border-[var(--color-brand-border)] transition-colors hover:bg-[var(--color-brand-light)] data-[state=selected]:bg-slate-100',
+        'border-b border-brand-border transition-colors hover:bg-brand-light data-[state=selected]:bg-brand-light',
         className
       )}
       {...props}
@@ -33,7 +33,7 @@ export function TableHead({ className, ...props }) {
   return (
     <th
       className={cn(
-        'h-11 px-4 text-left align-middle text-xs font-semibold text-[var(--color-brand-muted)] [&:has([role=checkbox])]:pr-0',
+        'h-11 px-4 text-left align-middle text-xs font-semibold text-brand-muted [&:has([role=checkbox])]:pr-0',
         className
       )}
       {...props}
@@ -44,7 +44,7 @@ export function TableHead({ className, ...props }) {
 export function TableCell({ className, ...props }) {
   return (
     <td
-      className={cn('p-4 align-middle text-sm text-[var(--color-brand-dark)] [&:has([role=checkbox])]:pr-0', className)}
+      className={cn('p-4 align-middle text-sm text-brand-dark [&:has([role=checkbox])]:pr-0', className)}
       {...props}
     />
   );

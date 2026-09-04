@@ -14,7 +14,7 @@ export default function StatCard({ label, value, subtext, icon, isGrey, classNam
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           {icon && (
-            <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${isGrey ? 'bg-slate-100 text-brand-muted' : 'bg-brand-light text-brand-primary'}`}>
+            <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${isGrey ? 'bg-brand-light text-brand-muted' : 'bg-brand-light text-brand-primary'}`}>
               {icon}
             </div>
           )}
@@ -28,7 +28,7 @@ export default function StatCard({ label, value, subtext, icon, isGrey, classNam
 
       {subtext && (
         <div className="mt-2 flex items-center gap-1.5">
-           <span className="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-slate-100 text-[9px] text-brand-muted font-bold">i</span>
+           <span className="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-brand-light text-[9px] text-brand-muted font-bold">i</span>
            <span className="text-xs font-semibold text-brand-muted">{subtext}</span>
         </div>
       )}

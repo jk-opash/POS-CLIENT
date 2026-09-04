@@ -139,28 +139,28 @@ export default function TablesPage() {
   ];
 
   return (
-    <div className="flex flex-col bg-slate-50 font-sans h-full">
+    <div className="flex flex-col bg-brand-bg font-sans h-full">
       <div className="flex-1 flex flex-col overflow-hidden relative min-w-0">
         <main className="flex-1 p-4 md:p-6 space-y-4 md:space-y-5">
           {/* Header & Global Actions */}
           <div className="flex flex-col gap-4 sm:flex-row justify-between items-start sm:items-center">
             <div>
-              <h2 className="text-2xl font-bold text-slate-900">
+              <h2 className="text-2xl font-bold text-brand-dark">
                 Tables & QR Management
               </h2>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-brand-muted">
                 Manage your restaurant zones, tables, and QR codes.
               </p>
             </div>
 
             <div className="flex items-center gap-3 flex-wrap">
               {/* Branch Selector */}
-              <div className="relative flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 shadow-sm">
-                <Building2 size={14} className="text-slate-500 shrink-0" />
+              <div className="relative flex items-center gap-2 bg-white border border-brand-border rounded-xl px-3 py-2 shadow-sm">
+                <Building2 size={14} className="text-brand-muted shrink-0" />
                 <select
                   value={branchFilter}
                   onChange={(e) => setBranchFilter(e.target.value)}
-                  className="text-sm font-semibold text-slate-700 outline-none bg-transparent cursor-pointer pr-2"
+                  className="text-sm font-semibold text-brand-dark outline-none bg-transparent cursor-pointer pr-2"
                 >
                   {branches?.map((b) => (
                     <option key={b.id} value={b.id}>
@@ -174,7 +174,7 @@ export default function TablesPage() {
                 <button
                   onClick={openAddTable}
                   disabled={!branchFilter}
-                  className="px-4 py-2 text-xs font-bold rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2 disabled:opacity-50"
+                  className="px-4 py-2 text-xs font-bold rounded-xl bg-brand-dark text-white hover:bg-brand-dark/90 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2 disabled:opacity-50"
                 >
                   <Plus size={16} /> Add Table
                 </button>
@@ -182,7 +182,7 @@ export default function TablesPage() {
                 <button
                   onClick={openAddZone}
                   disabled={!branchFilter}
-                  className="px-4 py-2 text-xs font-bold rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2 disabled:opacity-50"
+                  className="px-4 py-2 text-xs font-bold rounded-xl bg-brand-dark text-white hover:bg-brand-dark/90 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2 disabled:opacity-50"
                 >
                   <Plus size={16} /> Add Zone
                 </button>
@@ -191,7 +191,7 @@ export default function TablesPage() {
           </div>
 
           {/* Tabs */}
-          <div className="border-b border-slate-200 bg-white/50 flex flex-row gap-2 backdrop-blur-md rounded-t-2xl px-2">
+          <div className="border-b border-brand-border bg-white/50 flex flex-row gap-2 backdrop-blur-md rounded-t-2xl px-2">
             <nav className="-mb-px flex space-x-6 overflow-x-auto">
               {tabs.map((tab) => (
                 <button
@@ -199,8 +199,8 @@ export default function TablesPage() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`whitespace-nowrap py-4 px-2 border-b-2 font-bold text-sm transition-all duration-300 ease-spring ${
                     activeTab === tab.id
-                      ? "border-indigo-500 text-indigo-600"
-                      : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
+                      ? "border-brand-primary text-brand-primary"
+                      : "border-transparent text-brand-muted hover:text-brand-dark hover:border-brand-border"
                   }`}
                 >
                   {tab.label}

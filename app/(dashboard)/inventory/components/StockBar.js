@@ -12,7 +12,7 @@ export default function StockBar({ current, reorder }) {
           : "#10b981";
   return (
     <div>
-      <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+      <div className="w-full h-1.5 bg-brand-light rounded-full overflow-hidden">
         <div
           style={{ width: `${pct}%`, background: color }}
           className="h-full rounded-full transition-all duration-500"

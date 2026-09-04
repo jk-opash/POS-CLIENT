@@ -63,7 +63,7 @@ export default function SessionConflictModal() {
           <button
             type="button"
             onClick={handleLogout}
-            className="w-full py-3 bg-transparent border border-red-500 text-red-500 font-semibold rounded-xl hover:bg-red-50 transition-colors"
+            className="w-full py-3 bg-transparent border border-brand-danger text-brand-danger font-semibold rounded-xl hover:bg-brand-dangerLight transition-colors"
             disabled={isSubmitting}
           >
             Log Out

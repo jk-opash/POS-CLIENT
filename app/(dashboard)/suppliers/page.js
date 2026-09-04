@@ -110,16 +110,16 @@ export default function SuppliersPage() {
   const tabs = [{ id: "suppliers", label: "Suppliers List" }];
 
   return (
-    <div className="flex flex-col bg-slate-50 font-sans h-full">
+    <div className="flex flex-col bg-brand-bg font-sans h-full">
       <div className="flex-1 flex flex-col overflow-hidden relative min-w-0">
         <main className="flex-1 p-4 md:p-6 space-y-4 md:space-y-5">
           {/* Header & Global Actions */}
           <div className="flex flex-col gap-4 sm:flex-row justify-between items-start sm:items-center">
             <div>
-              <h2 className="text-2xl font-bold text-slate-900">
+              <h2 className="text-2xl font-bold text-brand-dark">
                 Suppliers Hub
               </h2>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-brand-muted">
                 Manage your vendors, contacts, and supply chain.
               </p>
             </div>
@@ -136,7 +136,7 @@ export default function SuppliersPage() {
             <div className="flex items-center gap-3 flex-wrap">
               <button
                 onClick={() => setModalState({ visible: true, supplier: null })}
-                className="px-4 py-2 text-xs font-bold rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2"
+                className="px-4 py-2 text-xs font-bold rounded-xl bg-brand-dark text-white hover:bg-brand-dark/90 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2"
               >
                 <Plus size={16} /> Add Supplier
               </button>

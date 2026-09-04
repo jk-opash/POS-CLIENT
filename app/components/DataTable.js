@@ -129,7 +129,7 @@ export default function DataTable({
                 ))
               ) : (
                 <tr>
-                  <td colSpan={columns.length} style={{ padding: '60px 20px', textAlign: 'center', color: '#6b7280' }}>
+                  <td colSpan={columns.length} className="text-brand-muted" style={{ padding: '60px 20px', textAlign: 'center' }}>
                     <div style={{ fontSize: 32, marginBottom: 12 }}>{emptyIcon}</div>
                     <div>{emptyMessage}</div>
                   </td>

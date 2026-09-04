@@ -15,38 +15,38 @@ export default function OrderStatisticsWidget() {
       label: "Success Orders",
       value: successOrders,
       icon: CheckCircle2,
-      color: "text-emerald-600",
-      bgColor: "bg-emerald-50",
-      borderColor: "border-emerald-100",
-      shadowColor: "hover:shadow-emerald-100/50",
+      color: "text-brand-success",
+      bgColor: "bg-brand-successLight/30",
+      borderColor: "border-brand-success/20",
+      shadowColor: "hover:shadow-brand-success/20",
     },
     {
       label: "Cancelled Orders",
       value: cancelledOrders,
       icon: XCircle,
-      color: "text-rose-600",
-      bgColor: "bg-rose-50",
-      borderColor: "border-rose-100",
-      shadowColor: "hover:shadow-rose-100/50",
+      color: "text-brand-danger",
+      bgColor: "bg-brand-dangerLight/30",
+      borderColor: "border-brand-danger/20",
+      shadowColor: "hover:shadow-brand-danger/20",
     },
     {
       label: "Complimentary Orders",
       value: complimentaryOrders,
       icon: Gift,
-      color: "text-indigo-600",
-      bgColor: "bg-indigo-50",
-      borderColor: "border-indigo-100",
-      shadowColor: "hover:shadow-indigo-100/50",
+      color: "text-brand-primary",
+      bgColor: "bg-brand-primaryLight/30",
+      borderColor: "border-brand-primary/20",
+      shadowColor: "hover:shadow-brand-primary/20",
     },
     {
       label: "Table Turn Around",
       value: averageTableTime,
       suffix: "mins",
       icon: Clock,
-      color: "text-amber-600",
-      bgColor: "bg-amber-50",
-      borderColor: "border-amber-100",
-      shadowColor: "hover:shadow-amber-100/50",
+      color: "text-brand-warning",
+      bgColor: "bg-brand-warningLight/30",
+      borderColor: "border-brand-warning/20",
+      shadowColor: "hover:shadow-brand-warning/20",
     },
   ];
 
@@ -81,16 +81,16 @@ export default function OrderStatisticsWidget() {
               
               <div className="relative">
                 <div className="flex items-baseline gap-1.5 mb-1.5">
-                  <span className="text-3xl font-black text-slate-800 tracking-tight">
+                  <span className="text-3xl font-black text-brand-dark tracking-tight">
                     {item.value}
                   </span>
                   {item.suffix && (
-                    <span className="text-sm font-bold text-slate-500">
+                    <span className="text-sm font-bold text-brand-muted">
                       {item.suffix}
                     </span>
                   )}
                 </div>
-                <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                <div className="text-[11px] font-bold text-brand-muted uppercase tracking-wider">
                   {item.label}
                 </div>
               </div>

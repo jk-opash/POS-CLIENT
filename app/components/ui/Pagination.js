@@ -49,7 +49,7 @@ export function Pagination({
     <div className={cn("flex flex-col sm:flex-row items-center justify-between gap-4 py-2", className)}>
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-[var(--color-brand-muted)]">Rows per page:</span>
+          <span className="text-sm font-medium text-brand-muted">Rows per page:</span>
           <div className="w-20">
             <Select 
               value={itemsPerPage.toString()}
@@ -59,8 +59,8 @@ export function Pagination({
           </div>
         </div>
         
-        <span className="text-sm text-[var(--color-brand-muted)]">
-          Showing <span className="font-semibold text-[var(--color-brand-dark)]">{startItem}–{endItem}</span> of <span className="font-semibold text-[var(--color-brand-dark)]">{totalItems}</span>
+        <span className="text-sm text-brand-muted">
+          Showing <span className="font-semibold text-brand-dark">{startItem}–{endItem}</span> of <span className="font-semibold text-brand-dark">{totalItems}</span>
         </span>
       </div>
 
@@ -72,7 +72,7 @@ export function Pagination({
           onClick={() => onPageChange(1)}
           disabled={currentPage === 1}
         >
-          <ChevronsLeft className="h-4 w-4 text-[var(--color-brand-muted)]" />
+          <ChevronsLeft className="h-4 w-4 text-brand-muted" />
         </Button>
         <Button
           variant="ghost"
@@ -81,14 +81,14 @@ export function Pagination({
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
-          <ChevronLeft className="h-4 w-4 text-[var(--color-brand-muted)]" />
+          <ChevronLeft className="h-4 w-4 text-brand-muted" />
         </Button>
 
         <div className="flex items-center gap-1 mx-2">
           {getPageNumbers().map((page, i) => (
             page === '...' ? (
               <div key={`ellipsis-${i}`} className="w-8 flex items-center justify-center">
-                <MoreHorizontal className="h-4 w-4 text-[var(--color-brand-muted)]" />
+                <MoreHorizontal className="h-4 w-4 text-brand-muted" />
               </div>
             ) : (
               <Button
@@ -97,7 +97,7 @@ export function Pagination({
                 size="sm"
                 className={cn(
                   "h-8 w-8 p-0 rounded-full",
-                  currentPage === page ? "bg-[var(--color-brand-primary)] text-white hover:bg-[var(--color-brand-primaryDark)] border-none" : "text-[var(--color-brand-dark)] hover:bg-slate-100 border-none"
+                  currentPage === page ? "bg-brand-primary text-white hover:bg-brand-primaryDark border-none" : "text-brand-dark hover:bg-brand-light border-none"
                 )}
                 onClick={() => onPageChange(page)}
               >
@@ -114,7 +114,7 @@ export function Pagination({
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage >= totalPages || totalPages === 0}
         >
-          <ChevronRight className="h-4 w-4 text-[var(--color-brand-muted)]" />
+          <ChevronRight className="h-4 w-4 text-brand-muted" />
         </Button>
         <Button
           variant="ghost"
@@ -123,7 +123,7 @@ export function Pagination({
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage >= totalPages || totalPages === 0}
         >
-          <ChevronsRight className="h-4 w-4 text-[var(--color-brand-muted)]" />
+          <ChevronsRight className="h-4 w-4 text-brand-muted" />
         </Button>
       </div>
     </div>

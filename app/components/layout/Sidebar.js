@@ -69,13 +69,13 @@ export function Sidebar({ isOpen, onClose }) {
       {/* Sidebar Drawer */}
       <aside
         className={cn(
-          "fixed md:relative z-100 left-0 top-0 z-modal h-screen w-64 border-r border-slate-800 bg-brand-dark flex flex-col transition-transform duration-300 ease-spring ease-in-out md:translate-x-0 shrink-0",
+          "fixed md:relative z-100 left-0 top-0 z-modal h-screen w-64 border-r border-brand-dark bg-brand-dark flex flex-col transition-transform duration-300 ease-spring ease-in-out md:translate-x-0 shrink-0",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="flex h-16 items-center justify-between px-6 border-b border-slate-800 bg-brand-dark shrink-0">
+        <div className="flex h-16 items-center justify-between px-6 border-b border-brand-dark bg-brand-dark shrink-0">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-float shadow-indigo-500/20">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-brand-primary to-brand-primaryDark flex items-center justify-center shadow-float shadow-brand-primary/20">
               <span className="text-white font-black text-lg">P</span>
             </div>
             <span className="font-bold text-lg tracking-tight text-white">
@@ -84,14 +84,14 @@ export function Sidebar({ isOpen, onClose }) {
           </div>
           <button
             onClick={onClose}
-            className="md:hidden text-slate-400 hover:text-white"
+            className="md:hidden text-brand-muted hover:text-white"
           >
             <X className="h-6 w-6" />
           </button>
         </div>
 
         <div className="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-1 custom-scrollbar">
-          <p className="px-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">
+          <p className="px-2 text-[10px] font-bold text-brand-muted uppercase tracking-widest mb-3">
             Restaurant Management
           </p>
 
@@ -110,20 +110,20 @@ export function Sidebar({ isOpen, onClose }) {
                     className={cn(
                       "w-full flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300 ease-spring group overflow-hidden",
                       isMainActive || isExpanded
-                        ? "text-white bg-slate-800/30"
-                        : "text-slate-400 hover:text-white hover:bg-slate-800/30",
+                        ? "text-white bg-brand-dark/30"
+                        : "text-brand-muted hover:text-white hover:bg-brand-dark/30",
                     )}
                   >
                     <div className="flex items-center gap-3 relative">
                       {isMainActive && (
-                        <div className="absolute -left-3 top-1/2 -translate-y-1/2 h-5 w-1 bg-indigo-500 rounded-r-full" />
+                        <div className="absolute -left-3 top-1/2 -translate-y-1/2 h-5 w-1 bg-brand-primary rounded-r-full" />
                       )}
                       <item.icon
                         className={cn(
                           "h-5 w-5 transition-transform duration-300 ease-spring group-hover:scale-110",
                           isMainActive
-                            ? "text-indigo-400"
-                            : "text-slate-500 group-hover:text-slate-300",
+                            ? "text-brand-primaryLight"
+                            : "text-brand-muted group-hover:text-brand-muted",
                         )}
                       />
                       {item.label}
@@ -131,7 +131,7 @@ export function Sidebar({ isOpen, onClose }) {
                     <ChevronDown
                       className={cn(
                         "h-4 w-4 transition-transform duration-300",
-                        isExpanded ? "rotate-180 text-white" : "text-slate-500",
+                        isExpanded ? "rotate-180 text-white" : "text-brand-muted",
                       )}
                     />
                   </button>
@@ -141,19 +141,19 @@ export function Sidebar({ isOpen, onClose }) {
                     className={cn(
                       "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300 ease-spring relative group overflow-hidden",
                       isMainActive
-                        ? "text-white bg-slate-800/50 shadow-inset-white-soft"
-                        : "text-slate-400 hover:text-white hover:bg-slate-800/30",
+                        ? "text-white bg-brand-dark/50 shadow-inset-white-soft"
+                        : "text-brand-muted hover:text-white hover:bg-brand-dark/30",
                     )}
                   >
                     {isMainActive && (
-                      <div className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 bg-indigo-500 rounded-r-full" />
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 bg-brand-primary rounded-r-full" />
                     )}
                     <item.icon
                       className={cn(
                         "h-5 w-5 transition-transform duration-300 ease-spring group-hover:scale-110",
                         isMainActive
-                          ? "text-indigo-400"
-                          : "text-slate-500 group-hover:text-slate-300",
+                          ? "text-brand-primaryLight"
+                          : "text-brand-muted group-hover:text-brand-muted",
                       )}
                     />
                     {item.label}
@@ -180,8 +180,8 @@ export function Sidebar({ isOpen, onClose }) {
                             className={cn(
                               "text-xs py-2 px-3 rounded-lg font-medium transition-all duration-200",
                               isSubActive
-                                ? "text-indigo-400 bg-indigo-500/10"
-                                : "text-slate-400 hover:text-white hover:bg-slate-800/50",
+                                ? "text-brand-primaryLight bg-brand-primary/10"
+                                : "text-brand-muted hover:text-white hover:bg-brand-dark/50",
                             )}
                           >
                             {subItem.label}
@@ -200,8 +200,8 @@ export function Sidebar({ isOpen, onClose }) {
           <div className={cn(
             "mx-3 mb-3 rounded-xl px-3 py-2.5 flex items-start gap-2.5 border shrink-0",
             daysLeft <= 3
-              ? "bg-red-500/10 border-red-500/30 text-red-400"
-              : "bg-amber-500/10 border-amber-500/30 text-amber-400"
+              ? "bg-brand-danger/10 border-brand-danger/30 text-brand-dangerLight"
+              : "bg-brand-warning/10 border-brand-warning/30 text-brand-warningLight"
           )}>
             <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
             <div className="min-w-0">
@@ -217,34 +217,34 @@ export function Sidebar({ isOpen, onClose }) {
           </div>
         )}
 
-        <div className="p-4 border-t border-slate-800 bg-brand-dark space-y-1 shrink-0">
+        <div className="p-4 border-t border-brand-dark bg-brand-dark space-y-1 shrink-0">
           <Link
             href="/settings"
             className={cn(
               "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300 ease-spring group relative overflow-hidden",
               pathname === "/settings"
-                ? "text-white bg-slate-800/50 shadow-inset-white-soft"
-                : "text-slate-400 hover:text-white hover:bg-slate-800/50",
+                ? "text-white bg-brand-dark/50 shadow-inset-white-soft"
+                : "text-brand-muted hover:text-white hover:bg-brand-dark/50",
             )}
           >
             {pathname === "/settings" && (
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 bg-indigo-500 rounded-r-full" />
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 bg-brand-primary rounded-r-full" />
             )}
             <Settings
               className={cn(
                 "h-5 w-5 transition-transform duration-300 ease-spring",
                 pathname === "/settings"
-                  ? "text-indigo-400 rotate-90"
-                  : "text-slate-500 group-hover:text-slate-300 group-hover:rotate-90",
+                  ? "text-brand-primaryLight rotate-90"
+                  : "text-brand-muted group-hover:text-brand-muted group-hover:rotate-90",
               )}
             />
             Settings
           </Link>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-400/80 hover:text-red-400 hover:bg-red-400/10 transition-all duration-300 ease-spring group"
+            className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-brand-dangerLight hover:text-brand-danger hover:bg-brand-danger/10 transition-all duration-300 ease-spring group"
           >
-            <LogOut className="h-5 w-5 text-red-400/60 group-hover:text-red-400 transition-transform duration-300 ease-spring group-hover:-translate-x-1" />
+            <LogOut className="h-5 w-5 text-brand-danger/60 group-hover:text-brand-danger transition-transform duration-300 ease-spring group-hover:-translate-x-1" />
             Log Out
           </button>
         </div>

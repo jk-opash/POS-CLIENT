@@ -53,7 +53,7 @@ export default function PosAdminPagination({
                 <select
                   value={itemsPerPage.toString()}
                   onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
-                  className="w-full appearance-none rounded-xl border border-[#E2E8F0] bg-[#F8F9FA] px-4 py-2 pr-10 text-sm text-[#0F172A] transition-all duration-300 ease-[cubic-bezier(0.43,0.13,0.23,0.96)] shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] hover:bg-white hover:border-[#CBD5E1] focus:outline-none focus:border-[#6366F1] focus:ring-4 focus:ring-[#6366F1]/10 focus:bg-white focus:shadow-none disabled:opacity-50 disabled:bg-slate-100 disabled:cursor-not-allowed disabled:hover:border-[#E2E8F0]"
+                  className="w-full appearance-none rounded-xl border border-[#E2E8F0] bg-[#F8F9FA] px-4 py-2 pr-10 text-sm text-[#0F172A] transition-all duration-300 ease-[cubic-bezier(0.43,0.13,0.23,0.96)] shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] hover:bg-white hover:border-[#CBD5E1] focus:outline-none focus:border-[#6366F1] focus:ring-4 focus:ring-[#6366F1]/10 focus:bg-white focus:shadow-none disabled:opacity-50 disabled:bg-brand-light disabled:cursor-not-allowed disabled:hover:border-[#E2E8F0]"
                 >
                   {itemsPerPageOptions.map((opt) => (
                     <option key={opt} value={opt.toString()}>
@@ -94,14 +94,14 @@ export default function PosAdminPagination({
         <button
           onClick={() => onPageChange(1)}
           disabled={currentPage === 1}
-          className="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F172A]/50 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-transparent text-slate-400 hover:bg-slate-100 hover:text-[#0F172A] border border-transparent h-8 w-8 p-0 text-xs"
+          className="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F172A]/50 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-transparent text-brand-muted/70 hover:bg-brand-light hover:text-[#0F172A] border border-transparent h-8 w-8 p-0 text-xs"
         >
           <ChevronsLeft className="h-4 w-4" />
         </button>
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F172A]/50 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-transparent text-slate-400 hover:bg-slate-100 hover:text-[#0F172A] border border-transparent h-8 w-8 p-0 text-xs"
+          className="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F172A]/50 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-transparent text-brand-muted/70 hover:bg-brand-light hover:text-[#0F172A] border border-transparent h-8 w-8 p-0 text-xs"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
@@ -113,7 +113,7 @@ export default function PosAdminPagination({
                 key={`ellipsis-${i}`}
                 className="w-8 flex items-center justify-center"
               >
-                <MoreHorizontal className="h-4 w-4 text-slate-400" />
+                <MoreHorizontal className="h-4 w-4 text-brand-muted/70" />
               </div>
             ) : (
               <button
@@ -121,8 +121,8 @@ export default function PosAdminPagination({
                 onClick={() => onPageChange(page)}
                 className={`inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F172A]/50 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none h-8 w-8 p-0 text-xs rounded-lg ${
                   currentPage === page
-                    ? "bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white hover:from-[#4F46E5] hover:to-violet-600 shadow-[0_4px_14px_0_rgba(99,102,241,0.39)] hover:shadow-[0_6px_20px_rgba(99,102,241,0.23)] border-transparent"
-                    : "bg-transparent text-[#4B5563] hover:bg-slate-100 hover:text-[#0F172A] border border-transparent"
+                    ? "bg-brand-primary text-white hover:bg-brand-primaryDark shadow-sm border-transparent"
+                    : "bg-transparent text-[#4B5563] hover:bg-brand-light hover:text-[#0F172A] border border-transparent"
                 }`}
               >
                 {page}
@@ -134,14 +134,14 @@ export default function PosAdminPagination({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage >= totalPages || totalPages === 0}
-          className="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F172A]/50 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-transparent text-slate-400 hover:bg-slate-100 hover:text-[#0F172A] border border-transparent h-8 w-8 p-0 text-xs"
+          className="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F172A]/50 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-transparent text-brand-muted/70 hover:bg-brand-light hover:text-[#0F172A] border border-transparent h-8 w-8 p-0 text-xs"
         >
           <ChevronRight className="h-4 w-4" />
         </button>
         <button
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage >= totalPages || totalPages === 0}
-          className="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F172A]/50 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-transparent text-slate-400 hover:bg-slate-100 hover:text-[#0F172A] border border-transparent h-8 w-8 p-0 text-xs"
+          className="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F172A]/50 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-transparent text-brand-muted/70 hover:bg-brand-light hover:text-[#0F172A] border border-transparent h-8 w-8 p-0 text-xs"
         >
           <ChevronsRight className="h-4 w-4" />
         </button>

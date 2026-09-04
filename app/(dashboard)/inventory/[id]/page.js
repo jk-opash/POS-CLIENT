@@ -55,7 +55,7 @@ function EditItemModal({ item, onClose, onSave }) {
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="text-xs text-slate-500 block mb-1">
+            <label className="text-xs text-brand-muted block mb-1">
               Item Name *
             </label>
             <input
@@ -66,7 +66,7 @@ function EditItemModal({ item, onClose, onSave }) {
             />
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">SKU *</label>
+            <label className="text-xs text-brand-muted block mb-1">SKU *</label>
             <input
               className="input"
               value={form.sku}
@@ -75,7 +75,7 @@ function EditItemModal({ item, onClose, onSave }) {
             />
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">
+            <label className="text-xs text-brand-muted block mb-1">
               Category
             </label>
             <input
@@ -85,7 +85,7 @@ function EditItemModal({ item, onClose, onSave }) {
             />
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">Unit</label>
+            <label className="text-xs text-brand-muted block mb-1">Unit</label>
             <select
               className="input select"
               value={form.unit}
@@ -100,7 +100,7 @@ function EditItemModal({ item, onClose, onSave }) {
             </select>
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">
+            <label className="text-xs text-brand-muted block mb-1">
               Price (₹)
             </label>
             <input
@@ -112,7 +112,7 @@ function EditItemModal({ item, onClose, onSave }) {
             />
           </div>
           <div>
-            <label className="text-xs text-slate-500 block mb-1">
+            <label className="text-xs text-brand-muted block mb-1">
               Reorder Level
             </label>
             <input
@@ -124,7 +124,7 @@ function EditItemModal({ item, onClose, onSave }) {
             />
           </div>
         </div>
-        <div className="flex gap-3 justify-end mt-4 pt-4 border-t border-slate-100">
+        <div className="flex gap-3 justify-end mt-4 pt-4 border-t border-brand-border">
           <Button type="button" variant="surface" onClick={onClose}>
             Cancel
           </Button>
@@ -140,13 +140,13 @@ function EditItemModal({ item, onClose, onSave }) {
 // Info Item Component
 function InfoItem({ icon: Icon, label, value }) {
   return (
-    <div className="flex gap-3 items-start p-4 rounded-lg bg-slate-50/50 border border-slate-100">
-      <div className="p-2 bg-white rounded border border-slate-200 text-slate-400 mt-0.5">
+    <div className="flex gap-3 items-start p-4 rounded-lg bg-brand-bg/50 border border-brand-border">
+      <div className="p-2 bg-white rounded border border-brand-border text-brand-muted/70 mt-0.5">
         <Icon className="w-4 h-4" />
       </div>
       <div>
-        <p className="text-xs font-medium text-slate-500 mb-0.5">{label}</p>
-        <p className="text-sm font-semibold text-slate-800">
+        <p className="text-xs font-medium text-brand-muted mb-0.5">{label}</p>
+        <p className="text-sm font-semibold text-brand-dark">
           {value || "Not specified"}
         </p>
       </div>
@@ -259,11 +259,11 @@ export default function ItemDetailsPage() {
 
   if (error && !item) {
     return (
-      <div className="flex h-screen bg-slate-50 items-center justify-center font-sans">
+      <div className="flex h-screen bg-brand-bg items-center justify-center font-sans">
         <div className="text-center space-y-4">
-          <AlertCircle className="w-12 h-12 text-red-500 mx-auto" />
-          <h2 className="text-lg font-bold text-slate-800">Item Not Found</h2>
-          <p className="text-slate-500 text-sm max-w-sm">{error}</p>
+          <AlertCircle className="w-12 h-12 text-brand-danger mx-auto" />
+          <h2 className="text-lg font-bold text-brand-dark">Item Not Found</h2>
+          <p className="text-brand-muted text-sm max-w-sm">{error}</p>
           <Button variant="primary" onClick={() => router.push("/inventory")}>
             Back to Inventory
           </Button>
@@ -275,7 +275,7 @@ export default function ItemDetailsPage() {
   if (!item) return null;
 
   return (
-    <div className="flex flex-col bg-slate-50 font-sans">
+    <div className="flex flex-col bg-brand-bg font-sans">
       <div className="flex-1 flex flex-col min-w-0">
         <main className="flex-1 px-6 py-6">
           <div className="space-y-6 pb-12">
@@ -283,7 +283,7 @@ export default function ItemDetailsPage() {
             <div>
               <button
                 onClick={() => router.push("/inventory")}
-                className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
+                className="inline-flex items-center text-sm font-medium text-brand-muted hover:text-brand-dark transition-colors"
               >
                 <ChevronLeft className="mr-1 h-4 w-4" />
                 Back to Inventory
@@ -294,7 +294,7 @@ export default function ItemDetailsPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-3">
-                  <h1 className="text-2xl font-bold text-slate-900">
+                  <h1 className="text-2xl font-bold text-brand-dark">
                     {item.name}
                   </h1>
                   <Badge
@@ -312,10 +312,10 @@ export default function ItemDetailsPage() {
                     {item.status || "Normal"}
                   </Badge>
                 </div>
-                <p className="mt-1 flex items-center gap-2 text-sm text-slate-500 capitalize">
+                <p className="mt-1 flex items-center gap-2 text-sm text-brand-muted capitalize">
                   <Package className="h-4 w-4" />{" "}
                   {item.category || "Uncategorized"}
-                  <span className="text-slate-300">|</span>
+                  <span className="text-brand-muted/70">|</span>
                   Created{" "}
                   {item.created_at
                     ? new Date(item.created_at).toLocaleDateString()
@@ -327,7 +327,7 @@ export default function ItemDetailsPage() {
                 <Button
                   variant="danger"
                   onClick={handleDeleteItem}
-                  className="bg-red-50 text-red-600 hover:bg-red-100 border-none shadow-none"
+                  className="bg-brand-dangerLight text-brand-danger hover:bg-brand-danger/20 border-none shadow-none"
                 >
                   Delete Item
                 </Button>
@@ -342,7 +342,7 @@ export default function ItemDetailsPage() {
             </div>
 
             {/* Tabs */}
-            <div className="border-b border-slate-200">
+            <div className="border-b border-brand-border">
               <nav
                 className="-mb-px flex space-x-6 overflow-x-auto"
                 aria-label="Tabs"
@@ -357,8 +357,8 @@ export default function ItemDetailsPage() {
                     className={cn(
                       "whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors",
                       activeTab === tab.id
-                        ? "border-slate-900 text-slate-900"
-                        : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-900",
+                        ? "border-brand-dark text-brand-dark"
+                        : "border-transparent text-brand-muted hover:border-brand-border hover:text-brand-dark",
                     )}
                   >
                     {tab.label}
@@ -373,7 +373,7 @@ export default function ItemDetailsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-300 ease-spring">
                   <div className="space-y-6">
                     <Card>
-                      <h3 className="text-sm font-bold text-slate-900 mb-4">
+                      <h3 className="text-sm font-bold text-brand-dark mb-4">
                         Master Information
                       </h3>
                       <div className="space-y-3">
@@ -398,7 +398,7 @@ export default function ItemDetailsPage() {
 
                   <div className="space-y-6">
                     <Card>
-                      <h3 className="text-sm font-bold text-slate-900 mb-4">
+                      <h3 className="text-sm font-bold text-brand-dark mb-4">
                         Pricing & Inventory Levels
                       </h3>
                       <div className="space-y-3">
@@ -413,17 +413,17 @@ export default function ItemDetailsPage() {
                           value={`${item.reorder_level || item.reorderLevel || 0} ${item.unit || "pcs"}`}
                         />
 
-                        <div className="flex gap-3 items-start p-4 rounded-lg bg-blue-50/50 border border-blue-100 mt-4">
-                          <div className="p-2 bg-white rounded border border-blue-200 text-blue-600 mt-0.5">
+                        <div className="flex gap-3 items-start p-4 rounded-lg bg-brand-primaryLight border border-brand-primary/20 mt-4">
+                          <div className="p-2 bg-white rounded border border-brand-primary/30 text-brand-primary mt-0.5">
                             <TrendingUp className="w-4 h-4" />
                           </div>
                           <div>
-                            <p className="text-xs font-bold text-blue-600/80 mb-0.5 uppercase tracking-wider">
+                            <p className="text-xs font-bold text-brand-primary mb-0.5 uppercase tracking-wider">
                               Current Stock
                             </p>
-                            <p className="text-2xl font-black text-slate-900">
+                            <p className="text-2xl font-black text-brand-dark">
                               {item.in_stock || item.currentStock || 0}{" "}
-                              <span className="text-sm font-semibold text-slate-500">
+                              <span className="text-sm font-semibold text-brand-muted">
                                 {item.unit || "pcs"}
                               </span>
                             </p>
@@ -441,14 +441,14 @@ export default function ItemDetailsPage() {
                     <div className="overflow-x-auto">
                       <table className="w-full text-left text-sm border-collapse">
                         <thead>
-                          <tr className="border-b border-slate-100 bg-slate-50/50 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                          <tr className="border-b border-brand-border bg-brand-bg/50 text-xs font-bold text-brand-muted uppercase tracking-wider">
                             <th className="px-6 py-4">Date & Time</th>
                             <th className="px-6 py-4">Type</th>
                             <th className="px-6 py-4 text-right">Qty Change</th>
                             <th className="px-6 py-4">Reason</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100">
+                        <tbody className="divide-y divide-brand-border">
                           {loadingLedger ? (
                             <tr>
                               <td
@@ -464,7 +464,7 @@ export default function ItemDetailsPage() {
                             <tr>
                               <td
                                 colSpan={4}
-                                className="px-6 py-12 text-center text-slate-500"
+                                className="px-6 py-12 text-center text-brand-muted"
                               >
                                 No stock movements recorded yet.
                               </td>
@@ -476,15 +476,15 @@ export default function ItemDetailsPage() {
                               return (
                                 <tr
                                   key={entry.id}
-                                  className="hover:bg-slate-50/50 transition-colors"
+                                  className="hover:bg-brand-bg/50 transition-colors"
                                 >
                                   <td className="px-6 py-4">
-                                    <div className="font-medium text-slate-900">
+                                    <div className="font-medium text-brand-dark">
                                       {new Date(
                                         entry.created_at,
                                       ).toLocaleDateString()}
                                     </div>
-                                    <div className="text-xs text-slate-500">
+                                    <div className="text-xs text-brand-muted">
                                       {new Date(
                                         entry.created_at,
                                       ).toLocaleTimeString()}
@@ -508,8 +508,8 @@ export default function ItemDetailsPage() {
                                       className={cn(
                                         "inline-flex items-center gap-1 font-bold",
                                         isPositive
-                                          ? "text-emerald-600"
-                                          : "text-red-600",
+                                          ? "text-brand-success"
+                                          : "text-brand-danger",
                                       )}
                                     >
                                       {isPositive ? (
@@ -520,7 +520,7 @@ export default function ItemDetailsPage() {
                                       {Math.abs(entry.quantity_change)}
                                     </div>
                                   </td>
-                                  <td className="px-6 py-4 text-slate-600">
+                                  <td className="px-6 py-4 text-brand-dark">
                                     {entry.reason || "-"}
                                   </td>
                                 </tr>

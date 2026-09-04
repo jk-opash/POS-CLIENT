@@ -42,7 +42,7 @@ export function Modal({ isOpen, onClose, title, description, children, className
       {/* Backdrop */}
       <div
         ref={overlayRef}
-        className="absolute inset-0 bg-[var(--color-brand-dark)]/40 backdrop-blur-sm transition-opacity"
+        className="absolute inset-0 bg-brand-dark/40 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
       
@@ -55,12 +55,12 @@ export function Modal({ isOpen, onClose, title, description, children, className
       >
         <div className="flex items-start justify-between p-6 pb-4 border-b border-white/20 bg-white/40 backdrop-blur-md">
           <div>
-            {title && <h2 className="text-xl font-bold text-[var(--color-brand-dark)]">{title}</h2>}
-            {description && <p className="mt-1 text-sm text-[var(--color-brand-muted)]">{description}</p>}
+            {title && <h2 className="text-xl font-bold text-brand-dark">{title}</h2>}
+            {description && <p className="mt-1 text-sm text-brand-muted">{description}</p>}
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-[var(--color-brand-placeholder)] transition-colors hover:bg-white hover:text-[var(--color-brand-dark)] shadow-sm"
+            className="rounded-lg p-1.5 text-brand-placeholder transition-colors hover:bg-white hover:text-brand-dark shadow-sm"
           >
             <X className="h-5 w-5" />
           </button>

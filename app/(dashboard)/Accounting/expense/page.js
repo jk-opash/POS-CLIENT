@@ -110,39 +110,39 @@ export default function ExpensePage() {
   const getBadgeStyle = (type) => {
     switch (type) {
       case "Expense":
-        return "bg-slate-100 text-slate-700 border border-slate-200";
+        return "bg-brand-light text-brand-dark border border-brand-border";
       case "Utility":
-        return "bg-amber-50 text-amber-700 border border-amber-200";
+        return "bg-brand-warningLight text-brand-warning border border-brand-warningLight";
       case "Withdrawal":
-        return "bg-red-50 text-red-700 border border-red-200";
+        return "bg-brand-dangerLight text-brand-danger border border-brand-dangerLight";
       default:
-        return "bg-slate-100 text-slate-700 border border-slate-200";
+        return "bg-brand-light text-brand-dark border border-brand-border";
     }
   };
 
   return (
-    <div className="flex flex-col bg-slate-50 font-sans min-h-screen">
+    <div className="flex flex-col bg-brand-bg font-sans min-h-screen">
       <div className="flex-1 flex flex-col overflow-hidden relative min-w-0">
         <main className="flex-1 p-4 md:p-6 space-y-4 md:space-y-5">
           {/* Header & Global Actions */}
           <div className="flex flex-col gap-4 sm:flex-row justify-between items-start sm:items-center">
             <div>
-              <h2 className="text-2xl font-bold text-slate-900">
+              <h2 className="text-2xl font-bold text-brand-dark">
                 Accounting & Expenses
               </h2>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-brand-muted">
                 Manage all expenses, bills, and cash withdrawals.
               </p>
             </div>
 
             <div className="flex items-center gap-3 flex-wrap">
               {/* Branch Selector */}
-              <div className="relative flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 shadow-sm">
-                <Building2 size={14} className="text-slate-500 shrink-0" />
+              <div className="relative flex items-center gap-2 bg-white border border-brand-border rounded-xl px-3 py-2 shadow-sm">
+                <Building2 size={14} className="text-brand-muted shrink-0" />
                 <select
                   value={branchFilter}
                   onChange={(e) => setBranchFilter(e.target.value)}
-                  className="text-sm font-semibold text-slate-700 outline-none bg-transparent cursor-pointer pr-2"
+                  className="text-sm font-semibold text-brand-dark outline-none bg-transparent cursor-pointer pr-2"
                 >
                   {branches?.map((b) => (
                     <option key={b.id} value={b.id}>
@@ -155,7 +155,7 @@ export default function ExpensePage() {
               <button
                 onClick={() => setIsExpenseModalOpen(true)}
                 disabled={!branchFilter}
-                className="px-4 py-2 text-xs font-bold rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2 disabled:opacity-50"
+                className="px-4 py-2 text-xs font-bold rounded-xl bg-brand-primary text-white hover:bg-brand-dark transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2 disabled:opacity-50"
               >
                 <Wallet size={16} /> Add Expense
               </button>
@@ -163,7 +163,7 @@ export default function ExpensePage() {
               <button
                 onClick={() => setIsUtilityModalOpen(true)}
                 disabled={!branchFilter}
-                className="px-4 py-2 text-xs font-bold rounded-xl bg-amber-500 text-white hover:bg-amber-600 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2 disabled:opacity-50"
+                className="px-4 py-2 text-xs font-bold rounded-xl bg-brand-warning text-white hover:bg-brand-warning transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2 disabled:opacity-50"
               >
                 <Zap size={16} /> Add Utility
               </button>
@@ -171,7 +171,7 @@ export default function ExpensePage() {
               <button
                 onClick={() => setIsWithdrawalModalOpen(true)}
                 disabled={!branchFilter}
-                className="px-4 py-2 text-xs font-bold rounded-xl bg-red-500 text-white hover:bg-red-600 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2 disabled:opacity-50"
+                className="px-4 py-2 text-xs font-bold rounded-xl bg-brand-danger text-white hover:bg-brand-danger transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2 disabled:opacity-50"
               >
                 <ArrowDownToLine size={16} /> Withdrawal
               </button>
@@ -179,7 +179,7 @@ export default function ExpensePage() {
           </div>
 
           {/* Pos-admin Tabs */}
-          <div className="border-b border-slate-200 bg-white/50 flex flex-row gap-2 backdrop-blur-md rounded-t-2xl px-2">
+          <div className="border-b border-brand-border bg-white/50 flex flex-row gap-2 backdrop-blur-md rounded-t-2xl px-2">
             <nav className="-mb-px flex space-x-6 overflow-x-auto">
               {tabs.map((tab) => (
                 <button
@@ -187,8 +187,8 @@ export default function ExpensePage() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`whitespace-nowrap py-4 px-2 border-b-2 font-bold text-sm transition-all duration-300 ease-spring ${
                     activeTab === tab.id
-                      ? "border-indigo-500 text-indigo-600"
-                      : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
+                      ? "border-brand-primary text-brand-primary"
+                      : "border-transparent text-brand-muted hover:text-brand-dark hover:border-brand-border"
                   }`}
                 >
                   {tab.label}
@@ -199,11 +199,11 @@ export default function ExpensePage() {
 
           {/* TABLE CONTENT */}
           <div className="space-y-4 md:space-y-5">
-            <div className="rounded-2xl border border-slate-200/80 bg-white/70 backdrop-blur-lg shadow-sm overflow-hidden">
+            <div className="rounded-2xl border border-brand-border/80 bg-white/70 backdrop-blur-lg shadow-sm overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-black text-slate-400 uppercase tracking-wider">
+                    <tr className="border-b border-brand-border bg-brand-bg/80 text-[11px] font-black text-brand-muted/70 uppercase tracking-wider">
                       <th className="py-3.5 px-6">Type</th>
                       <th className="py-3.5 px-4">Category / Details</th>
                       <th className="py-3.5 px-4">Amount</th>
@@ -213,7 +213,7 @@ export default function ExpensePage() {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 text-xs">
+                  <tbody className="divide-y divide-brand-border text-xs">
                     {loading ? (
                       <tr>
                         <td
@@ -229,16 +229,16 @@ export default function ExpensePage() {
                       <tr>
                         <td
                           colSpan={5}
-                          className="py-12 text-center text-slate-400"
+                          className="py-12 text-center text-brand-muted/70"
                         >
                           <FileText
                             size={36}
-                            className="mx-auto mb-2 text-slate-300"
+                            className="mx-auto mb-2 text-brand-muted/70"
                           />
-                          <p className="font-bold text-slate-600">
+                          <p className="font-bold text-brand-dark">
                             No Transactions Yet
                           </p>
-                          <p className="text-xs text-slate-400 mt-0.5">
+                          <p className="text-xs text-brand-muted/70 mt-0.5">
                             Keep track of your business spending by adding a
                             transaction.
                           </p>
@@ -248,7 +248,7 @@ export default function ExpensePage() {
                       combinedData.map((item) => (
                         <tr
                           key={`${item._type}-${item.id}`}
-                          className="hover:bg-slate-50/60 transition-colors duration-150"
+                          className="hover:bg-brand-bg/60 transition-colors duration-150"
                         >
                           <td className="py-3 px-6">
                             <span
@@ -257,28 +257,28 @@ export default function ExpensePage() {
                               {item._type}
                             </span>
                           </td>
-                          <td className="py-3 px-4 font-medium text-slate-900">
+                          <td className="py-3 px-4 font-medium text-brand-dark">
                             {item._type === "Expense"
                               ? item.category
                               : item._type === "Utility"
                                 ? `${item.utility_type} - ${item.vendor}`
                                 : item.description || "Cash Withdrawal"}
                           </td>
-                          <td className="py-3 px-4 font-bold text-slate-900 text-sm">
+                          <td className="py-3 px-4 font-bold text-brand-dark text-sm">
                             ₹
                             {Number(item.amount).toLocaleString(undefined, {
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 2,
                             })}
                           </td>
-                          <td className="py-3 px-4 text-slate-500">
+                          <td className="py-3 px-4 text-brand-muted">
                             {item._date.toLocaleDateString("en-US", {
                               month: "short",
                               day: "numeric",
                               year: "numeric",
                             })}
                           </td>
-                          <td className="py-3 px-6 text-right text-slate-600">
+                          <td className="py-3 px-6 text-right text-brand-dark">
                             {item._type === "Withdrawal" && item.team_member
                               ? `${item.team_member.first_name} ${item.team_member.last_name || ""}`
                               : "System/Admin"}

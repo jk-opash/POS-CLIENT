@@ -9,12 +9,12 @@ export default function ItemDetailModal({ item, onClose, onAdjust }) {
   if (!item) return null;
   const stockColor =
     item.currentStock <= 0
-      ? "text-red-600"
+      ? "text-brand-danger"
       : item.currentStock <= item.reorderLevel * 0.5
         ? "text-orange-600"
         : item.currentStock <= item.reorderLevel
-          ? "text-amber-600"
-          : "text-emerald-600";
+          ? "text-brand-warning"
+          : "text-brand-success";
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <motion.div
@@ -22,11 +22,11 @@ export default function ItemDetailModal({ item, onClose, onAdjust }) {
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden"
       >
-        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
-          <h2 className="text-lg font-black text-slate-800">Item Details</h2>
+        <div className="flex items-center justify-between px-6 py-5 border-b border-brand-border">
+          <h2 className="text-lg font-black text-brand-dark">Item Details</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-slate-100 rounded-xl text-slate-400 transition-colors"
+            className="p-2 hover:bg-brand-light rounded-xl text-brand-muted/70 transition-colors"
           >
             <X size={20} />
           </button>
@@ -41,10 +41,10 @@ export default function ItemDetailModal({ item, onClose, onAdjust }) {
           )}
           <div className="flex items-start justify-between">
             <div>
-              <div className="text-xl font-black text-slate-800">
+              <div className="text-xl font-black text-brand-dark">
                 {item.name}
               </div>
-              <div className="text-xs font-mono text-slate-400 mt-0.5">
+              <div className="text-xs font-mono text-brand-muted/70 mt-0.5">
                 {item.sku}
               </div>
             </div>
@@ -70,11 +70,11 @@ export default function ItemDetailModal({ item, onClose, onAdjust }) {
               ["Reserved", item.reserved || 0],
               ["Last Counted", item.lastCounted],
             ].map(([label, value], i) => (
-              <div key={i} className="bg-slate-50 rounded-xl p-3">
-                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">
+              <div key={i} className="bg-brand-bg rounded-xl p-3">
+                <div className="text-[10px] font-bold text-brand-muted/70 uppercase tracking-wider mb-0.5">
                   {label}
                 </div>
-                <div className="text-sm font-bold text-slate-800">{value}</div>
+                <div className="text-sm font-bold text-brand-dark">{value}</div>
               </div>
             ))}
           </div>
@@ -82,10 +82,10 @@ export default function ItemDetailModal({ item, onClose, onAdjust }) {
             <StockBar current={item.currentStock} reorder={item.reorderLevel} />
           </div>
         </div>
-        <div className="flex gap-3 px-6 py-4 border-t border-slate-100">
+        <div className="flex gap-3 px-6 py-4 border-t border-brand-border">
           <button
             onClick={onClose}
-            className="flex-1 py-2.5 border border-slate-200 text-slate-700 font-bold rounded-xl text-sm hover:bg-slate-50 transition-colors"
+            className="flex-1 py-2.5 border border-brand-border text-brand-dark font-bold rounded-xl text-sm hover:bg-brand-bg transition-colors"
           >
             Close
           </button>
@@ -94,7 +94,7 @@ export default function ItemDetailModal({ item, onClose, onAdjust }) {
               onClose();
               onAdjust(item);
             }}
-            className="flex-1 py-2.5 bg-slate-800 text-white font-bold rounded-xl text-sm hover:bg-slate-700 transition-colors"
+            className="flex-1 py-2.5 bg-brand-dark text-white font-bold rounded-xl text-sm hover:bg-brand-dark/90 transition-colors"
           >
             Adjust Stock
           </button>

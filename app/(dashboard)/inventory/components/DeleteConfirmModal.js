@@ -11,25 +11,25 @@ export default function DeleteConfirmModal({ item, onConfirm, onClose }) {
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden p-6 text-center"
       >
-        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Trash2 size={28} className="text-red-500" />
+        <div className="w-16 h-16 bg-brand-dangerLight rounded-full flex items-center justify-center mx-auto mb-4">
+          <Trash2 size={28} className="text-brand-danger" />
         </div>
-        <h2 className="text-xl font-black text-slate-800 mb-2">Delete Item?</h2>
-        <p className="text-slate-500 text-sm mb-6">
+        <h2 className="text-xl font-black text-brand-dark mb-2">Delete Item?</h2>
+        <p className="text-brand-muted text-sm mb-6">
           Are you sure you want to delete{" "}
-          <strong className="text-slate-800">{item.name}</strong>? This action
+          <strong className="text-brand-dark">{item.name}</strong>? This action
           cannot be undone.
         </p>
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 py-2.5 border border-slate-200 text-slate-700 font-bold rounded-xl text-sm hover:bg-slate-50 transition-colors"
+            className="flex-1 py-2.5 border border-brand-border text-brand-dark font-bold rounded-xl text-sm hover:bg-brand-bg transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            className="flex-1 py-2.5 bg-red-500 text-white font-bold rounded-xl text-sm hover:bg-red-600 transition-colors"
+            className="flex-1 py-2.5 bg-brand-danger text-white font-bold rounded-xl text-sm hover:bg-brand-danger/90 transition-colors"
           >
             Delete
           </button>

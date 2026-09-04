@@ -22,10 +22,10 @@ export default function TaxesWidget() {
         <CardTitle>Taxes</CardTitle>
       </CardHeader>
       <div className="text-center mb-6">
-        <span className="text-sm text-slate-500 font-medium">
+        <span className="text-sm text-brand-muted font-medium">
           Total Taxes:{" "}
         </span>
-        <span className="text-xl text-slate-800 font-bold ml-1">
+        <span className="text-xl text-brand-dark font-bold ml-1">
           ₹ {taxes.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
         </span>
       </div>
@@ -37,26 +37,26 @@ export default function TaxesWidget() {
           >
             <defs>
               <linearGradient id="colorTax" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
+                <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid
               strokeDasharray="3 3"
               vertical={false}
-              stroke="#e2e8f0"
+              stroke="#E2E8F0"
             />
             <XAxis
               dataKey="date"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#64748b", fontSize: 12, fontWeight: 500 }}
+              tick={{ fill: "#4B5563", fontSize: 12, fontWeight: 500 }}
               dy={10}
             />
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#64748b", fontSize: 12, fontWeight: 500 }}
+              tick={{ fill: "#4B5563", fontSize: 12, fontWeight: 500 }}
               tickFormatter={(value) => `₹${(value / 1000).toFixed(0)}k`}
               dx={-10}
             />
@@ -73,12 +73,12 @@ export default function TaxesWidget() {
                       <div className="flex flex-col gap-2">
                         <div className="flex items-center justify-between gap-6">
                           <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-[#8b5cf6]"></div>
+                            <div className="w-2 h-2 rounded-full bg-[#8B5CF6]"></div>
                             <span className="text-sm font-semibold text-brand-dark">
                               Tax
                             </span>
                           </div>
-                          <span className="font-bold text-[#8b5cf6]">
+                          <span className="font-bold text-[#8B5CF6]">
                             ₹
                             {val.toLocaleString(undefined, {
                               maximumFractionDigits: 0,
@@ -95,7 +95,7 @@ export default function TaxesWidget() {
             <Area
               type="monotone"
               dataKey="tax"
-              stroke="#8b5cf6"
+              stroke="#8B5CF6"
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#colorTax)"

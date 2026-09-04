@@ -127,39 +127,39 @@ export default function PaymentsPage() {
   const getBadgeStyle = (type) => {
     switch (type) {
       case "Vendor Payout":
-        return "bg-amber-50 text-amber-700 border border-amber-200";
+        return "bg-brand-warningLight text-brand-warning border border-brand-warningLight";
       case "Accounts Receivable":
-        return "bg-indigo-50 text-indigo-700 border border-indigo-200";
+        return "bg-brand-primary/10 text-brand-primary border border-brand-primary/20";
       case "Bank Deposit":
-        return "bg-green-50 text-green-700 border border-green-200";
+        return "bg-brand-successLight text-brand-success border border-brand-successLight";
       default:
-        return "bg-slate-100 text-slate-700 border border-slate-200";
+        return "bg-brand-light text-brand-dark border border-brand-border";
     }
   };
 
   return (
-    <div className="flex flex-col bg-slate-50 font-sans min-h-screen">
+    <div className="flex flex-col bg-brand-bg font-sans min-h-screen">
       <div className="flex-1 flex flex-col overflow-hidden relative min-w-0">
         <main className="flex-1 p-4 md:p-6 space-y-4 md:space-y-5">
           {/* Header & Global Actions */}
           <div className="flex flex-col gap-4 sm:flex-row justify-between items-start sm:items-center">
             <div>
-              <h2 className="text-2xl font-bold text-slate-900">
+              <h2 className="text-2xl font-bold text-brand-dark">
                 Payments Ledger
               </h2>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-brand-muted">
                 Track vendor payouts, customer tabs, and bank deposits.
               </p>
             </div>
 
             <div className="flex items-center gap-3 flex-wrap">
               {/* Branch Selector */}
-              <div className="relative flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 shadow-sm">
-                <Building2 size={14} className="text-slate-500 shrink-0" />
+              <div className="relative flex items-center gap-2 bg-white border border-brand-border rounded-xl px-3 py-2 shadow-sm">
+                <Building2 size={14} className="text-brand-muted shrink-0" />
                 <select
                   value={branchFilter}
                   onChange={(e) => setBranchFilter(e.target.value)}
-                  className="text-sm font-semibold text-slate-700 outline-none bg-transparent cursor-pointer pr-2"
+                  className="text-sm font-semibold text-brand-dark outline-none bg-transparent cursor-pointer pr-2"
                 >
                   {branches?.map((b) => (
                     <option key={b.id} value={b.id}>
@@ -172,7 +172,7 @@ export default function PaymentsPage() {
           </div>
 
           {/* Pos-admin Tabs */}
-          <div className="border-b border-slate-200 bg-white/50 flex flex-row gap-2 backdrop-blur-md rounded-t-2xl px-2">
+          <div className="border-b border-brand-border bg-white/50 flex flex-row gap-2 backdrop-blur-md rounded-t-2xl px-2">
             <nav className="-mb-px flex space-x-6 overflow-x-auto">
               {tabs.map((tab) => (
                 <button
@@ -180,8 +180,8 @@ export default function PaymentsPage() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`whitespace-nowrap py-4 px-2 border-b-2 font-bold text-sm transition-all duration-300 ease-spring ${
                     activeTab === tab.id
-                      ? "border-indigo-500 text-indigo-600"
-                      : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
+                      ? "border-brand-primary text-brand-primary"
+                      : "border-transparent text-brand-muted hover:text-brand-dark hover:border-brand-border"
                   }`}
                 >
                   {tab.label}
@@ -192,11 +192,11 @@ export default function PaymentsPage() {
 
           {/* TABLE CONTENT */}
           <div className="space-y-4 md:space-y-5">
-            <div className="rounded-2xl border border-slate-200/80 bg-white/70 backdrop-blur-lg shadow-sm overflow-hidden">
+            <div className="rounded-2xl border border-brand-border/80 bg-white/70 backdrop-blur-lg shadow-sm overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-black text-slate-400 uppercase tracking-wider">
+                    <tr className="border-b border-brand-border bg-brand-bg/80 text-[11px] font-black text-brand-muted/70 uppercase tracking-wider">
                       <th className="py-3.5 px-6">Reference / ID</th>
                       <th className="py-3.5 px-4">Type</th>
                       <th className="py-3.5 px-4">Entity</th>
@@ -205,7 +205,7 @@ export default function PaymentsPage() {
                       <th className="py-3.5 px-6 text-right">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 text-xs">
+                  <tbody className="divide-y divide-brand-border text-xs">
                     {loading ? (
                       <tr>
                         <td colSpan={6} className="py-12 text-center">
@@ -216,15 +216,15 @@ export default function PaymentsPage() {
                       </tr>
                     ) : combinedData.length === 0 ? (
                       <tr>
-                        <td colSpan={6} className="py-12 text-center text-slate-400">
+                        <td colSpan={6} className="py-12 text-center text-brand-muted/70">
                           <CreditCard
                             size={36}
-                            className="mx-auto mb-2 text-slate-300"
+                            className="mx-auto mb-2 text-brand-muted/70"
                           />
-                          <p className="font-bold text-slate-600">
+                          <p className="font-bold text-brand-dark">
                             No Payments Found
                           </p>
-                          <p className="text-xs text-slate-400 mt-0.5">
+                          <p className="text-xs text-brand-muted/70 mt-0.5">
                             Once payouts or deposits are logged, they will appear here.
                           </p>
                         </td>
@@ -233,9 +233,9 @@ export default function PaymentsPage() {
                       combinedData.map((item) => (
                         <tr
                           key={item.id}
-                          className="hover:bg-slate-50/60 transition-colors duration-150"
+                          className="hover:bg-brand-bg/60 transition-colors duration-150"
                         >
-                          <td className="py-3 px-6 font-medium text-slate-900">
+                          <td className="py-3 px-6 font-medium text-brand-dark">
                             {item.reference_id}
                           </td>
                           <td className="py-3 px-4">
@@ -243,13 +243,13 @@ export default function PaymentsPage() {
                               {item.type}
                             </span>
                           </td>
-                          <td className="py-3 px-4 text-slate-700">
+                          <td className="py-3 px-4 text-brand-dark">
                             {item.entity_name}
                           </td>
-                          <td className="py-3 px-4 font-bold text-slate-900 text-sm">
+                          <td className="py-3 px-4 font-bold text-brand-dark text-sm">
                             ₹{Number(item.amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </td>
-                          <td className="py-3 px-4 text-slate-500">
+                          <td className="py-3 px-4 text-brand-muted">
                             {new Date(item.date).toLocaleDateString("en-US", {
                               month: "short",
                               day: "numeric",
@@ -258,11 +258,11 @@ export default function PaymentsPage() {
                           </td>
                           <td className="py-3 px-6 text-right">
                             {item.status === "Cleared" || item.status === "Completed" ? (
-                              <span className="inline-flex items-center gap-1 text-green-600 font-medium text-xs">
+                              <span className="inline-flex items-center gap-1 text-brand-success font-medium text-xs">
                                 <CheckCircle2 size={14} /> {item.status}
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 text-amber-600 font-medium text-xs">
+                              <span className="inline-flex items-center gap-1 text-brand-warning font-medium text-xs">
                                 <Clock size={14} /> {item.status || "Pending"}
                               </span>
                             )}

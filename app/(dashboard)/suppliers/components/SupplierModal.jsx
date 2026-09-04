@@ -100,7 +100,7 @@ export default function SupplierModal({ visible, supplier, onClose, onSave }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+          className="absolute inset-0 bg-brand-dark/40 backdrop-blur-sm"
           onClick={onClose}
         />
         <motion.div
@@ -110,18 +110,18 @@ export default function SupplierModal({ visible, supplier, onClose, onSave }) {
           className="relative w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]"
         >
           {/* Header */}
-          <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+          <div className="px-6 py-4 border-b border-brand-border flex justify-between items-center bg-brand-bg/50">
             <div>
-              <h2 className="text-xl font-bold text-slate-800">
+              <h2 className="text-xl font-bold text-brand-dark">
                 {supplier ? "Edit Supplier" : "Add Supplier"}
               </h2>
-              <p className="text-sm text-slate-500 mt-1">
+              <p className="text-sm text-brand-muted mt-1">
                 {supplier ? "Update supplier details." : "Register a new vendor/supplier."}
               </p>
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-500"
+              className="p-2 hover:bg-brand-light rounded-full transition-colors text-brand-muted"
             >
               <X size={20} />
             </button>
@@ -133,49 +133,49 @@ export default function SupplierModal({ visible, supplier, onClose, onSave }) {
               
               {/* Basic Info */}
               <div className="space-y-4">
-                <h3 className="text-sm font-semibold text-slate-800 flex items-center gap-2 border-b pb-2">
-                  <Building2 size={16} className="text-indigo-500" />
+                <h3 className="text-sm font-semibold text-brand-dark flex items-center gap-2 border-b pb-2">
+                  <Building2 size={16} className="text-brand-primary" />
                   Company Details
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Company Name *</label>
+                    <label className="block text-sm font-medium text-brand-dark mb-1">Company Name *</label>
                     <input
                       type="text"
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value } )}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm transition-all"
+                      className="w-full px-3 py-2 border border-brand-border rounded-xl focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none text-sm transition-all"
                       placeholder="e.g. Fresh Farms Co."
                     />
-          {errors.name && <span className="text-red-500 text-xs mt-1 block">{errors.name}</span>}
+          {errors.name && <span className="text-brand-danger text-xs mt-1 block">{errors.name}</span>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Legal Business Name</label>
+                    <label className="block text-sm font-medium text-brand-dark mb-1">Legal Business Name</label>
                     <input
                       type="text"
                       value={formData.business_name}
                       onChange={(e) => setFormData({ ...formData, business_name: e.target.value })}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm transition-all"
+                      className="w-full px-3 py-2 border border-brand-border rounded-xl focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none text-sm transition-all"
                       placeholder="e.g. Fresh Farms Pvt Ltd"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Category</label>
+                    <label className="block text-sm font-medium text-brand-dark mb-1">Category</label>
                     <input
                       type="text"
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm transition-all"
+                      className="w-full px-3 py-2 border border-brand-border rounded-xl focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none text-sm transition-all"
                       placeholder="e.g. Dairy, Meat, Packaging"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Status</label>
+                    <label className="block text-sm font-medium text-brand-dark mb-1">Status</label>
                     <select
                       value={formData.status}
                       onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm transition-all bg-white"
+                      className="w-full px-3 py-2 border border-brand-border rounded-xl focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none text-sm transition-all bg-white"
                     >
                       <option value="Active">Active</option>
                       <option value="Blocked">Blocked</option>
@@ -187,82 +187,82 @@ export default function SupplierModal({ visible, supplier, onClose, onSave }) {
 
               {/* Contact Info */}
               <div className="space-y-4">
-                <h3 className="text-sm font-semibold text-slate-800 flex items-center gap-2 border-b pb-2">
-                  <User size={16} className="text-indigo-500" />
+                <h3 className="text-sm font-semibold text-brand-dark flex items-center gap-2 border-b pb-2">
+                  <User size={16} className="text-brand-primary" />
                   Contact Information
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Contact Person</label>
+                    <label className="block text-sm font-medium text-brand-dark mb-1">Contact Person</label>
                     <input
                       type="text"
                       value={formData.contact_person}
                       onChange={(e) => setFormData({ ...formData, contact_person: e.target.value })}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm transition-all"
+                      className="w-full px-3 py-2 border border-brand-border rounded-xl focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none text-sm transition-all"
                       placeholder="John Doe"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Mobile / Phone</label>
+                    <label className="block text-sm font-medium text-brand-dark mb-1">Mobile / Phone</label>
                     <input
                       type="text"
                       value={formData.contact_mobile}
                       onChange={(e) => setFormData({ ...formData, contact_mobile: e.target.value } )}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm transition-all"
+                      className="w-full px-3 py-2 border border-brand-border rounded-xl focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none text-sm transition-all"
                       placeholder="+91 9876543210"
                     />
-          {errors.contact_mobile && <span className="text-red-500 text-xs mt-1 block">{errors.contact_mobile}</span>}
+          {errors.contact_mobile && <span className="text-brand-danger text-xs mt-1 block">{errors.contact_mobile}</span>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                    <label className="block text-sm font-medium text-brand-dark mb-1">Email</label>
                     <input
                       type="email"
                       value={formData.contact_email}
                       onChange={(e) => setFormData({ ...formData, contact_email: e.target.value } )}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm transition-all"
+                      className="w-full px-3 py-2 border border-brand-border rounded-xl focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none text-sm transition-all"
                       placeholder="john@freshfarms.com"
                     />
-          {errors.contact_email && <span className="text-red-500 text-xs mt-1 block">{errors.contact_email}</span>}
+          {errors.contact_email && <span className="text-brand-danger text-xs mt-1 block">{errors.contact_email}</span>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Website</label>
+                    <label className="block text-sm font-medium text-brand-dark mb-1">Website</label>
                     <input
                       type="url"
                       value={formData.contact_website}
                       onChange={(e) => setFormData({ ...formData, contact_website: e.target.value } )}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm transition-all"
+                      className="w-full px-3 py-2 border border-brand-border rounded-xl focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none text-sm transition-all"
                       placeholder="https://freshfarms.com"
                     />
-          {errors.contact_website && <span className="text-red-500 text-xs mt-1 block">{errors.contact_website}</span>}
+          {errors.contact_website && <span className="text-brand-danger text-xs mt-1 block">{errors.contact_website}</span>}
                   </div>
                 </div>
               </div>
 
               {/* Tax & Address */}
               <div className="space-y-4">
-                <h3 className="text-sm font-semibold text-slate-800 flex items-center gap-2 border-b pb-2">
-                  <Landmark size={16} className="text-indigo-500" />
+                <h3 className="text-sm font-semibold text-brand-dark flex items-center gap-2 border-b pb-2">
+                  <Landmark size={16} className="text-brand-primary" />
                   Tax & Address
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">GST Number</label>
+                    <label className="block text-sm font-medium text-brand-dark mb-1">GST Number</label>
                     <input
                       type="text"
                       value={formData.tax_gst}
                       onChange={(e) => setFormData({ ...formData, tax_gst: e.target.value } )}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm transition-all uppercase"
+                      className="w-full px-3 py-2 border border-brand-border rounded-xl focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none text-sm transition-all uppercase"
                       placeholder="22AAAAA0000A1Z5"
                     />
-          {errors.tax_gst && <span className="text-red-500 text-xs mt-1 block">{errors.tax_gst}</span>}
+          {errors.tax_gst && <span className="text-brand-danger text-xs mt-1 block">{errors.tax_gst}</span>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">City</label>
+                    <label className="block text-sm font-medium text-brand-dark mb-1">City</label>
                     <input
                       type="text"
                       value={formData.address_city}
                       onChange={(e) => setFormData({ ...formData, address_city: e.target.value })}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm transition-all"
+                      className="w-full px-3 py-2 border border-brand-border rounded-xl focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none text-sm transition-all"
                       placeholder="Mumbai"
                     />
                   </div>
@@ -273,17 +273,17 @@ export default function SupplierModal({ visible, supplier, onClose, onSave }) {
           </div>
 
           {/* Footer */}
-          <div className="p-4 border-t border-slate-100 bg-slate-50 flex justify-end gap-3 shrink-0">
+          <div className="p-4 border-t border-brand-border bg-brand-bg flex justify-end gap-3 shrink-0">
             <button
               onClick={onClose}
-              className="px-5 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors shadow-sm"
+              className="px-5 py-2 text-sm font-medium text-brand-dark bg-white border border-brand-border rounded-xl hover:bg-brand-light transition-colors shadow-sm"
             >
               Cancel
             </button>
             <button
               type="submit"
               form="supplier-form"
-              className="px-5 py-2 text-sm font-medium text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm flex items-center gap-2"
+              className="px-5 py-2 text-sm font-medium text-white bg-brand-primary rounded-xl hover:bg-brand-primary/90 transition-colors shadow-sm flex items-center gap-2"
             >
               <Save size={16} />
               {supplier ? "Save Changes" : "Create Supplier"}

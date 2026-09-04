@@ -21,15 +21,15 @@ function formatPlanName(plan) {
 }
 
 function NavSectionTitle({ title }) {
-  return <p className="px-3 mt-5 mb-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest">{title}</p>;
+  return <p className="px-3 mt-5 mb-1 text-[10px] font-bold text-brand-muted uppercase tracking-widest">{title}</p>;
 }
 
 function SettingsNavLink({ label, icon, active, onClick, badge }) {
   return (
-    <button onClick={onClick} className={cn("w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-left group", active ? "bg-indigo-50 text-indigo-700" : "text-slate-500 hover:bg-slate-50 hover:text-slate-800")}>
-      <div className={cn("p-1.5 rounded-lg transition-colors flex items-center justify-center shrink-0", active ? "bg-indigo-600 text-white shadow-sm shadow-indigo-300" : "bg-slate-100 text-slate-400 group-hover:bg-slate-200")}>{icon}</div>
+    <button onClick={onClick} className={cn("w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-left group", active ? "bg-brand-light text-brand-primary" : "text-brand-muted hover:bg-brand-bg hover:text-brand-dark")}>
+      <div className={cn("p-1.5 rounded-lg transition-colors flex items-center justify-center shrink-0", active ? "bg-brand-primary text-white shadow-sm shadow-brand-primary/50" : "bg-brand-light text-brand-muted group-hover:bg-brand-border")}>{icon}</div>
       <span className="flex-1">{label}</span>
-      {badge && <span className="text-[10px] font-bold bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-md">{badge}</span>}
+      {badge && <span className="text-[10px] font-bold bg-brand-warningLight text-brand-warning px-1.5 py-0.5 rounded-md">{badge}</span>}
     </button>
   );
 }
@@ -37,14 +37,14 @@ function SettingsNavLink({ label, icon, active, onClick, badge }) {
 function Field({ label, value, icon, mono, full, badge }) {
   return (
     <div className={cn("flex flex-col gap-1.5", full && "col-span-2")}>
-      <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wider">
-        {icon && <span className="text-slate-300">{icon}</span>}{label}
+      <label className="flex items-center gap-1.5 text-xs font-semibold text-brand-muted uppercase tracking-wider">
+        {icon && <span className="text-brand-muted/70">{icon}</span>}{label}
       </label>
       {badge ? (
         <div className="flex items-center gap-2 min-h-[42px]">{badge}</div>
       ) : (
-        <div className={cn("text-sm font-medium text-slate-800 bg-slate-50 px-3.5 py-2.5 rounded-xl border border-slate-200 min-h-[42px] flex items-center", mono && "font-mono tracking-wider text-slate-700")}>
-          {value || <span className="text-slate-300 font-normal italic">Not provided</span>}
+        <div className={cn("text-sm font-medium text-brand-dark bg-brand-bg px-3.5 py-2.5 rounded-xl border border-brand-border min-h-[42px] flex items-center", mono && "font-mono tracking-wider text-brand-dark")}>
+          {value || <span className="text-brand-muted/70 font-normal italic">Not provided</span>}
         </div>
       )}
     </div>
@@ -53,11 +53,11 @@ function Field({ label, value, icon, mono, full, badge }) {
 
 function SectionHeader({ title, description, icon }) {
   return (
-    <div className="flex items-start gap-3 pb-5 border-b border-slate-100 mb-6">
-      {icon && <div className="p-2 bg-indigo-50 rounded-xl text-indigo-500 shrink-0 mt-0.5">{icon}</div>}
+    <div className="flex items-start gap-3 pb-5 border-b border-brand-border mb-6">
+      {icon && <div className="p-2 bg-brand-light rounded-xl text-brand-primary shrink-0 mt-0.5">{icon}</div>}
       <div>
-        <h3 className="text-base font-bold text-slate-800">{title}</h3>
-        {description && <p className="text-sm text-slate-500 mt-0.5">{description}</p>}
+        <h3 className="text-base font-bold text-brand-dark">{title}</h3>
+        {description && <p className="text-sm text-brand-muted mt-0.5">{description}</p>}
       </div>
     </div>
   );
@@ -65,7 +65,7 @@ function SectionHeader({ title, description, icon }) {
 
 function InfoBanner({ children }) {
   return (
-    <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 text-blue-700 rounded-xl px-4 py-3 text-xs font-medium">
+    <div className="flex items-start gap-2 bg-brand-primaryLight border border-brand-primary/20 text-brand-primary rounded-xl px-4 py-3 text-xs font-medium">
       <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" />{children}
     </div>
   );
@@ -75,23 +75,23 @@ function PlanCard({ plan }) {
   if (!plan) return null;
   const isActive = plan.status === "active" || plan.is_active;
   return (
-    <div className="col-span-2 rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50 to-purple-50 p-5">
+    <div className="col-span-2 rounded-2xl border border-brand-primary/20 bg-gradient-to-br from-brand-light to-brand-bg p-5">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <CreditCard className="h-4 w-4 text-indigo-500" />
-            <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest">Current Plan</span>
+            <CreditCard className="h-4 w-4 text-brand-primary" />
+            <span className="text-xs font-bold text-brand-primary/70 uppercase tracking-widest">Current Plan</span>
           </div>
-          <h4 className="text-xl font-extrabold text-indigo-700 capitalize">{formatPlanName(plan.plan)}</h4>
-          <p className="text-xs text-indigo-400 mt-0.5 capitalize">{plan.billing_cycle || "yearly"} billing &middot; {plan.amount > 0 ? `${plan.currency} ${plan.amount}` : "Free"}</p>
+          <h4 className="text-xl font-extrabold text-brand-primary capitalize">{formatPlanName(plan.plan)}</h4>
+          <p className="text-xs text-brand-primary/70 mt-0.5 capitalize">{plan.billing_cycle || "yearly"} billing &middot; {plan.amount > 0 ? `${plan.currency} ${plan.amount}` : "Free"}</p>
         </div>
         <div className="flex flex-col items-end gap-2">
           {isActive ? (
-            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full uppercase tracking-wider">Active</span>
+            <span className="text-[10px] font-bold text-brand-success bg-brand-successLight border border-brand-success/20 px-2.5 py-1 rounded-full uppercase tracking-wider">Active</span>
           ) : (
-            <span className="text-[10px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full uppercase tracking-wider">Inactive</span>
+            <span className="text-[10px] font-bold text-brand-muted bg-brand-light border border-brand-border px-2.5 py-1 rounded-full uppercase tracking-wider">Inactive</span>
           )}
-          {plan.cancel_at_period_end && <span className="text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full uppercase">Cancels at period end</span>}
+          {plan.cancel_at_period_end && <span className="text-[10px] font-bold text-brand-warning bg-brand-warningLight border border-brand-warning/20 px-2.5 py-1 rounded-full uppercase">Cancels at period end</span>}
         </div>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5">
@@ -102,8 +102,8 @@ function PlanCard({ plan }) {
           { label: "Period End", value: formatDate(plan.current_period_end) },
         ].map(({ label, value }) => (
           <div key={label} className="bg-white/70 rounded-xl px-3 py-2.5 border border-white/80">
-            <div className="text-[10px] text-indigo-400 font-semibold uppercase tracking-wider mb-1">{label}</div>
-            <div className="text-sm font-bold text-indigo-800">{value}</div>
+            <div className="text-[10px] text-brand-primary/70 font-semibold uppercase tracking-wider mb-1">{label}</div>
+            <div className="text-sm font-bold text-brand-dark">{value}</div>
           </div>
         ))}
       </div>
@@ -113,24 +113,24 @@ function PlanCard({ plan }) {
 
 function BranchCard({ branch }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 hover:border-indigo-200 hover:bg-indigo-50/30 transition-all">
+    <div className="rounded-xl border border-brand-border bg-brand-bg p-4 hover:border-brand-primary/30 hover:bg-brand-light/30 transition-all">
       <div className="flex items-start justify-between gap-2 mb-3">
         <div>
-          <p className="text-sm font-bold text-slate-800">{branch.name}</p>
-          <p className="text-xs text-slate-400 font-medium mt-0.5">{branch.code}</p>
+          <p className="text-sm font-bold text-brand-dark">{branch.name}</p>
+          <p className="text-xs text-brand-muted font-medium mt-0.5">{branch.code}</p>
         </div>
-        <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shrink-0", branch.status === "Operational" ? "bg-emerald-50 text-emerald-600 border border-emerald-200" : "bg-slate-100 text-slate-500 border border-slate-200")}>{branch.status}</span>
+        <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shrink-0", branch.status === "Operational" ? "bg-brand-successLight text-brand-success border border-brand-success/20" : "bg-brand-light text-brand-muted border border-brand-border")}>{branch.status}</span>
       </div>
-      <div className="space-y-1.5 text-xs text-slate-500">
-        <div className="flex items-center gap-1.5"><MapPin className="h-3 w-3 text-slate-300 shrink-0" />{branch.address}, {branch.city}, {branch.state}</div>
-        <div className="flex items-center gap-1.5"><Phone className="h-3 w-3 text-slate-300 shrink-0" />{branch.contact}</div>
-        <div className="flex items-center gap-1.5"><Mail className="h-3 w-3 text-slate-300 shrink-0" />{branch.email}</div>
-        <div className="flex items-center gap-1.5"><FileText className="h-3 w-3 text-slate-300 shrink-0" />GST: {branch.tax_registration || "—"} ({branch.tax_percentage}%)</div>
-        <div className="flex items-center gap-1.5"><Calendar className="h-3 w-3 text-slate-300 shrink-0" />Opened: {formatDate(branch.opening_date)}</div>
-        {branch.branch_type && <div className="flex items-center gap-1.5"><Store className="h-3 w-3 text-slate-300 shrink-0" />{branch.branch_type}</div>}
+      <div className="space-y-1.5 text-xs text-brand-muted">
+        <div className="flex items-center gap-1.5"><MapPin className="h-3 w-3 text-brand-muted/70 shrink-0" />{branch.address}, {branch.city}, {branch.state}</div>
+        <div className="flex items-center gap-1.5"><Phone className="h-3 w-3 text-brand-muted/70 shrink-0" />{branch.contact}</div>
+        <div className="flex items-center gap-1.5"><Mail className="h-3 w-3 text-brand-muted/70 shrink-0" />{branch.email}</div>
+        <div className="flex items-center gap-1.5"><FileText className="h-3 w-3 text-brand-muted/70 shrink-0" />GST: {branch.tax_registration || "—"} ({branch.tax_percentage}%)</div>
+        <div className="flex items-center gap-1.5"><Calendar className="h-3 w-3 text-brand-muted/70 shrink-0" />Opened: {formatDate(branch.opening_date)}</div>
+        {branch.branch_type && <div className="flex items-center gap-1.5"><Store className="h-3 w-3 text-brand-muted/70 shrink-0" />{branch.branch_type}</div>}
         {branch.schedule && (
-          <div className="mt-2 pt-2 border-t border-slate-200">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Hours</p>
+          <div className="mt-2 pt-2 border-t border-brand-border">
+            <p className="text-[10px] font-bold text-brand-muted uppercase tracking-wider mb-1">Hours</p>
             <p>Weekday: {branch.schedule.weekday}</p>
             <p>Weekend: {branch.schedule.weekend}</p>
           </div>
@@ -145,18 +145,18 @@ function TeamMemberRow({ member }) {
   const branchLabel = member.branch_id?.slice(-4).toUpperCase();
   const roleColor = { Manager: "purple", Cashier: "blue", Waiter: "green" }[roleName] || "default";
   return (
-    <div className="flex items-center gap-3 py-3.5 px-4 border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
-      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
+    <div className="flex items-center gap-3 py-3.5 px-4 border-b border-brand-border last:border-0 hover:bg-brand-bg transition-colors">
+      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-primary to-brand-primary/80 flex items-center justify-center text-white text-xs font-bold shrink-0">
         {member.first_name?.[0]}{member.last_name?.[0]}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-slate-800 truncate">{member.first_name} {member.last_name}</p>
-        <p className="text-xs text-slate-400 truncate">{member.email}</p>
+        <p className="text-sm font-semibold text-brand-dark truncate">{member.first_name} {member.last_name}</p>
+        <p className="text-xs text-brand-muted truncate">{member.email}</p>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <span className="text-[10px] text-slate-400 font-mono hidden sm:block">BR-{branchLabel}</span>
+        <span className="text-[10px] text-brand-muted font-mono hidden sm:block">BR-{branchLabel}</span>
         <Badge variant={roleColor}>{roleName}</Badge>
-        <span className={cn("text-[10px] font-bold px-1.5 py-0.5 rounded-full", member.status === "Active" ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-500")}>{member.status}</span>
+        <span className={cn("text-[10px] font-bold px-1.5 py-0.5 rounded-full", member.status === "Active" ? "bg-brand-successLight text-brand-success" : "bg-brand-light text-brand-muted")}>{member.status}</span>
       </div>
     </div>
   );
@@ -183,7 +183,7 @@ export default function Page() {
                 <Field label="Phone Number" value={user?.phone} icon={<Phone className="h-3 w-3" />} />
                 <Field label="Role" badge={<Badge variant="purple" className="uppercase">{user?.role || "admin"}</Badge>} />
                 <Field label="Member Since" value={formatDate(user?.created_at)} icon={<Calendar className="h-3 w-3" />} />
-                <Field label="Account Status" badge={user?.is_active ? <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full uppercase">Active</span> : <span className="text-[11px] font-bold text-rose-600 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-full uppercase">Suspended</span>} />
+                <Field label="Account Status" badge={user?.is_active ? <span className="text-[11px] font-bold text-brand-success bg-brand-successLight border border-brand-success/20 px-2.5 py-1 rounded-full uppercase">Active</span> : <span className="text-[11px] font-bold text-brand-danger bg-brand-dangerLight border border-brand-danger/20 px-2.5 py-1 rounded-full uppercase">Suspended</span>} />
               </div>
             </div>
             <div>
@@ -211,7 +211,7 @@ export default function Page() {
                 <Field label="Business Type" value={business?.business_type?.replace(/\b\w/g, (c) => c.toUpperCase())} />
                 <Field label="Business Slug" value={business?.slug} mono />
                 <Field label="Registration Number" value={business?.business_registration_number} mono icon={<Hash className="h-3 w-3" />} />
-                <Field label="Account Status" badge={<span className={cn("text-[11px] font-bold px-2.5 py-1 rounded-full uppercase border", business?.status === "active" ? "text-emerald-600 bg-emerald-50 border-emerald-200" : "text-slate-500 bg-slate-100 border-slate-200")}>{business?.status || "—"}</span>} />
+                <Field label="Account Status" badge={<span className={cn("text-[11px] font-bold px-2.5 py-1 rounded-full uppercase border", business?.status === "active" ? "text-brand-success bg-brand-successLight border-brand-success/20" : "text-brand-muted bg-brand-light border-brand-border")}>{business?.status || "—"}</span>} />
               </div>
             </div>
             <div>
@@ -251,27 +251,27 @@ export default function Page() {
               <div className="grid grid-cols-2 gap-5">
                 <Field label="PAN Number" value={business?.pan} mono icon={<Hash className="h-3 w-3" />} />
                 <Field label="GSTIN" value={business?.gstin} mono icon={<ShieldCheck className="h-3 w-3" />} />
-                <Field label="Identity Verification" badge={<span className={cn("text-[11px] font-bold px-2.5 py-1 rounded-full uppercase border", business?.identity_verification === "verified" ? "text-emerald-600 bg-emerald-50 border-emerald-200" : business?.identity_verification === "pending" ? "text-amber-600 bg-amber-50 border-amber-200" : "text-rose-600 bg-rose-50 border-rose-200")}>{business?.identity_verification || "Pending"}</span>} />
+                <Field label="Identity Verification" badge={<span className={cn("text-[11px] font-bold px-2.5 py-1 rounded-full uppercase border", business?.identity_verification === "verified" ? "text-brand-success bg-brand-successLight border-brand-success/20" : business?.identity_verification === "pending" ? "text-brand-warning bg-brand-warningLight border-brand-warning/20" : "text-brand-danger bg-brand-dangerLight border-brand-danger/20")}>{business?.identity_verification || "Pending"}</span>} />
               </div>
             </div>
             <div>
               <SectionHeader title="Branch-wise Tax Configuration" description="GST rate and jurisdiction for each branch" icon={<GitBranch className="h-4 w-4" />} />
-              <div className="overflow-x-auto rounded-xl border border-slate-200">
+              <div className="overflow-x-auto rounded-xl border border-brand-border">
                 <table className="w-full text-sm text-left">
-                  <thead className="bg-slate-50 border-b border-slate-200">
-                    <tr>{["Branch","Code","Jurisdiction","Registration","Tax Rate"].map((h) => <th key={h} className="py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider">{h}</th>)}</tr>
+                  <thead className="bg-brand-bg border-b border-brand-border">
+                    <tr>{["Branch","Code","Jurisdiction","Registration","Tax Rate"].map((h) => <th key={h} className="py-3 px-4 text-xs font-bold text-brand-muted uppercase tracking-wider">{h}</th>)}</tr>
                   </thead>
                   <tbody>
                     {branches.length === 0 ? (
-                      <tr><td colSpan={5} className="py-8 text-center text-slate-400 text-sm">No branches found</td></tr>
+                      <tr><td colSpan={5} className="py-8 text-center text-brand-muted text-sm">No branches found</td></tr>
                     ) : (
                       branches.map((b) => (
-                        <tr key={b.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
-                          <td className="py-3 px-4 font-semibold text-slate-700">{b.name}</td>
-                          <td className="py-3 px-4 font-mono text-slate-500 text-xs">{b.code}</td>
-                          <td className="py-3 px-4 text-slate-600">{b.tax_jurisdiction || "—"}</td>
-                          <td className="py-3 px-4 font-mono text-slate-600 text-xs">{b.tax_registration || "—"}</td>
-                          <td className="py-3 px-4"><span className="font-bold text-slate-700">{b.tax_percentage ?? 0}%</span></td>
+                        <tr key={b.id} className="border-b border-brand-border last:border-0 hover:bg-brand-bg transition-colors">
+                          <td className="py-3 px-4 font-semibold text-brand-dark">{b.name}</td>
+                          <td className="py-3 px-4 font-mono text-brand-muted text-xs">{b.code}</td>
+                          <td className="py-3 px-4 text-brand-dark">{b.tax_jurisdiction || "—"}</td>
+                          <td className="py-3 px-4 font-mono text-brand-dark text-xs">{b.tax_registration || "—"}</td>
+                          <td className="py-3 px-4"><span className="font-bold text-brand-dark">{b.tax_percentage ?? 0}%</span></td>
                         </tr>
                       ))
                     )}
@@ -288,7 +288,7 @@ export default function Page() {
           <div className="space-y-6">
             <SectionHeader title="Branch Locations" description={`${branches.length} branch${branches.length !== 1 ? "es" : ""} under your business`} icon={<Building2 className="h-4 w-4" />} />
             {branches.length === 0 ? (
-              <div className="text-center py-12 text-slate-400 text-sm">No branches configured</div>
+              <div className="text-center py-12 text-brand-muted text-sm">No branches configured</div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">{branches.map((b) => <BranchCard key={b.id} branch={b} />)}</div>
             )}
@@ -300,9 +300,9 @@ export default function Page() {
           <div className="space-y-6">
             <SectionHeader title="Team Members" description={`${teamMembers.length} member${teamMembers.length !== 1 ? "s" : ""} across all branches`} icon={<Users className="h-4 w-4" />} />
             {teamMembers.length === 0 ? (
-              <div className="text-center py-12 text-slate-400 text-sm">No team members found</div>
+              <div className="text-center py-12 text-brand-muted text-sm">No team members found</div>
             ) : (
-              <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">{teamMembers.map((m) => <TeamMemberRow key={m.id} member={m} />)}</div>
+              <div className="bg-white rounded-xl border border-brand-border overflow-hidden">{teamMembers.map((m) => <TeamMemberRow key={m.id} member={m} />)}</div>
             )}
           </div>
         );
@@ -313,15 +313,15 @@ export default function Page() {
   };
 
   return (
-    <div className="flex flex-col bg-slate-50 font-sans">
+    <div className="flex flex-col bg-brand-bg font-sans">
       <div className="flex-1 flex flex-col min-w-0">
         <main className="flex-1 px-6 py-6">
           <div className="mx-auto">
             <div className="flex flex-col md:flex-row gap-8 pb-12 min-h-[calc(100vh-8rem)]">
               <div className="w-full md:w-60 shrink-0 flex flex-col gap-5">
                 <div>
-                  <h2 className="text-2xl font-extrabold text-slate-800">Settings</h2>
-                  <p className="text-xs text-slate-400 mt-1">{business?.name || "My Business"}</p>
+                  <h2 className="text-2xl font-extrabold text-brand-dark">Settings</h2>
+                  <p className="text-xs text-brand-muted mt-1">{business?.name || "My Business"}</p>
                 </div>
                 <nav className="flex flex-col gap-0.5">
                   <NavSectionTitle title="Account" />
@@ -335,7 +335,7 @@ export default function Page() {
                 </nav>
               </div>
               <div className="flex-1 min-w-0">
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 md:p-8 min-h-full">
+                <div className="bg-white rounded-2xl border border-brand-border shadow-sm p-6 md:p-8 min-h-full">
                   {renderContent()}
                 </div>
               </div>

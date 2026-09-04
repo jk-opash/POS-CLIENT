@@ -59,22 +59,22 @@ export default function SupportPage() {
         <StatsCard
           title="Open Tickets"
           value={totalOpen}
-          icon={<Ticket className="h-5 w-5 text-blue-500" />}
+          icon={<Ticket className="h-5 w-5 text-brand-info" />}
         />
         <StatsCard
           title="SLA Breached"
           value={totalBreached}
-          icon={<AlertCircle className={`h-5 w-5 ${totalBreached > 0 ? 'text-red-500' : 'text-emerald-500'}`} />}
+          icon={<AlertCircle className={`h-5 w-5 ${totalBreached > 0 ? 'text-brand-danger' : 'text-brand-success'}`} />}
         />
         <StatsCard
           title="Avg Resolution Time"
           value={avgResolutionTime > 0 ? `${avgResolutionTime.toFixed(1)} hrs` : '-'}
-          icon={<Clock className="h-5 w-5 text-amber-500" />}
+          icon={<Clock className="h-5 w-5 text-brand-warning" />}
         />
         <StatsCard
           title="Avg CSAT Score"
           value={avgCsat > 0 ? `${avgCsat.toFixed(1)} / 5.0` : '-'}
-          icon={<CheckCircle2 className="h-5 w-5 text-emerald-500" />}
+          icon={<CheckCircle2 className="h-5 w-5 text-brand-success" />}
         />
       </div>
 

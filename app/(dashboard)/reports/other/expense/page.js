@@ -202,7 +202,7 @@ export default function ExpenseReport() {
   };
 
   return (
-    <div className="flex flex-col bg-slate-50 font-sans">
+    <div className="flex flex-col bg-brand-bg font-sans">
       <div className="flex flex-1 min-w-0 flex-col">
         <main className="flex-1 px-6 py-6">
           <div className="space-y-6 pb-12">
@@ -225,22 +225,22 @@ export default function ExpenseReport() {
               </div>
 
               <div className="flex flex-1 justify-end flex-wrap items-center gap-3">
-                <div className="flex flex-1 items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg max-w-md shadow-sm transition-colors focus-within:border-blue-500">
-                  <Search size={16} className="text-slate-400 shrink-0" />
+                <div className="flex flex-1 items-center gap-2 px-4 py-2 bg-white border border-brand-border rounded-lg max-w-md shadow-sm transition-colors focus-within:border-brand-primary">
+                  <Search size={16} className="text-brand-muted/70 shrink-0" />
                   <input
-                    className="w-full text-sm bg-transparent outline-none text-slate-700 placeholder:text-slate-400"
+                    className="w-full text-sm bg-transparent outline-none text-brand-dark placeholder:text-brand-muted/70"
                     placeholder="Search expenses..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
                 
-                <div className="relative flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 shadow-sm">
-                  <Filter size={14} className="text-slate-500 shrink-0" />
+                <div className="relative flex items-center gap-2 bg-white border border-brand-border rounded-xl px-3 py-2 shadow-sm">
+                  <Filter size={14} className="text-brand-muted shrink-0" />
                   <select
                     value={categoryFilter}
                     onChange={(e) => setCategoryFilter(e.target.value)}
-                    className="text-sm font-semibold text-slate-700 outline-none bg-transparent cursor-pointer pr-2 max-w-[120px] truncate appearance-none"
+                    className="text-sm font-semibold text-brand-dark outline-none bg-transparent cursor-pointer pr-2 max-w-[120px] truncate appearance-none"
                   >
                     {categories.map((cat) => (
                       <option key={cat} value={cat}>
@@ -256,12 +256,12 @@ export default function ExpenseReport() {
                   placeholder="Select Date Range"
                 />
 
-                <div className="relative flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 shadow-sm">
-                  <Building2 size={14} className="text-slate-500 shrink-0" />
+                <div className="relative flex items-center gap-2 bg-white border border-brand-border rounded-xl px-3 py-2 shadow-sm">
+                  <Building2 size={14} className="text-brand-muted shrink-0" />
                   <select
                     value={branchFilter}
                     onChange={(e) => setBranchFilter(e.target.value)}
-                    className="text-sm font-semibold text-slate-700 outline-none bg-transparent cursor-pointer pr-2 max-w-[150px] truncate"
+                    className="text-sm font-semibold text-brand-dark outline-none bg-transparent cursor-pointer pr-2 max-w-[150px] truncate"
                   >
                     {branches?.map((b) => (
                       <option key={b.id} value={b.id}>
@@ -273,7 +273,7 @@ export default function ExpenseReport() {
 
                 <button
                   onClick={handleExport}
-                  className="px-4 py-2 text-xs font-bold rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2"
+                  className="px-4 py-2 text-xs font-bold rounded-xl bg-brand-dark text-white hover:bg-brand-dark/90 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2"
                 >
                   <Download size={16} /> Export
                 </button>
@@ -307,39 +307,39 @@ export default function ExpenseReport() {
             </section>
 
             {/* Data Table Area */}
-            <div className="rounded-2xl border border-slate-200/80 bg-white/70 backdrop-blur-lg shadow-sm overflow-hidden flex flex-col">
+            <div className="rounded-2xl border border-brand-border/80 bg-white/70 backdrop-blur-lg shadow-sm overflow-hidden flex flex-col">
               {/* Table */}
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-black text-slate-400 uppercase tracking-wider">
+                    <tr className="border-b border-brand-border bg-brand-bg/80 text-[11px] font-black text-brand-muted/70 uppercase tracking-wider">
                       <th
-                        className="py-3.5 px-6 cursor-pointer hover:text-slate-600 transition-colors"
+                        className="py-3.5 px-6 cursor-pointer hover:text-brand-dark transition-colors"
                         onClick={() => handleSort("expense_date")}
                       >
                         Date <SortIcon field="expense_date" />
                       </th>
                       <th
-                        className="py-3.5 px-4 cursor-pointer hover:text-slate-600 transition-colors"
+                        className="py-3.5 px-4 cursor-pointer hover:text-brand-dark transition-colors"
                         onClick={() => handleSort("category")}
                       >
                         Category <SortIcon field="category" />
                       </th>
                       <th
-                        className="py-3.5 px-4 cursor-pointer hover:text-slate-600 transition-colors"
+                        className="py-3.5 px-4 cursor-pointer hover:text-brand-dark transition-colors"
                         onClick={() => handleSort("description")}
                       >
                         Description <SortIcon field="description" />
                       </th>
                       <th
-                        className="py-3.5 px-4 text-right cursor-pointer hover:text-slate-600 transition-colors"
+                        className="py-3.5 px-4 text-right cursor-pointer hover:text-brand-dark transition-colors"
                         onClick={() => handleSort("amount")}
                       >
                         Amount <SortIcon field="amount" />
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 text-xs">
+                  <tbody className="divide-y divide-brand-border text-xs">
                     {loading ? (
                       <tr>
                         <td
@@ -355,16 +355,16 @@ export default function ExpenseReport() {
                       <tr>
                         <td
                           colSpan="4"
-                          className="py-12 text-center text-slate-400"
+                          className="py-12 text-center text-brand-muted/70"
                         >
                           <Receipt
                             size={36}
-                            className="mx-auto mb-2 text-slate-300"
+                            className="mx-auto mb-2 text-brand-muted/70"
                           />
-                          <p className="font-bold text-slate-600">
+                          <p className="font-bold text-brand-dark">
                             No expense records found
                           </p>
-                          <p className="text-xs text-slate-400 mt-0.5">
+                          <p className="text-xs text-brand-muted/70 mt-0.5">
                             Try adjusting your search query or filters.
                           </p>
                         </td>
@@ -376,10 +376,10 @@ export default function ExpenseReport() {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: Math.min(idx * 0.02, 0.5) }}
                           key={item.id || idx}
-                          className="hover:bg-slate-50/60 transition-colors duration-150"
+                          className="hover:bg-brand-bg/60 transition-colors duration-150"
                         >
-                          <td className="py-3 px-6 font-medium text-slate-900">
-                            <span className="font-bold text-slate-800 text-sm block">
+                          <td className="py-3 px-6 font-medium text-brand-dark">
+                            <span className="font-bold text-brand-dark text-sm block">
                               {new Date(item.expense_date).toLocaleDateString("en-IN", {
                                 day: "2-digit",
                                 month: "short",
@@ -388,15 +388,15 @@ export default function ExpenseReport() {
                             </span>
                           </td>
                           <td className="py-3 px-4">
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase bg-slate-100 text-slate-500 border border-slate-200/60">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase bg-brand-light text-brand-muted border border-brand-border/60">
                               {item.category}
                             </span>
                           </td>
-                          <td className="py-3 px-4 text-slate-900 text-sm">
+                          <td className="py-3 px-4 text-brand-dark text-sm">
                             {item.description}
                           </td>
                           <td className="py-3 px-4 text-right">
-                            <span className="font-bold text-slate-900 text-sm">
+                            <span className="font-bold text-brand-dark text-sm">
                               ₹{fmt(item.amount)}
                             </span>
                           </td>
@@ -407,7 +407,7 @@ export default function ExpenseReport() {
                 </table>
               </div>
 
-              <div className="p-4 border-t border-slate-100">
+              <div className="p-4 border-t border-brand-border">
                 <PosAdminPagination
                   currentPage={currentPage}
                   totalPages={totalPages}

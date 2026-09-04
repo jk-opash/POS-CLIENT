@@ -76,13 +76,13 @@ export default function ActionModal({
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden"
       >
-        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
-          <h2 className="text-xl font-black text-slate-800">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-brand-border">
+          <h2 className="text-xl font-black text-brand-dark">
             {titles[type] || "Inventory Action"}
           </h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-slate-100 rounded-xl text-slate-400 transition-colors"
+            className="p-2 hover:bg-brand-light rounded-xl text-brand-muted/70 transition-colors"
           >
             <X size={20} />
           </button>
@@ -90,19 +90,19 @@ export default function ActionModal({
         <form onSubmit={handleSubmit}>
           <div className="px-6 py-5 space-y-4">
             {error && (
-              <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl">
+              <div className="flex items-center gap-2 bg-brand-dangerLight border border-brand-danger/20 text-brand-dark text-sm px-4 py-3 rounded-xl">
                 <AlertCircle size={16} /> {error}
               </div>
             )}
             {/* Product selector */}
             <div className="relative">
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-bold text-brand-muted uppercase tracking-wider mb-1.5">
                 Product
               </label>
-              <div className="flex items-center gap-2 border border-slate-200 rounded-xl px-3 py-2.5">
-                <Search size={14} className="text-slate-400 shrink-0" />
+              <div className="flex items-center gap-2 border border-brand-border rounded-xl px-3 py-2.5">
+                <Search size={14} className="text-brand-muted/70 shrink-0" />
                 <input
-                  className="flex-1 text-sm outline-none text-slate-700"
+                  className="flex-1 text-sm outline-none text-brand-dark"
                   placeholder="Search by name or SKU..."
                   value={productSearch}
                   onChange={(e) => {
@@ -113,13 +113,13 @@ export default function ActionModal({
                   onFocus={() => setShowDropdown(true)}
                 />
                 {selectedProduct && (
-                  <span className="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-bold bg-brand-successLight text-brand-success px-2 py-0.5 rounded-full">
                     Selected
                   </span>
                 )}
               </div>
               {showDropdown && productSearch && !selectedProduct && (
-                <div className="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden max-h-48 overflow-y-auto">
+                <div className="absolute z-10 w-full mt-1 bg-white border border-brand-border rounded-xl shadow-xl overflow-hidden max-h-48 overflow-y-auto">
                   {filteredItems.slice(0, 8).map((item) => (
                     <div
                       key={item.id}
@@ -128,23 +128,23 @@ export default function ActionModal({
                         setProductSearch(item.name);
                         setShowDropdown(false);
                       }}
-                      className="flex items-center justify-between px-4 py-2.5 hover:bg-slate-50 cursor-pointer border-b border-slate-100 last:border-0"
+                      className="flex items-center justify-between px-4 py-2.5 hover:bg-brand-bg cursor-pointer border-b border-brand-border last:border-0"
                     >
                       <div>
-                        <div className="font-bold text-sm text-slate-800">
+                        <div className="font-bold text-sm text-brand-dark">
                           {item.name}
                         </div>
-                        <div className="text-[11px] text-slate-400">
+                        <div className="text-[11px] text-brand-muted/70">
                           {item.sku}
                         </div>
                       </div>
-                      <span className="text-xs font-bold text-slate-600">
+                      <span className="text-xs font-bold text-brand-dark">
                         {item.currentStock} {item.unit}
                       </span>
                     </div>
                   ))}
                   {filteredItems.length === 0 && (
-                    <div className="px-4 py-3 text-sm text-slate-400">
+                    <div className="px-4 py-3 text-sm text-brand-muted/70">
                       No items found
                     </div>
                   )}
@@ -155,17 +155,17 @@ export default function ActionModal({
             {/* Adjustment type toggle (only for adjustments) */}
             {type === "adjustments" && (
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-brand-muted uppercase tracking-wider mb-1.5">
                   Action
                 </label>
-                <div className="flex rounded-xl border border-slate-200 overflow-hidden bg-slate-50 p-1 gap-1">
+                <div className="flex rounded-xl border border-brand-border overflow-hidden bg-brand-bg p-1 gap-1">
                   <button
                     type="button"
                     onClick={() => {
                       setAdjType("add");
                       setReason("");
                     }}
-                    className={`flex-1 py-2 text-sm font-bold rounded-lg transition-colors ${adjType === "add" ? "bg-white text-emerald-600 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
+                    className={`flex-1 py-2 text-sm font-bold rounded-lg transition-colors ${adjType === "add" ? "bg-white text-brand-success shadow-sm" : "text-brand-muted/70 hover:text-brand-dark"}`}
                   >
                     <ArrowUpCircle size={14} className="inline mr-1.5" />
                     Add Stock
@@ -176,7 +176,7 @@ export default function ActionModal({
                       setAdjType("remove");
                       setReason("");
                     }}
-                    className={`flex-1 py-2 text-sm font-bold rounded-lg transition-colors ${adjType === "remove" ? "bg-white text-red-500 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
+                    className={`flex-1 py-2 text-sm font-bold rounded-lg transition-colors ${adjType === "remove" ? "bg-white text-brand-danger shadow-sm" : "text-brand-muted/70 hover:text-brand-dark"}`}
                   >
                     <ArrowDownCircle size={14} className="inline mr-1.5" />
                     Remove Stock
@@ -187,25 +187,25 @@ export default function ActionModal({
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-brand-muted uppercase tracking-wider mb-1.5">
                   Quantity
                 </label>
                 <input
                   type="number"
                   step="0.1"
                   min="0"
-                  className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-slate-400"
+                  className="w-full border border-brand-border rounded-xl px-3 py-2.5 text-sm outline-none focus:border-brand-muted/70"
                   value={quantity}
                   onChange={(e) => setQuantity(e.target.value)}
                   placeholder="0"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-brand-muted uppercase tracking-wider mb-1.5">
                   Reason
                 </label>
                 <select
-                  className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none bg-white focus:border-slate-400"
+                  className="w-full border border-brand-border rounded-xl px-3 py-2.5 text-sm outline-none bg-white focus:border-brand-muted/70"
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                 >
@@ -225,9 +225,9 @@ export default function ActionModal({
             </div>
 
             {selectedProduct && quantity && (
-              <div className="bg-slate-50 rounded-xl px-4 py-3 text-sm border border-slate-200">
-                <span className="text-slate-500">New stock will be: </span>
-                <span className="font-black text-slate-800">
+              <div className="bg-brand-bg rounded-xl px-4 py-3 text-sm border border-brand-border">
+                <span className="text-brand-muted">New stock will be: </span>
+                <span className="font-black text-brand-dark">
                   {Math.max(
                     0,
                     (selectedProduct.currentStock || 0) +
@@ -243,11 +243,11 @@ export default function ActionModal({
             )}
 
             <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-bold text-brand-muted uppercase tracking-wider mb-1.5">
                 Additional Notes
               </label>
               <textarea
-                className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none resize-none focus:border-slate-400"
+                className="w-full border border-brand-border rounded-xl px-3 py-2.5 text-sm outline-none resize-none focus:border-brand-muted/70"
                 rows={3}
                 placeholder="Optional notes..."
                 value={notes}
@@ -255,17 +255,17 @@ export default function ActionModal({
               />
             </div>
           </div>
-          <div className="flex justify-end gap-3 px-6 py-4 border-t border-slate-100 bg-slate-50">
+          <div className="flex justify-end gap-3 px-6 py-4 border-t border-brand-border bg-brand-bg">
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 border border-slate-200 bg-white text-slate-700 font-bold rounded-xl text-sm hover:bg-slate-50 transition-colors"
+              className="px-5 py-2.5 border border-brand-border bg-white text-brand-dark font-bold rounded-xl text-sm hover:bg-brand-bg transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex items-center gap-2 px-5 py-2.5 bg-emerald-500 text-white font-bold rounded-xl text-sm hover:bg-emerald-600 transition-colors shadow-md shadow-emerald-500/20"
+              className="flex items-center gap-2 px-5 py-2.5 bg-brand-success text-white font-bold rounded-xl text-sm hover:bg-brand-success/90 transition-colors shadow-md shadow-brand-success/20"
             >
               <Save size={15} /> Submit
             </button>

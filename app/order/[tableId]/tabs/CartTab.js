@@ -148,13 +148,13 @@ export default function CartTab({
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2
-          className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-black via-slate-800 to-slate-700 drop-shadow-sm"
+          className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-black via-slate-800 to-brand-dark drop-shadow-sm"
           style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
         >
           Your Cart
         </h2>
         {cart.length > 0 && (
-          <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">
+          <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-brand-primary bg-brand-primaryLight px-2.5 py-1 rounded-full border border-brand-primaryLight">
             {cart.length} item{cart.length !== 1 ? "s" : ""}
           </span>
         )}
@@ -174,15 +174,15 @@ export default function CartTab({
               initial={{ rotate: -10, scale: 0.8 }}
               animate={{ rotate: 3, scale: 1 }}
               transition={{ type: "spring", stiffness: 200, damping: 20 }}
-              className="w-20 h-20 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-[1.5rem] flex items-center justify-center shadow-inner border border-indigo-100"
+              className="w-20 h-20 bg-gradient-to-br from-brand-primaryLight to-brand-purple rounded-[1.5rem] flex items-center justify-center shadow-inner border border-brand-primaryLight"
             >
-              <ShoppingCart size={32} className="text-indigo-300" />
+              <ShoppingCart size={32} className="text-brand-primary" />
             </motion.div>
             <div>
-              <p className="font-black text-slate-700 text-base">
+              <p className="font-black text-brand-dark text-base">
                 Your cart is empty
               </p>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-brand-muted mt-1">
                 Add items from the menu to get started
               </p>
             </div>
@@ -208,7 +208,7 @@ export default function CartTab({
                 >
                   <div className="flex gap-3 p-3">
                     {/* Image */}
-                    <div className="w-[72px] h-[72px] rounded-2xl overflow-hidden flex-shrink-0 bg-slate-50 border border-slate-100 shadow-inner">
+                    <div className="w-[72px] h-[72px] rounded-2xl overflow-hidden flex-shrink-0 bg-brand-light border border-brand-light shadow-inner">
                       {cartItem.item.image_url ? (
                         <img
                           src={getImageUrl(cartItem.item.image_url)}
@@ -216,7 +216,7 @@ export default function CartTab({
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-slate-300">
+                        <div className="w-full h-full flex items-center justify-center text-brand-muted">
                           <UtensilsCrossed size={28} strokeWidth={1.5} />
                         </div>
                       )}
@@ -226,11 +226,11 @@ export default function CartTab({
                     <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
                       <div className="flex items-start justify-between gap-2">
                         <div className="overflow-hidden flex-1">
-                          <h4 className="font-black text-transparent bg-clip-text bg-gradient-to-r from-black via-slate-800 to-slate-700 text-[14px] leading-snug drop-shadow-sm inline-block">
+                          <h4 className="font-black text-transparent bg-clip-text bg-gradient-to-r from-black via-slate-800 to-brand-dark text-[14px] leading-snug drop-shadow-sm inline-block">
                             {cartItem.item.name}
                           </h4>
                         </div>
-                        <span className="font-black text-slate-800 text-[14px] shrink-0">
+                        <span className="font-black text-brand-dark text-[14px] shrink-0">
                           {branch?.currency} {cartItem.totalPrice.toFixed(2)}
                         </span>
                       </div>
@@ -243,7 +243,7 @@ export default function CartTab({
                             cartItem.addons?.length > 0) && (
                             <div className="flex flex-wrap gap-1 mt-1">
                               {cartItem.variant && (
-                                <span className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-600 text-[11px] font-bold px-1.5 py-0.5 rounded-full">
+                                <span className="inline-flex items-center gap-1 bg-brand-primaryLight text-brand-primary text-[11px] font-bold px-1.5 py-0.5 rounded-full">
                                   <Tag size={11} /> {cartItem.variant.name}
                                 </span>
                               )}
@@ -255,7 +255,7 @@ export default function CartTab({
                               {cartItem.addons?.map((addon, idx) => (
                                 <span
                                   key={idx}
-                                  className="inline-flex items-center bg-slate-100 text-slate-500 text-[11px] font-bold px-1.5 py-0.5 rounded-full"
+                                  className="inline-flex items-center bg-brand-light text-brand-muted text-[11px] font-bold px-1.5 py-0.5 rounded-full"
                                 >
                                   + {addon.name}
                                 </span>
@@ -266,26 +266,26 @@ export default function CartTab({
 
                         {/* Qty + Remove */}
                         <div className="flex items-center gap-2 mt-2">
-                          <div className="flex items-center bg-slate-100 rounded-xl overflow-hidden">
+                          <div className="flex items-center bg-brand-light rounded-xl overflow-hidden">
                             <button
                               onClick={() => updateQty(cartItem.id, -1)}
-                              className="w-7 h-7 flex items-center justify-center text-slate-600 hover:bg-slate-200 active:scale-90 transition-all"
+                              className="w-7 h-7 flex items-center justify-center text-brand-dark hover:bg-brand-light active:scale-90 transition-all"
                             >
                               <Minus size={12} strokeWidth={3} />
                             </button>
-                            <span className="w-7 text-center text-sm font-black text-slate-900">
+                            <span className="w-7 text-center text-sm font-black text-brand-dark">
                               {cartItem.quantity}
                             </span>
                             <button
                               onClick={() => updateQty(cartItem.id, 1)}
-                              className="w-7 h-7 flex items-center justify-center text-slate-600 hover:bg-slate-200 active:scale-90 transition-all"
+                              className="w-7 h-7 flex items-center justify-center text-brand-dark hover:bg-brand-light active:scale-90 transition-all"
                             >
                               <Plus size={12} strokeWidth={3} />
                             </button>
                           </div>
                           <button
                             onClick={() => removeItem(cartItem.id)}
-                            className="w-7 h-7 bg-red-50 text-red-400 rounded-xl flex items-center justify-center hover:bg-red-100 hover:text-red-500 active:scale-90 transition-all"
+                            className="w-7 h-7 bg-brand-dangerLight text-brand-danger rounded-xl flex items-center justify-center hover:bg-brand-dangerLight hover:text-brand-danger active:scale-90 transition-all"
                           >
                             <Trash2 size={12} />
                           </button>
@@ -302,16 +302,16 @@ export default function CartTab({
               layout
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              className="relative overflow-hidden rounded-[2rem] border border-slate-800 shadow-2xl shadow-indigo-900/25 mt-2"
+              className="relative overflow-hidden rounded-[2rem] border border-brand-dark shadow-2xl shadow-brand-primary/25 mt-2"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900" />
-              <div className="absolute top-0 right-0 w-40 h-40 bg-indigo-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-              <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-600/15 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-br from-brand-dark via-slate-950 to-brand-dark" />
+              <div className="absolute top-0 right-0 w-40 h-40 bg-brand-primary/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-brand-purple/15 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
               <div className="relative p-6 text-white">
                 <div className="flex items-center gap-2 mb-5">
-                  <Sparkles size={14} className="text-indigo-300" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-300">
+                  <Sparkles size={14} className="text-brand-primary" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-brand-primary">
                     Order Summary
                   </span>
                 </div>
@@ -332,7 +332,7 @@ export default function CartTab({
                   whileTap={!isSubmitting ? { scale: 0.97 } : {}}
                   onClick={handlePlaceOrder}
                   disabled={isSubmitting}
-                  className="w-full py-4 bg-white text-slate-900 font-black rounded-2xl text-[15px] tracking-wide disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:bg-indigo-50 active:scale-[0.98] transition-all"
+                  className="w-full py-4 bg-white text-brand-dark font-black rounded-2xl text-[15px] tracking-wide disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:bg-brand-primaryLight active:scale-[0.98] transition-all"
                 >
                   {isSubmitting ? (
                     <>
@@ -341,7 +341,7 @@ export default function CartTab({
                     </>
                   ) : (
                     <>
-                      <Sparkles size={15} className="text-indigo-500" />
+                      <Sparkles size={15} className="text-brand-primary" />
                       Place Order
                     </>
                   )}

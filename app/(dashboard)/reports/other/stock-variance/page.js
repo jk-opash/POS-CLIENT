@@ -155,19 +155,19 @@ export default function StockVarianceReport() {
   const getVarianceBadge = (variance) => {
     if (variance < 0) {
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase bg-rose-100 text-rose-600 border border-rose-200/60">
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase bg-brand-light text-brand-dark border border-brand-border/60">
           {variance}
         </span>
       );
     } else if (variance > 0) {
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase bg-emerald-100 text-emerald-600 border border-emerald-200/60">
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase bg-brand-light text-brand-dark border border-brand-border/60">
           +{variance}
         </span>
       );
     } else {
        return (
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase bg-slate-100 text-slate-500 border border-slate-200/60">
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase bg-brand-light text-brand-muted border border-brand-border/60">
           0
         </span>
       );
@@ -175,7 +175,7 @@ export default function StockVarianceReport() {
   };
 
   return (
-    <div className="flex flex-col bg-slate-50 font-sans">
+    <div className="flex flex-col bg-brand-bg font-sans">
       <div className="flex flex-1 min-w-0 flex-col">
         <main className="flex-1 px-6 py-6">
           <div className="space-y-6 pb-12">
@@ -198,10 +198,10 @@ export default function StockVarianceReport() {
               </div>
 
               <div className="flex flex-1 justify-end flex-wrap items-center gap-3">
-                <div className="flex flex-1 items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg max-w-md shadow-sm transition-colors focus-within:border-blue-500">
-                  <Search size={16} className="text-slate-400 shrink-0" />
+                <div className="flex flex-1 items-center gap-2 px-4 py-2 bg-white border border-brand-border rounded-lg max-w-md shadow-sm transition-colors focus-within:border-brand-border">
+                  <Search size={16} className="text-brand-muted/70 shrink-0" />
                   <input
-                    className="w-full text-sm bg-transparent outline-none text-slate-700 placeholder:text-slate-400"
+                    className="w-full text-sm bg-transparent outline-none text-brand-dark placeholder:text-brand-muted/70"
                     placeholder="Search by item name or SKU..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
@@ -214,12 +214,12 @@ export default function StockVarianceReport() {
                   placeholder="Select Date Range"
                 />
 
-                <div className="relative flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 shadow-sm">
-                  <Building2 size={14} className="text-slate-500 shrink-0" />
+                <div className="relative flex items-center gap-2 bg-white border border-brand-border rounded-xl px-3 py-2 shadow-sm">
+                  <Building2 size={14} className="text-brand-muted shrink-0" />
                   <select
                     value={branchFilter}
                     onChange={(e) => setBranchFilter(e.target.value)}
-                    className="text-sm font-semibold text-slate-700 outline-none bg-transparent cursor-pointer pr-2 max-w-[150px] truncate"
+                    className="text-sm font-semibold text-brand-dark outline-none bg-transparent cursor-pointer pr-2 max-w-[150px] truncate"
                   >
                     {branches?.map((b) => (
                       <option key={b.id} value={b.id}>
@@ -229,7 +229,7 @@ export default function StockVarianceReport() {
                   </select>
                 </div>
 
-                <button className="px-4 py-2 text-xs font-bold rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2">
+                <button className="px-4 py-2 text-xs font-bold rounded-xl bg-brand-dark text-white hover:bg-brand-dark/90 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2">
                   <Download size={16} /> Export
                 </button>
               </div>
@@ -260,63 +260,63 @@ export default function StockVarianceReport() {
             </section>
 
             {/* Data Table Area */}
-            <div className="rounded-2xl border border-slate-200/80 bg-white/70 backdrop-blur-lg shadow-sm overflow-hidden flex flex-col">
+            <div className="rounded-2xl border border-brand-border/80 bg-white/70 backdrop-blur-lg shadow-sm overflow-hidden flex flex-col">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-black text-slate-400 uppercase tracking-wider">
+                    <tr className="border-b border-brand-border bg-brand-bg/80 text-[11px] font-black text-brand-muted/70 uppercase tracking-wider">
                       <th
-                        className="py-3.5 px-6 cursor-pointer hover:text-slate-600 transition-colors"
+                        className="py-3.5 px-6 cursor-pointer hover:text-brand-dark transition-colors"
                         onClick={() => handleSort("date")}
                       >
                         Date & Time <SortIcon field="date" />
                       </th>
                       <th
-                        className="py-3.5 px-4 cursor-pointer hover:text-slate-600 transition-colors"
+                        className="py-3.5 px-4 cursor-pointer hover:text-brand-dark transition-colors"
                         onClick={() => handleSort("itemName")}
                       >
                         Item Name <SortIcon field="itemName" />
                       </th>
                       <th
-                        className="py-3.5 px-4 cursor-pointer hover:text-slate-600 transition-colors"
+                        className="py-3.5 px-4 cursor-pointer hover:text-brand-dark transition-colors"
                         onClick={() => handleSort("sku")}
                       >
                         SKU <SortIcon field="sku" />
                       </th>
                       <th
-                        className="py-3.5 px-4 cursor-pointer hover:text-slate-600 transition-colors text-right"
+                        className="py-3.5 px-4 cursor-pointer hover:text-brand-dark transition-colors text-right"
                         onClick={() => handleSort("expectedStock")}
                       >
                         Expected Stock <SortIcon field="expectedStock" />
                       </th>
                       <th
-                        className="py-3.5 px-4 cursor-pointer hover:text-slate-600 transition-colors text-right"
+                        className="py-3.5 px-4 cursor-pointer hover:text-brand-dark transition-colors text-right"
                         onClick={() => handleSort("actualStock")}
                       >
                         Actual Stock <SortIcon field="actualStock" />
                       </th>
                       <th
-                        className="py-3.5 px-4 cursor-pointer hover:text-slate-600 transition-colors text-right"
+                        className="py-3.5 px-4 cursor-pointer hover:text-brand-dark transition-colors text-right"
                         onClick={() => handleSort("variance")}
                       >
                         Variance <SortIcon field="variance" />
                       </th>
                       <th
-                        className="py-3.5 px-6 cursor-pointer hover:text-slate-600 transition-colors text-right"
+                        className="py-3.5 px-6 cursor-pointer hover:text-brand-dark transition-colors text-right"
                         onClick={() => handleSort("valueImpact")}
                       >
                         Value Impact <SortIcon field="valueImpact" />
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 text-xs">
+                  <tbody className="divide-y divide-brand-border text-xs">
                     {stockVarianceLoading ? (
                       <tr>
                         <td
                           colSpan="7"
-                          className="py-12 text-center text-slate-400"
+                          className="py-12 text-center text-brand-muted/70"
                         >
-                          <p className="font-bold text-slate-600">
+                          <p className="font-bold text-brand-dark">
                             Loading data...
                           </p>
                         </td>
@@ -325,16 +325,16 @@ export default function StockVarianceReport() {
                       <tr>
                         <td
                           colSpan="7"
-                          className="py-12 text-center text-slate-400"
+                          className="py-12 text-center text-brand-muted/70"
                         >
                           <PackageMinus
                             size={36}
-                            className="mx-auto mb-2 text-slate-300"
+                            className="mx-auto mb-2 text-brand-muted/70"
                           />
-                          <p className="font-bold text-slate-600">
+                          <p className="font-bold text-brand-dark">
                             No discrepancies found
                           </p>
-                          <p className="text-xs text-slate-400 mt-0.5">
+                          <p className="text-xs text-brand-muted/70 mt-0.5">
                             Everything looks clean for this selected period!
                           </p>
                         </td>
@@ -346,9 +346,9 @@ export default function StockVarianceReport() {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: Math.min(idx * 0.02, 0.5) }}
                           key={rec.id}
-                          className="hover:bg-slate-50/60 transition-colors duration-150"
+                          className="hover:bg-brand-bg/60 transition-colors duration-150"
                         >
-                          <td className="py-3 px-6 text-slate-600">
+                          <td className="py-3 px-6 text-brand-dark">
                             {new Date(rec.date).toLocaleString("en-IN", {
                               day: "2-digit",
                               month: "short",
@@ -357,25 +357,25 @@ export default function StockVarianceReport() {
                               minute: "2-digit",
                             })}
                           </td>
-                          <td className="py-3 px-4 font-medium text-slate-900">
-                            <span className="font-bold text-slate-800 text-sm block">
+                          <td className="py-3 px-4 font-medium text-brand-dark">
+                            <span className="font-bold text-brand-dark text-sm block">
                               {rec.itemName}
                             </span>
-                            <span className="text-[10px] text-slate-400 block mt-0.5">{rec.movementType} - {rec.reason}</span>
+                            <span className="text-[10px] text-brand-muted/70 block mt-0.5">{rec.movementType} - {rec.reason}</span>
                           </td>
-                          <td className="py-3 px-4 text-slate-500">
+                          <td className="py-3 px-4 text-brand-muted">
                             {rec.sku}
                           </td>
-                          <td className="py-3 px-4 text-right text-slate-700">
+                          <td className="py-3 px-4 text-right text-brand-dark">
                             {fmt(rec.expectedStock)}
                           </td>
-                          <td className="py-3 px-4 text-right text-slate-700">
+                          <td className="py-3 px-4 text-right text-brand-dark">
                             {fmt(rec.actualStock)}
                           </td>
                           <td className="py-3 px-4 text-right">
                             {getVarianceBadge(rec.variance)}
                           </td>
-                          <td className={`py-3 px-6 text-right font-bold text-sm ${rec.valueImpact < 0 ? 'text-rose-600' : rec.valueImpact > 0 ? 'text-emerald-600' : 'text-slate-500'}`}>
+                          <td className={`py-3 px-6 text-right font-bold text-sm ${rec.valueImpact < 0 ? 'text-brand-danger' : rec.valueImpact > 0 ? 'text-brand-success' : 'text-brand-muted'}`}>
                             {rec.valueImpact < 0 ? '-' : ''}₹{fmt(Math.abs(rec.valueImpact))}
                           </td>
                         </motion.tr>
@@ -385,7 +385,7 @@ export default function StockVarianceReport() {
                 </table>
               </div>
 
-              <div className="p-4 border-t border-slate-100">
+              <div className="p-4 border-t border-brand-border">
                 <PosAdminPagination
                   currentPage={currentPage}
                   totalPages={totalPages}

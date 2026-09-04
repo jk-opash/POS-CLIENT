@@ -43,7 +43,7 @@ function PriorityBadge({ priority }) {
       return (
         <Badge
           variant="warning"
-          className="uppercase text-[10px] font-bold text-amber-700 bg-amber-100"
+          className="uppercase text-[10px] font-bold text-brand-warning bg-brand-warningLight"
         >
           High
         </Badge>
@@ -155,7 +155,7 @@ export function TicketTable({ data }) {
                 <div className="flex items-start gap-3">
                   <div className="mt-0.5">
                     {ticket.slaBreached ? (
-                      <AlertCircle className="h-5 w-5 text-red-500" />
+                      <AlertCircle className="h-5 w-5 text-brand-danger" />
                     ) : (
                       <MessageSquare className="h-5 w-5 text-brand-placeholder" />
                     )}
@@ -171,7 +171,7 @@ export function TicketTable({ data }) {
                       <span className="text-xs font-mono text-brand-primary">
                         {ticket.ticketNumber}
                       </span>
-                      <span className="text-[10px] uppercase tracking-wider text-brand-placeholder bg-slate-100 px-1.5 py-0.5 rounded">
+                      <span className="text-[10px] uppercase tracking-wider text-brand-placeholder bg-brand-light px-1.5 py-0.5 rounded">
                         {(ticket.category || "").replace("_", " ")}
                       </span>
                     </div>
@@ -215,13 +215,13 @@ export function TicketTable({ data }) {
                     {formatRelativeTime(ticket.updatedAt)}
                   </span>
                   {ticket.slaDeadline && !ticket.slaBreached && (
-                    <span className="text-[10px] text-amber-600 flex items-center gap-1 mt-0.5">
+                    <span className="text-[10px] text-brand-warning flex items-center gap-1 mt-0.5">
                       <Clock className="h-3 w-3" /> Due{" "}
                       {formatRelativeTime(ticket.slaDeadline)}
                     </span>
                   )}
                   {ticket.slaBreached && (
-                    <span className="text-[10px] text-red-600 font-bold mt-0.5">
+                    <span className="text-[10px] text-brand-danger font-bold mt-0.5">
                       SLA Breached
                     </span>
                   )}

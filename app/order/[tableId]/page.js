@@ -183,19 +183,19 @@ export default function CustomerOrderPage({ params }) {
 
   if (error || !data) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-6 text-center">
-        <div className="w-24 h-24 bg-red-50 rounded-full flex items-center justify-center mb-6 shadow-sm">
-          <UtensilsCrossed size={40} className="text-red-400" />
+      <div className="min-h-screen bg-brand-light flex flex-col items-center justify-center px-6 text-center">
+        <div className="w-24 h-24 bg-brand-dangerLight rounded-full flex items-center justify-center mb-6 shadow-sm">
+          <UtensilsCrossed size={40} className="text-brand-danger" />
         </div>
-        <h1 className="text-2xl font-black text-slate-800 mb-2 tracking-tight">
+        <h1 className="text-2xl font-black text-brand-dark mb-2 tracking-tight">
           Oops!
         </h1>
-        <p className="text-slate-500 font-medium">
+        <p className="text-brand-muted font-medium">
           {error || "Data unavailable"}
         </p>
         <button
           onClick={() => window.location.reload()}
-          className="mt-8 px-8 py-3 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-all active:scale-95 shadow-lg shadow-slate-900/20"
+          className="mt-8 px-8 py-3 bg-brand-dark text-white font-bold rounded-2xl hover:bg-brand-dark transition-all active:scale-95 shadow-lg shadow-brand-dark/20"
         >
           Try Again
         </button>
@@ -224,10 +224,10 @@ export default function CustomerOrderPage({ params }) {
   ).length;
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 pb-24">
+    <div className="min-h-screen bg-brand-light font-sans text-brand-dark pb-24">
       {/* Dynamic Header */}
       <header
-        className={`sticky top-0 z-40 transition-all duration-300 bg-gradient-to-r from-indigo-300 via-purple-300 to-orange-300 backdrop-blur-xl shadow-md ${
+        className={`sticky top-0 z-40 transition-all duration-300 bg-gradient-to-r from-brand-primary via-purple-300 to-orange-300 backdrop-blur-xl shadow-md ${
           activeTab === "menu" ? "pt-3" : "py-3"
         }`}
       >
@@ -235,16 +235,16 @@ export default function CustomerOrderPage({ params }) {
         <div className="px-4 flex items-center justify-between ">
           <div className="flex flex-col">
             <h1
-              className="text-3xl font-black text-slate-900 tracking-tight drop-shadow-sm"
+              className="text-3xl font-black text-brand-dark tracking-tight drop-shadow-sm"
               style={{ fontFamily: "'Playfair Display', 'Georgia', serif" }}
             >
               {business?.name}
             </h1>
-            <div className="text-[10px] font-bold uppercase tracking-widest text-slate-700">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-brand-dark">
               A TASTE OF HOME
             </div>
           </div>
-          <span className="inline-flex self-start gap-1 text-[11px] font-bold uppercase tracking-wider text-slate-700 bg-orange-50 px-2 py-1 rounded-md">
+          <span className="inline-flex self-start gap-1 text-[11px] font-bold uppercase tracking-wider text-brand-dark bg-orange-50 px-2 py-1 rounded-md">
             <UtensilsCrossed size={14} />
             Table {table?.name || tableId}
           </span>
@@ -257,8 +257,8 @@ export default function CustomerOrderPage({ params }) {
               onClick={() => setActiveCategory("all")}
               className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm transition-all ${
                 activeCategory === "all"
-                  ? "bg-white text-indigo-700 font-bold"
-                  : "bg-white/40 text-slate-700 font-medium hover:bg-white/60"
+                  ? "bg-white text-brand-primary font-bold"
+                  : "bg-white/40 text-brand-dark font-medium hover:bg-white/60"
               }`}
             >
               All
@@ -269,8 +269,8 @@ export default function CustomerOrderPage({ params }) {
                 onClick={() => setActiveCategory(cat.id)}
                 className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm transition-all ${
                   activeCategory === cat.id
-                    ? "bg-white text-indigo-700 font-bold"
-                    : "bg-white/40 text-slate-700 font-medium hover:bg-white/60"
+                    ? "bg-white text-brand-primary font-bold"
+                    : "bg-white/40 text-brand-dark font-medium hover:bg-white/60"
                 }`}
               >
                 {cat.name}
@@ -285,7 +285,7 @@ export default function CustomerOrderPage({ params }) {
         {activeTab === "menu" && (
           <>
             {/* <div className="flex items-center justify-between pt-1 pb-1">
-              <h2 className="text-2xl font-black text-slate-800 tracking-tight">
+              <h2 className="text-2xl font-black text-brand-dark tracking-tight">
                 {activeCategoryName}
               </h2>
             </div> */}
@@ -334,15 +334,15 @@ export default function CustomerOrderPage({ params }) {
       <div className="fixed gap-4 bottom-4 left-4 right-4 z-30 flex justify-center pb-safe pointer-events-none">
         <motion.div
           layout
-          className="bg-slate-900/95 backdrop-blur-md p-1.5 rounded-full shadow-2xl flex items-center gap-2 border border-slate-800 pointer-events-auto relative"
+          className="bg-brand-dark/95 backdrop-blur-md p-1.5 rounded-full shadow-2xl flex items-center gap-2 border border-brand-dark pointer-events-auto relative"
         >
           <motion.button
             layout
             onClick={() => setActiveTab("menu")}
             className={`flex items-center px-4 py-2.5 rounded-full transition-colors duration-300 ${
               activeTab === "menu"
-                ? "bg-white text-slate-900 shadow-sm"
-                : "text-slate-400 hover:text-slate-200"
+                ? "bg-white text-brand-dark shadow-sm"
+                : "text-brand-muted hover:text-brand-light"
             }`}
           >
             <motion.div layout>
@@ -372,8 +372,8 @@ export default function CustomerOrderPage({ params }) {
             onClick={() => setActiveTab("orders")}
             className={`flex items-center px-4 py-2.5 rounded-full transition-colors duration-300 relative ${
               activeTab === "orders"
-                ? "bg-white text-slate-900 shadow-sm"
-                : "text-slate-400 hover:text-slate-200"
+                ? "bg-white text-brand-dark shadow-sm"
+                : "text-brand-muted hover:text-brand-light"
             }`}
           >
             <motion.div layout>
@@ -399,7 +399,7 @@ export default function CustomerOrderPage({ params }) {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   exit={{ scale: 0 }}
-                  className="absolute -top-1 -right-1 w-5 h-5 bg-indigo-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-slate-900"
+                  className="absolute -top-1 -right-1 w-5 h-5 bg-brand-primary text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-brand-dark"
                 >
                   {activeOrdersCount}
                 </motion.div>
@@ -412,8 +412,8 @@ export default function CustomerOrderPage({ params }) {
             onClick={() => setActiveTab("bill")}
             className={`flex items-center px-4 py-2.5 rounded-full transition-colors duration-300 relative ${
               activeTab === "bill"
-                ? "bg-white text-slate-900 shadow-sm"
-                : "text-slate-400 hover:text-slate-200"
+                ? "bg-white text-brand-dark shadow-sm"
+                : "text-brand-muted hover:text-brand-light"
             }`}
           >
             <motion.div layout>
@@ -442,7 +442,7 @@ export default function CustomerOrderPage({ params }) {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   exit={{ scale: 0 }}
-                  className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-slate-900"
+                  className="absolute -top-1 -right-1 w-5 h-5 bg-brand-danger text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-brand-dark"
                 >
                   {cartItemCount}
                 </motion.div>

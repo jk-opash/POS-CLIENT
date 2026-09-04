@@ -43,19 +43,19 @@ export default function PaymentStatisticsWidget() {
           label="Cash Collected"
           value={formatCurrency(cashCollection)}
           subtext="Cash Payments"
-          icon={<Banknote size={16} color="#10b981" />}
+          icon={<Banknote size={16} color="#059669" />}
         />
         <StatCard
           label="UPI Collected"
           value={formatCurrency(upiCollection)}
           subtext="UPI / Online Transfers"
-          icon={<Smartphone size={16} color="#6b21a8" />}
+          icon={<Smartphone size={16} color="#8B5CF6" />}
         />
         <StatCard
           label="Card Collected"
           value={formatCurrency(cardCollection)}
           subtext="Credit / Debit Cards"
-          icon={<CreditCard size={16} color="#0284c7" />}
+          icon={<CreditCard size={16} color="#6366F1" />}
         />
       </div>
 
@@ -68,34 +68,34 @@ export default function PaymentStatisticsWidget() {
           >
             <defs>
               <linearGradient id="colorCash" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                <stop offset="5%" stopColor="#059669" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#059669" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="colorUpi" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#6b21a8" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#6b21a8" stopOpacity={0} />
+                <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="colorCard" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#0284c7" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#0284c7" stopOpacity={0} />
+                <stop offset="5%" stopColor="#6366F1" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#6366F1" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid
               strokeDasharray="3 3"
               vertical={false}
-              stroke="#e2e8f0"
+              stroke="#E2E8F0"
             />
             <XAxis
               dataKey="date"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#64748b", fontSize: 12, fontWeight: 500 }}
+              tick={{ fill: "#4B5563", fontSize: 12, fontWeight: 500 }}
               dy={10}
             />
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#64748b", fontSize: 12, fontWeight: 500 }}
+              tick={{ fill: "#4B5563", fontSize: 12, fontWeight: 500 }}
               tickFormatter={(value) => `₹${(value / 1000).toFixed(0)}k`}
               dx={-10}
             />
@@ -130,12 +130,12 @@ export default function PaymentStatisticsWidget() {
                         </div>
                         <div className="flex items-center justify-between gap-6">
                           <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-[#6b21a8]"></div>
+                            <div className="w-2 h-2 rounded-full bg-brand-purple"></div>
                             <span className="text-sm font-semibold text-brand-dark">
                               UPI
                             </span>
                           </div>
-                          <span className="font-bold text-[#6b21a8]">
+                          <span className="font-bold text-brand-purple">
                             ₹
                             {upi.toLocaleString(undefined, {
                               maximumFractionDigits: 0,
@@ -144,12 +144,12 @@ export default function PaymentStatisticsWidget() {
                         </div>
                         <div className="flex items-center justify-between gap-6">
                           <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-[#0284c7]"></div>
+                            <div className="w-2 h-2 rounded-full bg-brand-primary"></div>
                             <span className="text-sm font-semibold text-brand-dark">
                               Card
                             </span>
                           </div>
-                          <span className="font-bold text-[#0284c7]">
+                          <span className="font-bold text-brand-primary">
                             ₹
                             {card.toLocaleString(undefined, {
                               maximumFractionDigits: 0,
@@ -166,7 +166,7 @@ export default function PaymentStatisticsWidget() {
             <Area
               type="monotone"
               dataKey="cash"
-              stroke="#10b981"
+              stroke="#059669"
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#colorCash)"
@@ -175,7 +175,7 @@ export default function PaymentStatisticsWidget() {
             <Area
               type="monotone"
               dataKey="upi"
-              stroke="#6b21a8"
+              stroke="#8B5CF6"
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#colorUpi)"
@@ -184,7 +184,7 @@ export default function PaymentStatisticsWidget() {
             <Area
               type="monotone"
               dataKey="card"
-              stroke="#0284c7"
+              stroke="#6366F1"
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#colorCard)"

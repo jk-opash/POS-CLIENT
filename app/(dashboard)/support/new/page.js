@@ -66,7 +66,7 @@ export default function CreateTicketPage() {
       <div className="rounded-2xl border border-brand-border bg-white shadow-sm overflow-hidden p-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
-            <div className="p-4 bg-red-50 text-red-600 rounded-xl text-sm border border-red-100">
+            <div className="p-4 bg-brand-dangerLight text-brand-danger rounded-xl text-sm border border-brand-danger/20">
               {error}
             </div>
           )}
@@ -74,7 +74,7 @@ export default function CreateTicketPage() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-brand-dark mb-1">
-                Subject <span className="text-red-500">*</span>
+                Subject <span className="text-brand-danger">*</span>
               </label>
               <Input
                 placeholder="Brief summary of the issue (e.g., POS Printer not working)"
