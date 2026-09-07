@@ -94,7 +94,7 @@ export default function ActionModal({
             <AlertCircle size={16} /> {error}
           </div>
         )}
-        
+
         {/* Product selector */}
         <div className="relative">
           <Input

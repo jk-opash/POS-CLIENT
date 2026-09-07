@@ -212,7 +212,10 @@ export default function MenuItemModal({ item, onClose, onSave }) {
             const isCompleted = step > s.num;
             const isCurrent = step === s.num;
             return (
-              <div key={s.num} className={`flex items-center ${i < steps.length - 1 ? 'flex-1' : ''}`}>
+              <div
+                key={s.num}
+                className={`flex items-center ${i < steps.length - 1 ? "flex-1" : ""}`}
+              >
                 <div
                   className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 shadow-sm ${
                     isCompleted
@@ -423,7 +426,8 @@ export default function MenuItemModal({ item, onClose, onSave }) {
               <div className="space-y-6 md:space-y-7 animate-in slide-in-from-right-4 duration-300 ease-out">
                 <div>
                   <label className="block text-sm font-bold text-brand-dark mb-2">
-                    Base Selling Price (₹) <span className="text-brand-danger">*</span>
+                    Base Selling Price (₹){" "}
+                    <span className="text-brand-danger">*</span>
                   </label>
                   <div className="relative">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted font-bold">
@@ -460,7 +464,10 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                   {formData.variants.length > 0 && (
                     <div className="space-y-3 mb-4 bg-brand-bg p-3 md:p-4 rounded-2xl border border-brand-border/60">
                       {formData.variants.map((variant, index) => (
-                        <div key={index} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-white sm:bg-transparent p-3 sm:p-0 rounded-xl border border-brand-border sm:border-transparent">
+                        <div
+                          key={index}
+                          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-white sm:bg-transparent p-3 sm:p-0 rounded-xl border border-brand-border sm:border-transparent"
+                        >
                           <input
                             className={inputBaseStyle}
                             placeholder="Variant Name"
@@ -515,7 +522,8 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                       Enable Spice Level Options?
                     </h4>
                     <p className="text-xs font-medium text-brand-muted mt-1">
-                      Prompts the customer to choose spice level (Mild, Medium, Spicy)
+                      Prompts the customer to choose spice level (Mild, Medium,
+                      Spicy)
                     </p>
                   </div>
                   <button
@@ -548,7 +556,8 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                       Custom Add-on Categories
                     </h4>
                     <p className="text-xs font-medium text-brand-placeholder mt-1">
-                      Build specific add-on groups (e.g. "Choice of Bread", "Extra Toppings").
+                      Build specific add-on groups (e.g. "Choice of Bread",
+                      "Extra Toppings").
                     </p>
                   </div>
 
@@ -694,7 +703,12 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                     onClick={addAddonCategory}
                     className="mt-5 w-full flex items-center justify-center gap-2 px-5 py-3.5 bg-white border-2 border-dashed border-brand-borderHover rounded-2xl text-sm font-bold text-brand-dark hover:border-brand-primary hover:bg-brand-primary/5 hover:text-brand-primary transition-all group"
                   >
-                    <Plus size={18} strokeWidth={3} className="text-brand-muted group-hover:text-brand-primary transition-colors" /> Create Add-on Category
+                    <Plus
+                      size={18}
+                      strokeWidth={3}
+                      className="text-brand-muted group-hover:text-brand-primary transition-colors"
+                    />{" "}
+                    Create Add-on Category
                   </button>
                 </div>
               </div>
@@ -722,7 +736,8 @@ export default function MenuItemModal({ item, onClose, onSave }) {
               onClick={handleNext}
               className="flex items-center gap-1.5 md:gap-2 px-6 md:px-8 py-3 rounded-xl bg-brand-primary text-white text-xs md:text-sm font-bold shadow-lg shadow-brand-primary/30 hover:bg-brand-primaryDark hover:shadow-xl hover:shadow-brand-primary/40 hover:-translate-y-0.5 transition-all ml-auto"
             >
-              Next <span className="hidden md:inline">Step</span> <ChevronRight size={18} strokeWidth={3} />
+              Next <span className="hidden md:inline">Step</span>{" "}
+              <ChevronRight size={18} strokeWidth={3} />
             </button>
           ) : (
             <button

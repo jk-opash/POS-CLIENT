@@ -40,10 +40,13 @@ export default function AddItemModal({ branchId, onClose }) {
       "Spices",
       "Dry Goods",
       "Other",
-    ].map(c => ({ value: c, label: c }))
+    ].map((c) => ({ value: c, label: c })),
   ];
 
-  const UNITS = ["kg", "g", "L", "ml", "pcs", "box", "dozen"].map(u => ({ value: u, label: u }));
+  const UNITS = ["kg", "g", "L", "ml", "pcs", "box", "dozen"].map((u) => ({
+    value: u,
+    label: u,
+  }));
 
   const dispatch = useDispatch();
 
@@ -89,19 +92,14 @@ export default function AddItemModal({ branchId, onClose }) {
   };
 
   return (
-    <Modal
-      isOpen={true}
-      onClose={onClose}
-      title="Add Inventory Item"
-      size="lg"
-    >
+    <Modal isOpen={true} onClose={onClose} title="Add Inventory Item" size="lg">
       <form onSubmit={handleSubmit} className="space-y-5">
         {error && (
           <div className="flex items-center gap-2 bg-brand-dangerLight border border-brand-danger/20 text-brand-danger text-sm px-4 py-3 rounded-xl">
             <AlertCircle size={16} /> {error}
           </div>
         )}
-        
+
         <Input
           label="Item Name *"
           value={form.name}

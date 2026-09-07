@@ -146,7 +146,10 @@ function PlanCard({ plan }) {
             {formatPlanName(plan.plan)}
           </h4>
           <p className="text-xs text-brand-primary/70 mt-0.5 capitalize">
-            {plan.billing_cycle === "freely" ? "Lifetime" : `${plan.billing_cycle || "yearly"} billing`} &middot;{" "}
+            {plan.billing_cycle === "freely"
+              ? "Lifetime"
+              : `${plan.billing_cycle || "yearly"} billing`}{" "}
+            &middot;{" "}
             {plan.amount > 0 ? `${plan.currency} ${plan.amount}` : "Free"}
           </p>
         </div>
@@ -300,10 +303,18 @@ export default function Page() {
     ? {
         ...business.subscription_plan,
         status: business.subscription_status || "active",
-        current_period_start: business.subscription_starts_at || business.subscription_plan.current_period_start,
-        current_period_end: business.subscription_ends_at || business.subscription_plan.current_period_end,
-        trial_end_date: business.subscription_trial_end_date || business.subscription_plan.trial_end_date,
-        auto_renew: business.subscription_auto_renew ?? business.subscription_plan.auto_renew,
+        current_period_start:
+          business.subscription_starts_at ||
+          business.subscription_plan.current_period_start,
+        current_period_end:
+          business.subscription_ends_at ||
+          business.subscription_plan.current_period_end,
+        trial_end_date:
+          business.subscription_trial_end_date ||
+          business.subscription_plan.trial_end_date,
+        auto_renew:
+          business.subscription_auto_renew ??
+          business.subscription_plan.auto_renew,
       }
     : null;
   const branches = business?.branches || [];

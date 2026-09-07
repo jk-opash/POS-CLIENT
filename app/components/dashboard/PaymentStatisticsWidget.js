@@ -74,16 +74,40 @@ export default function PaymentStatisticsWidget() {
           >
             <defs>
               <linearGradient id="colorCash" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--color-brand-success)" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="var(--color-brand-success)" stopOpacity={0} />
+                <stop
+                  offset="5%"
+                  stopColor="var(--color-brand-success)"
+                  stopOpacity={0.3}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--color-brand-success)"
+                  stopOpacity={0}
+                />
               </linearGradient>
               <linearGradient id="colorUpi" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--color-brand-accent)" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="var(--color-brand-accent)" stopOpacity={0} />
+                <stop
+                  offset="5%"
+                  stopColor="var(--color-brand-accent)"
+                  stopOpacity={0.3}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--color-brand-accent)"
+                  stopOpacity={0}
+                />
               </linearGradient>
               <linearGradient id="colorCard" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--color-brand-primary)" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="var(--color-brand-primary)" stopOpacity={0} />
+                <stop
+                  offset="5%"
+                  stopColor="var(--color-brand-primary)"
+                  stopOpacity={0.3}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--color-brand-primary)"
+                  stopOpacity={0}
+                />
               </linearGradient>
             </defs>
             <CartesianGrid
@@ -122,12 +146,18 @@ export default function PaymentStatisticsWidget() {
                       <div className="flex flex-col gap-2">
                         <div className="flex items-center justify-between gap-6">
                           <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-brand-success"></div>
+                            <div
+                              className="w-2 h-2 rounded-full"
+                              style={{ backgroundColor: "#059669" }}
+                            ></div>
                             <span className="text-sm font-semibold text-brand-dark">
                               Cash
                             </span>
                           </div>
-                          <span className="font-bold text-brand-success">
+                          <span
+                            className="font-bold"
+                            style={{ color: "#059669" }}
+                          >
                             ₹
                             {cash.toLocaleString(undefined, {
                               maximumFractionDigits: 0,
@@ -150,12 +180,18 @@ export default function PaymentStatisticsWidget() {
                         </div>
                         <div className="flex items-center justify-between gap-6">
                           <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-brand-primary"></div>
+                            <div
+                              className="w-2 h-2 rounded-full"
+                              style={{ backgroundColor: "#6366F1" }}
+                            ></div>
                             <span className="text-sm font-semibold text-brand-dark">
                               Card
                             </span>
                           </div>
-                          <span className="font-bold text-brand-primary">
+                          <span
+                            className="font-bold"
+                            style={{ color: "#6366F1" }}
+                          >
                             ₹
                             {card.toLocaleString(undefined, {
                               maximumFractionDigits: 0,
