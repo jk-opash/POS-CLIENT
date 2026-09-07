@@ -1,5 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
+import ReduxProvider from "./provider/ReduxProvider";
+import AuthProvider from "./provider/AuthProvider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -8,9 +10,6 @@ export const metadata = {
   description:
     "Complete restaurant point-of-sale and management system for owners",
 };
-
-import ReduxProvider from "./components/ReduxProvider";
-import AuthProvider from "./components/AuthProvider";
 
 export default function RootLayout({ children }) {
   return (

@@ -7,13 +7,12 @@ const paddingStyles = {
   lg: 'p-6',
 };
 
-export function Card({ children, className, glass, hover, padding = 'md' }) {
+export function Card({ children, className, hover, padding = 'md' }) {
   return (
     <div
       className={cn(
-        'rounded-2xl border border-white/60 bg-white/70 backdrop-blur-lg shadow-sm',
-        glass && 'bg-white/40 backdrop-blur-xl border-white/80',
-        hover && 'transition-all duration-300 ease-spring hover:shadow-glass-hover hover:-translate-y-1',
+        'bg-white border border-brand-border rounded-2xl shadow-sm',
+        hover && 'transition-all duration-300 ease-spring hover:shadow-md hover:border-brand-borderHover hover:-translate-y-0.5',
         paddingStyles[padding],
         className
       )}

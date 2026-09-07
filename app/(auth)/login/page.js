@@ -16,19 +16,17 @@ export default function LoginPage() {
   const [email, setEmail] = useState("karthik@dailygrind.co");
   const [password, setPassword] = useState("password123");
   const [showPass, setShowPass] = useState(false);
-  const [validationErrors, setValidationErrors] = useState({});
 
   const { loading, error } = useSelector((state) => state.auth);
-
 
   const validateForm = () => {
     const newErrors = {};
     if (!email.trim()) newErrors.email = "Email is required";
-    else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) newErrors.email = "Invalid email format";
-    
+    else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email))
+      newErrors.email = "Invalid email format";
+
     if (!password) newErrors.password = "Password is required";
-    
-    setValidationErrors(newErrors);
+
     return Object.keys(newErrors).length === 0;
   };
 
@@ -37,9 +35,8 @@ export default function LoginPage() {
     if (error) {
       dispatch(clearError());
     }
-    
-    if (!validateForm()) return;
 
+    if (!validateForm()) return;
 
     const resultAction = await dispatch(loginOwner({ email, password }));
 
@@ -87,7 +84,7 @@ export default function LoginPage() {
               { label: "Daily Orders", value: "850+" },
               { label: "Staff Members", value: "24" },
             ].map((stat) => (
-              <Card key={stat.label} padding="sm" glass hover>
+              <Card key={stat.label} padding="sm" hover>
                 <p className="text-xl font-bold text-brand-dark">
                   {stat.value}
                 </p>

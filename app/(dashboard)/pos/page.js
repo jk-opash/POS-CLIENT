@@ -13,13 +13,11 @@ import {
   List,
   ShoppingBag,
 } from "lucide-react";
-import Tabs from "../../components/ui/Tabs";
-import PosAdminBadge from "../menu/components/PosAdminBadge";
+import PosAdminBadge from "@/app/components/ui/PosAdminBadge";
 import LottieLoader from "../../components/common/LottieLoader";
 
 export default function POSPage() {
   const dispatch = useDispatch();
-  const [collapsed, setCollapsed] = useState(false);
   const [selectedBranchId, setSelectedBranchId] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
 
@@ -92,7 +90,9 @@ export default function POSPage() {
         {/* Header & Global Actions */}
         <div className="flex flex-col gap-4 sm:flex-row justify-between items-start sm:items-center">
           <div>
-            <h2 className="text-2xl font-bold text-brand-dark">Branch Orders</h2>
+            <h2 className="text-2xl font-bold text-brand-dark">
+              Branch Orders
+            </h2>
             <p className="mt-1 text-sm text-brand-muted">
               View all historical and active orders for the branch.
             </p>
@@ -127,7 +127,8 @@ export default function POSPage() {
           </div>
         </div>
 
-        <div className="flex w-full overflow-x-auto pb-1 border-b border-brand-border">
+        {/* Pos-admin Tabs */}
+        <div className="border-b border-brand-border bg-white/50 flex flex-row gap-2 backdrop-blur-md rounded-t-2xl px-2">
           <nav className="-mb-px flex space-x-6 overflow-x-auto">
             {[
               { key: "All", label: "All Orders", icon: List },
@@ -137,7 +138,7 @@ export default function POSPage() {
               <button
                 key={tab.key}
                 onClick={() => setActiveFilter(tab.key)}
-                className={`whitespace-nowrap py-4 px-2 border-b-2 font-bold text-sm transition-all duration-300 ${
+                className={`whitespace-nowrap py-4 px-2 border-b-2 font-bold text-sm transition-all duration-300 ease-spring ${
                   activeFilter === tab.key
                     ? "border-brand-primary text-brand-primary"
                     : "border-transparent text-brand-muted hover:text-brand-dark hover:border-brand-borderHover"
@@ -161,7 +162,7 @@ export default function POSPage() {
               Please select a branch to view orders.
             </p>
           </div>
-        ) : (allOrders?.length === 0 && loading) ? (
+        ) : allOrders?.length === 0 && loading ? (
           <div className="flex flex-col items-center justify-center min-h-[400px] mt-4">
             <LottieLoader text="Loading orders..." />
           </div>

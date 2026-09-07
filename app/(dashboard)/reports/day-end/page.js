@@ -9,7 +9,6 @@ import StatCard from "../../../components/ui/StatCard";
 import Card from "../../../components/ui/Card";
 import {
   Printer,
-  Calendar,
   ArrowUpRight,
   ArrowDownRight,
   DollarSign,
@@ -17,8 +16,6 @@ import {
   Wallet,
   Coins,
   Receipt,
-  UserCheck,
-  Clock,
   ShieldAlert,
   Building2,
 } from "lucide-react";
@@ -403,7 +400,10 @@ export default function DayEndReport() {
 
                     <div className="space-y-1 pt-1 border-t border-brand-border">
                       <span className="text-xs font-bold text-brand-muted flex items-center gap-1.5">
-                        <ArrowDownRight size={14} className="text-brand-danger" />{" "}
+                        <ArrowDownRight
+                          size={14}
+                          className="text-brand-danger"
+                        />{" "}
                         Petty Cash Payouts
                       </span>
                       {pettyCash.length === 0 && (

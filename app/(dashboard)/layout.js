@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Sidebar } from "../components/layout/Sidebar";
-import { Header } from "../components/layout/Header";
+import { Sidebar } from "../layout/Sidebar";
+import { Header } from "../layout/Header";
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
@@ -26,7 +26,7 @@ export default function DashboardLayout({ children }) {
   return (
     <div className="flex h-screen overflow-hidden bg-brand-bg text-brand-dark">
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <div className="flex flex-1 flex-col overflow-hidden w-full">
+      <div className="flex flex-1 flex-col overflow-hidden w-full md:pl-64">
         <Header onMenuClick={() => setIsSidebarOpen(true)} />
         <main className="flex-1 overflow-y-auto scroll-smooth">
           <div className="">{children}</div>

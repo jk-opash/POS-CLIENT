@@ -4,15 +4,24 @@ import { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBranches } from "../../../store/slices/branchSlice";
 import { fetchReconciliations } from "../../../store/slices/reconciliationSlice";
-import { Building2, UploadCloud, CheckCircle2, AlertTriangle, XCircle, RefreshCcw } from "lucide-react";
+import {
+  Building2,
+  UploadCloud,
+  CheckCircle2,
+  AlertTriangle,
+  XCircle,
+  RefreshCcw,
+} from "lucide-react";
 import LottieLoader from "../../../components/common/LottieLoader";
 
 export default function ReconciliationPage() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const businessId = user?.businesses?.[0]?.id;
-  
-  const { reconciliations, loading } = useSelector((state) => state.reconciliation);
+
+  const { reconciliations, loading } = useSelector(
+    (state) => state.reconciliation,
+  );
   const { branches } = useSelector((state) => state.branch);
 
   const [branchFilter, setBranchFilter] = useState("");
@@ -37,13 +46,22 @@ export default function ReconciliationPage() {
   }, [branchFilter, dispatch]);
 
   const filteredData = useMemo(() => {
-    const rawData = Array.isArray(reconciliations) ? reconciliations : reconciliations?.data || [];
-    return rawData.filter(item => {
-      if (activeTab === "all") return true;
-      if (activeTab === "zomato") return item.platform?.toLowerCase() === "zomato";
-      if (activeTab === "swiggy") return item.platform?.toLowerCase() === "swiggy";
-      return true;
-    }).sort((a, b) => new Date(b.date || b.created_at) - new Date(a.date || a.created_at));
+    const rawData = Array.isArray(reconciliations)
+      ? reconciliations
+      : reconciliations?.data || [];
+    return rawData
+      .filter((item) => {
+        if (activeTab === "all") return true;
+        if (activeTab === "zomato")
+          return item.platform?.toLowerCase() === "zomato";
+        if (activeTab === "swiggy")
+          return item.platform?.toLowerCase() === "swiggy";
+        return true;
+      })
+      .sort(
+        (a, b) =>
+          new Date(b.date || b.created_at) - new Date(a.date || a.created_at),
+      );
   }, [reconciliations, activeTab]);
 
   const metrics = useMemo(() => {
@@ -52,7 +70,7 @@ export default function ReconciliationPage() {
     let net = 0;
     let discrepancy = 0;
 
-    filteredData.forEach(item => {
+    filteredData.forEach((item) => {
       gross += Number(item.gross_amount || 0);
       deductions += Number(item.deductions || 0);
       net += Number(item.net_amount || 0);
@@ -127,20 +145,52 @@ export default function ReconciliationPage() {
           {/* Metric Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-white rounded-2xl p-5 border border-brand-border shadow-sm">
-              <p className="text-sm font-medium text-brand-muted mb-1">Gross Platform Sales</p>
-              <h3 className="text-2xl font-black text-brand-dark">₹{metrics.gross.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</h3>
+              <p className="text-sm font-medium text-brand-muted mb-1">
+                Gross Platform Sales
+              </p>
+              <h3 className="text-2xl font-black text-brand-dark">
+                ₹
+                {metrics.gross.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </h3>
             </div>
             <div className="bg-white rounded-2xl p-5 border border-brand-border shadow-sm">
-              <p className="text-sm font-medium text-brand-muted mb-1">Total Deductions</p>
-              <h3 className="text-2xl font-black text-brand-danger">-₹{metrics.deductions.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</h3>
+              <p className="text-sm font-medium text-brand-muted mb-1">
+                Total Deductions
+              </p>
+              <h3 className="text-2xl font-black text-brand-danger">
+                -₹
+                {metrics.deductions.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </h3>
             </div>
             <div className="bg-white rounded-2xl p-5 border border-brand-border shadow-sm">
-              <p className="text-sm font-medium text-brand-muted mb-1">Net Payouts</p>
-              <h3 className="text-2xl font-black text-brand-success">₹{metrics.net.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</h3>
+              <p className="text-sm font-medium text-brand-muted mb-1">
+                Net Payouts
+              </p>
+              <h3 className="text-2xl font-black text-brand-success">
+                ₹
+                {metrics.net.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </h3>
             </div>
             <div className="bg-white rounded-2xl p-5 border border-brand-warningLight shadow-sm bg-brand-warningLight/50">
-              <p className="text-sm font-medium text-brand-warning mb-1">Discrepancy (Missing)</p>
-              <h3 className="text-2xl font-black text-brand-warning">₹{metrics.discrepancy.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</h3>
+              <p className="text-sm font-medium text-brand-warning mb-1">
+                Discrepancy (Missing)
+              </p>
+              <h3 className="text-2xl font-black text-brand-warning">
+                ₹
+                {metrics.discrepancy.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </h3>
             </div>
           </div>
 
@@ -189,7 +239,10 @@ export default function ReconciliationPage() {
                       </tr>
                     ) : filteredData.length === 0 ? (
                       <tr>
-                        <td colSpan={6} className="py-12 text-center text-brand-muted/70">
+                        <td
+                          colSpan={6}
+                          className="py-12 text-center text-brand-muted/70"
+                        >
                           <RefreshCcw
                             size={36}
                             className="mx-auto mb-2 text-brand-muted/70"
@@ -198,7 +251,8 @@ export default function ReconciliationPage() {
                             No Reconciliation Data
                           </p>
                           <p className="text-xs text-brand-muted/70 mt-0.5">
-                            Upload a settlement report from your delivery partner to begin.
+                            Upload a settlement report from your delivery
+                            partner to begin.
                           </p>
                         </td>
                       </tr>
@@ -211,45 +265,84 @@ export default function ReconciliationPage() {
                           <td className="py-3 px-6 font-medium text-brand-dark">
                             {item.order_id || `#ORD-${item.id}`}
                             <span className="block text-[10px] text-brand-muted/70 font-normal mt-0.5">
-                              {new Date(item.date || item.created_at).toLocaleDateString("en-US", {
-                                month: "short", day: "numeric", hour: "2-digit", minute: "2-digit"
+                              {new Date(
+                                item.date || item.created_at,
+                              ).toLocaleDateString("en-US", {
+                                month: "short",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
                               })}
                             </span>
                           </td>
                           <td className="py-3 px-4">
-                            <span className={`px-2 py-1 rounded-md text-[10px] font-bold ${
-                              item.platform?.toLowerCase() === "zomato" ? "bg-brand-dangerLight text-brand-danger" :
-                              item.platform?.toLowerCase() === "swiggy" ? "bg-orange-50 text-orange-700" :
-                              "bg-brand-light text-brand-dark"
-                            }`}>
+                            <span
+                              className={`px-2 py-1 rounded-md text-[10px] font-bold ${
+                                item.platform?.toLowerCase() === "zomato"
+                                  ? "bg-brand-dangerLight text-brand-danger"
+                                  : item.platform?.toLowerCase() === "swiggy"
+                                    ? "bg-orange-50 text-orange-700"
+                                    : "bg-brand-light text-brand-dark"
+                              }`}
+                            >
                               {item.platform || "Unknown"}
                             </span>
                           </td>
                           <td className="py-3 px-4 font-semibold text-brand-dark text-right">
-                            ₹{Number(item.gross_amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            ₹
+                            {Number(item.gross_amount || 0).toLocaleString(
+                              undefined,
+                              {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              },
+                            )}
                           </td>
                           <td className="py-3 px-4 text-brand-danger font-medium text-right">
-                            -₹{Number(item.deductions || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            -₹
+                            {Number(item.deductions || 0).toLocaleString(
+                              undefined,
+                              {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              },
+                            )}
                           </td>
                           <td className="py-3 px-4 font-bold text-brand-success text-right">
-                            ₹{Number(item.net_amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            ₹
+                            {Number(item.net_amount || 0).toLocaleString(
+                              undefined,
+                              {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              },
+                            )}
                           </td>
                           <td className="py-3 px-6 text-center">
                             <div className="flex items-center justify-center gap-1.5">
                               {getStatusIcon(item.status)}
-                              <span className={`font-semibold text-xs ${
-                                item.status === "Matched" ? "text-brand-success" :
-                                item.status === "Discrepancy" ? "text-brand-warning" :
-                                "text-brand-danger"
-                              }`}>
+                              <span
+                                className={`font-semibold text-xs ${
+                                  item.status === "Matched"
+                                    ? "text-brand-success"
+                                    : item.status === "Discrepancy"
+                                      ? "text-brand-warning"
+                                      : "text-brand-danger"
+                                }`}
+                              >
                                 {item.status || "Pending"}
                               </span>
                             </div>
-                            {(item.status === "Discrepancy" || item.status === "Missing") && item.discrepancy_amount && (
-                              <span className="block text-[10px] text-brand-warning font-bold mt-1">
-                                diff: ₹{Number(item.discrepancy_amount).toLocaleString()}
-                              </span>
-                            )}
+                            {(item.status === "Discrepancy" ||
+                              item.status === "Missing") &&
+                              item.discrepancy_amount && (
+                                <span className="block text-[10px] text-brand-warning font-bold mt-1">
+                                  diff: ₹
+                                  {Number(
+                                    item.discrepancy_amount,
+                                  ).toLocaleString()}
+                                </span>
+                              )}
                           </td>
                         </tr>
                       ))

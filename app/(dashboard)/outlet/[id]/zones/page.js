@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
 import {
@@ -19,7 +19,6 @@ import {
   ArrowLeft,
   ZoomIn,
   ZoomOut,
-  Maximize,
   Plus,
   Edit2,
   Check,
@@ -31,7 +30,6 @@ import {
   MapPin,
   AlertCircle,
   Eye,
-  LayoutGrid,
 } from "lucide-react";
 import LottieLoader from "../../../../components/common/LottieLoader";
 import { motion, AnimatePresence } from "framer-motion";

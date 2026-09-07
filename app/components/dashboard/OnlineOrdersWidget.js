@@ -24,7 +24,7 @@ export default function OnlineOrdersWidget() {
   return (
     <Card padding="none" className="overflow-hidden flex flex-col">
       {/* Top Header Section */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center px-6 py-5 border-b border-brand-border/60 bg-white/40">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center px-6 py-5 border-b border-brand-border bg-brand-light/30">
         <div className="flex flex-col gap-1">
           <h3 className="text-base font-bold text-brand-dark">
             Revenue Over Time
@@ -102,7 +102,7 @@ export default function OnlineOrdersWidget() {
                   const takeAway =
                     payload.find((p) => p.dataKey === "val2")?.value || 0;
                   return (
-                    <div className="rounded-xl border border-brand-border bg-white/90 backdrop-blur-md p-4 shadow-[var(--shadow-glass-hover)]">
+                    <div className="rounded-xl border border-brand-border bg-white p-4 shadow-lg">
                       <p className="mb-3 text-xs font-bold text-brand-muted uppercase tracking-wider">
                         {label}
                       </p>

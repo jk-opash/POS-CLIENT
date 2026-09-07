@@ -26,7 +26,7 @@ export default function PaymentStatisticsWidget() {
   return (
     <Card padding="none" className="overflow-hidden flex flex-col h-full mt-6">
       {/* Top Header Section */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center px-6 py-5 border-b border-brand-border/60 bg-white/40">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center px-6 py-5 border-b border-brand-border bg-brand-light/30">
         <div className="flex flex-col gap-1">
           <h3 className="text-base font-bold text-brand-dark">
             Payment Methods Trends
@@ -49,7 +49,7 @@ export default function PaymentStatisticsWidget() {
           label="UPI Collected"
           value={formatCurrency(upiCollection)}
           subtext="UPI / Online Transfers"
-          icon={<Smartphone size={16} color="#8B5CF6" />}
+          icon={<Smartphone size={16} color="#df5cf6" />}
         />
         <StatCard
           label="Card Collected"
@@ -72,8 +72,8 @@ export default function PaymentStatisticsWidget() {
                 <stop offset="95%" stopColor="#059669" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="colorUpi" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0} />
+                <stop offset="5%" stopColor="#df5cf6" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#df5cf6" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="colorCard" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#6366F1" stopOpacity={0.3} />
@@ -109,19 +109,19 @@ export default function PaymentStatisticsWidget() {
                   const card =
                     payload.find((p) => p.dataKey === "card")?.value || 0;
                   return (
-                    <div className="rounded-xl border border-brand-border bg-white/90 backdrop-blur-md p-4 shadow-[var(--shadow-glass-hover)]">
+                    <div className="rounded-xl border border-brand-border bg-white p-4 shadow-lg">
                       <p className="mb-3 text-xs font-bold text-brand-muted uppercase tracking-wider">
                         {label}
                       </p>
                       <div className="flex flex-col gap-2">
                         <div className="flex items-center justify-between gap-6">
                           <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-brand-success"></div>
+                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "#059669" }}></div>
                             <span className="text-sm font-semibold text-brand-dark">
                               Cash
                             </span>
                           </div>
-                          <span className="font-bold text-brand-success">
+                          <span className="font-bold" style={{ color: "#059669" }}>
                             ₹
                             {cash.toLocaleString(undefined, {
                               maximumFractionDigits: 0,
@@ -130,12 +130,12 @@ export default function PaymentStatisticsWidget() {
                         </div>
                         <div className="flex items-center justify-between gap-6">
                           <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-brand-purple"></div>
+                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "#df5cf6" }}></div>
                             <span className="text-sm font-semibold text-brand-dark">
                               UPI
                             </span>
                           </div>
-                          <span className="font-bold text-brand-purple">
+                          <span className="font-bold" style={{ color: "#df5cf6" }}>
                             ₹
                             {upi.toLocaleString(undefined, {
                               maximumFractionDigits: 0,
@@ -144,12 +144,12 @@ export default function PaymentStatisticsWidget() {
                         </div>
                         <div className="flex items-center justify-between gap-6">
                           <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-brand-primary"></div>
+                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "#6366F1" }}></div>
                             <span className="text-sm font-semibold text-brand-dark">
                               Card
                             </span>
                           </div>
-                          <span className="font-bold text-brand-primary">
+                          <span className="font-bold" style={{ color: "#6366F1" }}>
                             ₹
                             {card.toLocaleString(undefined, {
                               maximumFractionDigits: 0,
@@ -175,7 +175,7 @@ export default function PaymentStatisticsWidget() {
             <Area
               type="monotone"
               dataKey="upi"
-              stroke="#8B5CF6"
+              stroke="#df5cf6"
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#colorUpi)"

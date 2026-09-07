@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
-import { Tag, Edit2, Trash2, Layers, Loader2, Plus, X } from "lucide-react";
-import PosAdminBadge from "../components/PosAdminBadge";
+import { useState } from "react";
+import { Tag, Edit2, Trash2, Layers, Loader2, Plus } from "lucide-react";
+import PosAdminBadge from "@/app/components/ui/PosAdminBadge";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories, createCategory, updateCategory, deleteCategory } from "../../../store/slices/categorySlice";
-import DeleteConfirmModal from "../../inventory/components/DeleteConfirmModal";
+import {
+  createCategory,
+  updateCategory,
+  deleteCategory,
+} from "../../../store/slices/categorySlice";
+import DeleteConfirmModal from "../../../components/inventory/DeleteConfirmModal";
 
 export default function CategoriesTab({ branchId }) {
   const dispatch = useDispatch();
@@ -13,7 +17,6 @@ export default function CategoriesTab({ branchId }) {
 
   // Category UI States
   const [showAddCategory, setShowAddCategory] = useState(false);
-  const [catError, setCatError] = useState("");
   const [newCategoryName, setNewCategoryName] = useState("");
   const [editingCategoryId, setEditingCategoryId] = useState(null);
   const [editCategoryName, setEditCategoryName] = useState("");
@@ -43,14 +46,22 @@ export default function CategoriesTab({ branchId }) {
 
   const handleDeleteCategory = (e, cat) => {
     e.stopPropagation();
-    setItemToDelete({ type: 'category', id: cat.id, name: cat.name });
+    setItemToDelete({ type: "category", id: cat.id, name: cat.name });
   };
 
   // SUBCATEGORY HANDLERS
   const handleAddSubcategory = (category) => {
     if (!newSubcategoryName.trim()) return;
-    const newSubcategories = [...(category.sub_categories || []), { name: newSubcategoryName.trim() }];
-    dispatch(updateCategory({ id: category.id, data: { sub_categories: newSubcategories } }));
+    const newSubcategories = [
+      ...(category.sub_categories || []),
+      { name: newSubcategoryName.trim() },
+    ];
+    dispatch(
+      updateCategory({
+        id: category.id,
+        data: { sub_categories: newSubcategories },
+      }),
+    );
     setNewSubcategoryName("");
     setShowAddSubcategory(false);
   };
@@ -58,34 +69,52 @@ export default function CategoriesTab({ branchId }) {
   const handleUpdateSubcategory = (category, subIndex) => {
     if (!editSubcategoryName.trim()) return;
     const newSubcategories = [...category.sub_categories];
-    newSubcategories[subIndex] = { ...newSubcategories[subIndex], name: editSubcategoryName.trim() };
-    dispatch(updateCategory({ id: category.id, data: { sub_categories: newSubcategories } }));
+    newSubcategories[subIndex] = {
+      ...newSubcategories[subIndex],
+      name: editSubcategoryName.trim(),
+    };
+    dispatch(
+      updateCategory({
+        id: category.id,
+        data: { sub_categories: newSubcategories },
+      }),
+    );
     setEditingSubcategoryIndex(null);
     setEditSubcategoryName("");
   };
 
   const handleDeleteSubcategory = (category, subIndex) => {
-    setItemToDelete({ 
-      type: 'subcategory', 
-      category, 
-      subIndex, 
-      name: category.sub_categories[subIndex].name 
+    setItemToDelete({
+      type: "subcategory",
+      category,
+      subIndex,
+      name: category.sub_categories[subIndex].name,
     });
   };
 
   const confirmDelete = () => {
     if (!itemToDelete) return;
 
-    if (itemToDelete.type === 'category') {
+    if (itemToDelete.type === "category") {
       dispatch(deleteCategory(itemToDelete.id)).then((res) => {
-        if (res.meta.requestStatus === 'fulfilled' && selectedCategoryTabId === itemToDelete.id) {
+        if (
+          res.meta.requestStatus === "fulfilled" &&
+          selectedCategoryTabId === itemToDelete.id
+        ) {
           setSelectedCategoryTabId(null);
         }
       });
-    } else if (itemToDelete.type === 'subcategory') {
+    } else if (itemToDelete.type === "subcategory") {
       const { category, subIndex } = itemToDelete;
-      const newSubcategories = category.sub_categories.filter((_, idx) => idx !== subIndex);
-      dispatch(updateCategory({ id: category.id, data: { sub_categories: newSubcategories } }));
+      const newSubcategories = category.sub_categories.filter(
+        (_, idx) => idx !== subIndex,
+      );
+      dispatch(
+        updateCategory({
+          id: category.id,
+          data: { sub_categories: newSubcategories },
+        }),
+      );
     }
 
     setItemToDelete(null);
@@ -98,19 +127,19 @@ export default function CategoriesTab({ branchId }) {
         <div className="flex justify-between items-center px-1">
           <h3 className="font-bold text-brand-dark text-lg flex items-center gap-2">
             Categories
-            {loading && <Loader2 size={16} className="animate-spin text-brand-muted/70" />}
+            {loading && (
+              <Loader2 size={16} className="animate-spin text-brand-muted/70" />
+            )}
           </h3>
-          <button 
+          <button
             onClick={() => setShowAddCategory(true)}
             className="text-xs font-bold text-brand-primary hover:text-brand-primary/90 bg-brand-light hover:bg-brand-light/80 px-3 py-2 rounded-xl transition-colors flex items-center gap-1"
           >
             <Plus size={14} /> New Category
           </button>
         </div>
-        
-        {error && (
-          <div className="text-brand-danger text-xs px-2">{error}</div>
-        )}
+
+        {error && <div className="text-brand-danger text-xs px-2">{error}</div>}
 
         <div className="space-y-3">
           {showAddCategory && (
@@ -127,7 +156,9 @@ export default function CategoriesTab({ branchId }) {
               <div className="flex justify-end gap-2">
                 <button
                   className="px-3 py-1.5 text-xs text-brand-dark hover:bg-brand-light font-medium rounded-lg transition-colors"
-                  onClick={() => { setShowAddCategory(false); setCatError(""); }}
+                  onClick={() => {
+                    setShowAddCategory(false);
+                  }}
                 >
                   Cancel
                 </button>
@@ -143,23 +174,30 @@ export default function CategoriesTab({ branchId }) {
 
           {categories.length === 0 && !loading && !showAddCategory && (
             <div className="text-center py-10 bg-white/50 border border-brand-border/60 rounded-2xl">
-              <p className="text-sm text-brand-muted font-medium">No categories found.</p>
+              <p className="text-sm text-brand-muted font-medium">
+                No categories found.
+              </p>
             </div>
           )}
           {categories.map((cat, idx) => {
             const isSelected = selectedCategoryTabId
               ? selectedCategoryTabId === cat.id
               : idx === 0;
-            
+
             return editingCategoryId === cat.id ? (
-              <div key={cat.id} className="p-3 bg-white border border-brand-border rounded-xl shadow-sm ring-1 ring-brand-primary/20">
+              <div
+                key={cat.id}
+                className="p-3 bg-white border border-brand-border rounded-xl shadow-sm ring-1 ring-brand-primary/20"
+              >
                 <input
                   autoFocus
                   type="text"
                   className="w-full text-sm font-medium border border-brand-border focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none rounded-lg p-2.5 mb-2.5 transition-all"
                   value={editCategoryName}
                   onChange={(e) => setEditCategoryName(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleUpdateCategory(cat.id)}
+                  onKeyDown={(e) =>
+                    e.key === "Enter" && handleUpdateCategory(cat.id)
+                  }
                 />
                 <div className="flex justify-end gap-2">
                   <button
@@ -187,12 +225,14 @@ export default function CategoriesTab({ branchId }) {
                 }`}
               >
                 <div className="flex justify-between items-start mb-2">
-                  <h4 className={`font-bold text-sm ${isSelected ? "text-brand-primary" : "text-brand-dark"}`}>
+                  <h4
+                    className={`font-bold text-sm ${isSelected ? "text-brand-primary" : "text-brand-dark"}`}
+                  >
                     {cat.name}
                   </h4>
                   <div className="flex items-center gap-1">
                     <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center mr-1">
-                      <button 
+                      <button
                         onClick={(e) => {
                           e.stopPropagation();
                           setEditingCategoryId(cat.id);
@@ -202,14 +242,16 @@ export default function CategoriesTab({ branchId }) {
                       >
                         <Edit2 size={13} />
                       </button>
-                      <button 
+                      <button
                         onClick={(e) => handleDeleteCategory(e, cat)}
                         className="text-brand-muted/70 hover:text-brand-danger hover:bg-brand-dangerLight p-1.5 rounded-lg transition-colors"
                       >
                         <Trash2 size={13} />
                       </button>
                     </div>
-                    <PosAdminBadge variant="success" dot>ACTIVE</PosAdminBadge>
+                    <PosAdminBadge variant="success" dot>
+                      ACTIVE
+                    </PosAdminBadge>
                   </div>
                 </div>
                 <p className="text-xs font-medium text-brand-muted">
@@ -242,13 +284,16 @@ export default function CategoriesTab({ branchId }) {
               <div className="flex justify-between items-center border-b border-brand-border pb-5 mb-2">
                 <div>
                   <h3 className="font-bold text-brand-dark text-lg flex items-center gap-2">
-                    {activeCat.name} <span className="text-brand-muted/70 font-normal">Subcategories</span>
+                    {activeCat.name}{" "}
+                    <span className="text-brand-muted/70 font-normal">
+                      Subcategories
+                    </span>
                   </h3>
                   <p className="text-xs text-brand-muted mt-1 font-medium">
                     Manage subcategories under this category
                   </p>
                 </div>
-                <button 
+                <button
                   onClick={() => setShowAddSubcategory(true)}
                   className="text-xs font-bold text-white bg-brand-dark hover:bg-brand-dark/90 px-4 py-2.5 rounded-xl transition-colors shadow-sm flex items-center gap-1.5"
                 >
@@ -265,7 +310,9 @@ export default function CategoriesTab({ branchId }) {
                     className="w-full text-sm font-medium border border-brand-border focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none rounded-xl p-3 mb-3 transition-all"
                     value={newSubcategoryName}
                     onChange={(e) => setNewSubcategoryName(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleAddSubcategory(activeCat)}
+                    onKeyDown={(e) =>
+                      e.key === "Enter" && handleAddSubcategory(activeCat)
+                    }
                   />
                   <div className="flex justify-end gap-2">
                     <button
@@ -284,11 +331,13 @@ export default function CategoriesTab({ branchId }) {
                 </div>
               )}
 
-              {(!activeCat.sub_categories || activeCat.sub_categories.length === 0) && !showAddSubcategory ? (
+              {(!activeCat.sub_categories ||
+                activeCat.sub_categories.length === 0) &&
+              !showAddSubcategory ? (
                 <div className="flex flex-1 flex-col items-center justify-center py-16 text-sm text-brand-muted/70 border-2 border-dashed border-brand-border rounded-2xl bg-brand-bg/50">
                   <Tag size={24} className="mb-3 text-brand-muted/70" />
                   <p className="font-medium">No subcategories yet.</p>
-                  <button 
+                  <button
                     onClick={() => setShowAddSubcategory(true)}
                     className="mt-3 text-brand-primary font-bold hover:underline"
                   >
@@ -300,14 +349,22 @@ export default function CategoriesTab({ branchId }) {
                   {activeCat.sub_categories?.map((sub, idx) => {
                     if (editingSubcategoryIndex === idx) {
                       return (
-                        <div key={idx} className="p-4 bg-white border border-brand-border rounded-2xl shadow-sm ring-1 ring-brand-border col-span-1 sm:col-span-2 md:col-span-1">
+                        <div
+                          key={idx}
+                          className="p-4 bg-white border border-brand-border rounded-2xl shadow-sm ring-1 ring-brand-border col-span-1 sm:col-span-2 md:col-span-1"
+                        >
                           <input
                             autoFocus
                             type="text"
                             className="w-full text-sm font-medium border border-brand-border focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none rounded-xl p-2.5 mb-3 transition-all"
                             value={editSubcategoryName}
-                            onChange={(e) => setEditSubcategoryName(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && handleUpdateSubcategory(activeCat, idx)}
+                            onChange={(e) =>
+                              setEditSubcategoryName(e.target.value)
+                            }
+                            onKeyDown={(e) =>
+                              e.key === "Enter" &&
+                              handleUpdateSubcategory(activeCat, idx)
+                            }
                           />
                           <div className="flex justify-end gap-2">
                             <button
@@ -318,7 +375,9 @@ export default function CategoriesTab({ branchId }) {
                             </button>
                             <button
                               className="px-3 py-1.5 text-xs bg-brand-dark hover:bg-brand-dark/90 text-white font-bold rounded-lg transition-colors shadow-sm"
-                              onClick={() => handleUpdateSubcategory(activeCat, idx)}
+                              onClick={() =>
+                                handleUpdateSubcategory(activeCat, idx)
+                              }
                             >
                               Save
                             </button>
@@ -341,7 +400,7 @@ export default function CategoriesTab({ branchId }) {
                           </span>
                         </div>
                         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button 
+                          <button
                             onClick={() => {
                               setEditingSubcategoryIndex(idx);
                               setEditSubcategoryName(sub.name);
@@ -350,8 +409,10 @@ export default function CategoriesTab({ branchId }) {
                           >
                             <Edit2 size={14} strokeWidth={2.5} />
                           </button>
-                          <button 
-                            onClick={() => handleDeleteSubcategory(activeCat, idx)}
+                          <button
+                            onClick={() =>
+                              handleDeleteSubcategory(activeCat, idx)
+                            }
                             className="p-2 text-brand-muted/70 hover:text-brand-danger hover:bg-brand-dangerLight rounded-xl transition-colors"
                           >
                             <Trash2 size={14} strokeWidth={2.5} />

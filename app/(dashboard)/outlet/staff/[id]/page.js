@@ -20,8 +20,6 @@ import {
   Phone,
   Mail,
   ChevronLeft,
-  Settings,
-  Clock,
   Edit,
   Shield,
   KeyRound,
@@ -180,7 +178,9 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
             />
           </div>
           <div>
-            <label className="text-xs text-brand-muted block mb-1">Status</label>
+            <label className="text-xs text-brand-muted block mb-1">
+              Status
+            </label>
             <select
               className="input select"
               value={form.status}
@@ -191,7 +191,9 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
             </select>
           </div>
           <div>
-            <label className="text-xs text-brand-muted block mb-1">Role *</label>
+            <label className="text-xs text-brand-muted block mb-1">
+              Role *
+            </label>
             <select
               className="input select"
               value={form.role_name}
@@ -232,7 +234,9 @@ function EditStaffModal({ member, branches = [], onClose, onSave }) {
             )}
           </div>
           <div>
-            <label className="text-xs text-brand-muted block mb-1">Branch</label>
+            <label className="text-xs text-brand-muted block mb-1">
+              Branch
+            </label>
             <select
               className="input select"
               value={form.branch_id}
@@ -632,8 +636,8 @@ export default function StaffDetailsPage() {
                   <div className="md:col-span-2 space-y-6">
                     <Card>
                       <h3 className="text-sm font-bold text-brand-dark mb-4 flex items-center gap-2">
-                        <KeyRound className="h-4 w-4 text-brand-muted" /> Access &
-                        Permissions
+                        <KeyRound className="h-4 w-4 text-brand-muted" /> Access
+                        & Permissions
                       </h3>
                       <div className="flex flex-wrap gap-2">
                         {m.role?.permissions ? (

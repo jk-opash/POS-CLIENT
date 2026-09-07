@@ -5,7 +5,7 @@ export const fetchPendingOrders = createAsyncThunk(
   'order/fetchPendingOrders',
   async (branchId, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/order?branch_id=${branchId}&status=Pending`);
+      const response = await api.get(`/order?branch_id=${branchId}&status=Pending,Accepted,Preparing`);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || 'Failed to fetch pending orders');

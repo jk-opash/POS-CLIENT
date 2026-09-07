@@ -41,6 +41,23 @@ export const fetchInventoryItems = createAsyncThunk(
   }
 );
 
+// Fetch Inventory Ledger
+export const fetchInventoryLedger = createAsyncThunk(
+  'inventory/fetchInventoryLedger',
+  async (branchId, { rejectWithValue }) => {
+    try {
+      if (!branchId) return rejectWithValue('Branch ID is required');
+      const response = await api.get(`/inventory/ledger/branch/${branchId}`);
+      if (response.data.success) {
+        return response.data.data;
+      }
+      return rejectWithValue('Failed to fetch inventory ledger');
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.error || error.message);
+    }
+  }
+);
+
 // Create item
 export const createInventoryItem = createAsyncThunk(
   'inventory/createInventoryItem',
@@ -138,6 +155,9 @@ const inventorySlice = createSlice({
     items: [],
     loading: false,
     error: null,
+    ledger: [],
+    ledgerLoading: false,
+    ledgerError: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -153,6 +173,19 @@ const inventorySlice = createSlice({
       .addCase(fetchInventoryItems.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      // fetch inventory ledger
+      .addCase(fetchInventoryLedger.pending, (state) => {
+        state.ledgerLoading = true;
+        state.ledgerError = null;
+      })
+      .addCase(fetchInventoryLedger.fulfilled, (state, action) => {
+        state.ledgerLoading = false;
+        state.ledger = action.payload;
+      })
+      .addCase(fetchInventoryLedger.rejected, (state, action) => {
+        state.ledgerLoading = false;
+        state.ledgerError = action.payload;
       })
       // create item
       .addCase(createInventoryItem.fulfilled, (state, action) => {
