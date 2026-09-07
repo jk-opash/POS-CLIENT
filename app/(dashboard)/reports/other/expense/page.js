@@ -17,7 +17,7 @@ import {
   Filter,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import PosAdminPagination from "../../../menu/components/PosAdminPagination";
+import PosAdminPagination from "../../../../components/ui/PosAdminPagination";
 import StatCard from "../../../../components/ui/StatCard";
 import DateRangePicker from "../../../../components/ui/DateRangePicker";
 import * as XLSX from "xlsx";
@@ -234,7 +234,7 @@ export default function ExpenseReport() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
-                
+
                 <div className="relative flex items-center gap-2 bg-white border border-brand-border rounded-xl px-3 py-2 shadow-sm">
                   <Filter size={14} className="text-brand-muted shrink-0" />
                   <select
@@ -342,10 +342,7 @@ export default function ExpenseReport() {
                   <tbody className="divide-y divide-brand-border text-xs">
                     {loading ? (
                       <tr>
-                        <td
-                          colSpan="4"
-                          className="py-12 text-center"
-                        >
+                        <td colSpan="4" className="py-12 text-center">
                           <div className="flex justify-center min-h-[200px]">
                             <LottieLoader text="Loading data..." />
                           </div>
@@ -380,11 +377,14 @@ export default function ExpenseReport() {
                         >
                           <td className="py-3 px-6 font-medium text-brand-dark">
                             <span className="font-bold text-brand-dark text-sm block">
-                              {new Date(item.expense_date).toLocaleDateString("en-IN", {
-                                day: "2-digit",
-                                month: "short",
-                                year: "numeric"
-                              })}
+                              {new Date(item.expense_date).toLocaleDateString(
+                                "en-IN",
+                                {
+                                  day: "2-digit",
+                                  month: "short",
+                                  year: "numeric",
+                                },
+                              )}
                             </span>
                           </td>
                           <td className="py-3 px-4">

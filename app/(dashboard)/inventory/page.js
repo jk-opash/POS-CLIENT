@@ -1,48 +1,33 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import InventoryTabFilters from "./components/InventoryTabFilters";
-import InventoryTabTable from "./components/InventoryTabTable";
+import InventoryTabFilters from "../../components/inventory/InventoryTabFilters";
+import InventoryTabTable from "../../components/inventory/InventoryTabTable";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchInventoryItems,
-  createInventoryItem,
   deleteInventoryItem,
   adjustInventoryStock,
 } from "../../store/slices/inventorySlice";
 import { fetchBranches } from "../../store/slices/branchSlice";
 import {
   Package,
-  Search,
-  Settings2,
-  Trash2,
   Plus,
-  X,
-  Save,
-  AlertCircle,
-  Upload,
-  Clock,
-  LayoutGrid,
-  List,
   ArrowUpCircle,
-  ArrowDownCircle,
-  AlertTriangle,
   ClipboardList,
   TrendingUp,
   RotateCcw,
   ShieldAlert,
-  ChevronDown,
   Building2,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Extracted Components
-import AdjustmentsTab from "./components/AdjustmentsTab";
-import AuditLogTab from "./components/AuditLogTab";
-import AddItemModal from "./components/AddItemModal";
-import ActionModal from "./components/ActionModal";
-import ItemDetailModal from "./components/ItemDetailModal";
-import DeleteConfirmModal from "./components/DeleteConfirmModal";
+import AdjustmentsTab from "../../components/inventory/AdjustmentsTab";
+import AuditLogTab from "../../components/inventory/AuditLogTab";
+import AddItemModal from "../../components/inventory/AddItemModal";
+import ActionModal from "../../components/inventory/ActionModal";
+import DeleteConfirmModal from "../../components/inventory/DeleteConfirmModal";
 import LottieLoader from "../../components/common/LottieLoader";
 
 // ═══════════════════════════════════════════════════════════════════════

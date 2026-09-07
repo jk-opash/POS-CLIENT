@@ -6,13 +6,10 @@ import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import {
   ChevronLeft,
-  Calendar,
-  Download,
   DollarSign,
   TrendingUp,
   Clock,
   Activity,
-  Search,
   Building2,
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -20,9 +17,8 @@ import { fetchHourlyTrends } from "../../../../store/slices/analyticsSlice";
 import { fetchBranches } from "../../../../store/slices/branchSlice";
 import StatCard from "../../../../components/ui/StatCard";
 import DateRangePicker from "../../../../components/ui/DateRangePicker";
-import PosAdminPagination from "../../../menu/components/PosAdminPagination";
+import PosAdminPagination from "../../../../components/ui/PosAdminPagination";
 import {
-  BarChart,
   Bar,
   XAxis,
   YAxis,

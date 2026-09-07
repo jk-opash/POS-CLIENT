@@ -49,11 +49,11 @@ export function Modal({ isOpen, onClose, title, description, children, className
       {/* Modal Container */}
       <div
         className={cn(
-          `relative z-10 w-full ${sizeClasses} scale-100 transform rounded-3xl border border-white/60 bg-white/80 backdrop-blur-xl p-0 shadow-[var(--shadow-modal)] transition-all overflow-hidden flex flex-col`,
+          `relative z-10 w-full ${sizeClasses} scale-100 transform rounded-3xl border border-brand-border bg-white p-0 shadow-lg transition-all overflow-hidden flex flex-col`,
           className
         )}
       >
-        <div className="flex items-start justify-between p-6 pb-4 border-b border-white/20 bg-white/40 backdrop-blur-md">
+        <div className="flex items-start justify-between p-6 pb-4 border-b border-brand-border">
           <div>
             {title && <h2 className="text-xl font-bold text-brand-dark">{title}</h2>}
             {description && <p className="mt-1 text-sm text-brand-muted">{description}</p>}

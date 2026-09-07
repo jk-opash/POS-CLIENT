@@ -17,7 +17,7 @@ import {
   UtensilsCrossed,
 } from "lucide-react";
 
-import PosAdminBadge from "../../menu/components/PosAdminBadge";
+import PosAdminBadge from "../../../components/ui/PosAdminBadge";
 import LottieLoader from "../../../components/common/LottieLoader";
 
 export default function KOTPage() {
@@ -127,7 +127,7 @@ export default function KOTPage() {
               Kitchen Orders.
             </p>
           </div>
-        ) : (orders?.length === 0 && loading) ? (
+        ) : orders?.length === 0 && loading ? (
           <div className="flex flex-col items-center justify-center min-h-[400px] mt-4">
             <LottieLoader text="Loading KOTs..." />
           </div>
@@ -137,7 +137,9 @@ export default function KOTPage() {
               size={64}
               className="mb-4 text-brand-success opacity-50"
             />
-            <h3 className="text-xl font-bold text-brand-dark">All caught up!</h3>
+            <h3 className="text-xl font-bold text-brand-dark">
+              All caught up!
+            </h3>
             <p className="text-sm mt-2">
               No pending orders in the kitchen queue right now.
             </p>

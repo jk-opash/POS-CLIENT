@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { fetchBranches } from "../../store/slices/branchSlice";
@@ -34,7 +34,6 @@ import {
   EyeOff,
   Ban,
   Trash2,
-  Edit2,
   CheckSquare,
   Square,
 } from "lucide-react";
@@ -210,7 +209,9 @@ function StaffModal({ member, branches = [], onSave, onClose }) {
             />
           </div>
           <div>
-            <label className="text-xs text-brand-muted block mb-1">Status</label>
+            <label className="text-xs text-brand-muted block mb-1">
+              Status
+            </label>
             <select
               className="input select"
               value={form.status}
@@ -224,7 +225,9 @@ function StaffModal({ member, branches = [], onSave, onClose }) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
-            <label className="text-xs text-brand-muted block mb-1">Role *</label>
+            <label className="text-xs text-brand-muted block mb-1">
+              Role *
+            </label>
             <select
               className="input select"
               value={form.role_name}
@@ -330,7 +333,9 @@ function StaffModal({ member, branches = [], onSave, onClose }) {
             )}
           </div>
           <div>
-            <label className="text-xs text-brand-muted block mb-1">Branch</label>
+            <label className="text-xs text-brand-muted block mb-1">
+              Branch
+            </label>
             <select
               className="input select"
               value={form.branch_id}

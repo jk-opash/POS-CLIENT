@@ -9,14 +9,13 @@ import {
   deleteSupplier,
 } from "../../store/slices/supplierSlice";
 import { Plus } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import LottieLoader from "../../components/common/LottieLoader";
 
 // Extracted Components
-import SupplierTabFilters from "./components/SupplierTabFilters";
-import SupplierTabTable from "./components/SupplierTabTable";
-import SupplierModal from "./components/SupplierModal";
-import DeleteConfirmModal from "./components/DeleteConfirmModal";
+import SupplierTabFilters from "../../components/suppliers/SupplierTabFilters";
+import SupplierTabTable from "../../components/suppliers/SupplierTabTable";
+import SupplierModal from "../../components/suppliers/SupplierModal";
+import DeleteConfirmModal from "../../components/suppliers/DeleteConfirmModal";
 
 export default function SuppliersPage() {
   const dispatch = useDispatch();
@@ -148,20 +147,22 @@ export default function SuppliersPage() {
               <div className="flex justify-center min-h-[200px] items-center">
                 <LottieLoader text="Loading suppliers..." />
               </div>
-            ) : activeTab === "suppliers" && (
-              <SupplierTabTable
-                paginatedItems={paginatedItems}
-                filteredItems={filteredItems}
-                onEdit={(supplier) =>
-                  setModalState({ visible: true, supplier })
-                }
-                onDelete={setDeleteItem}
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-                totalPages={totalPages}
-                itemsPerPage={itemsPerPage}
-                setItemsPerPage={setItemsPerPage}
-              />
+            ) : (
+              activeTab === "suppliers" && (
+                <SupplierTabTable
+                  paginatedItems={paginatedItems}
+                  filteredItems={filteredItems}
+                  onEdit={(supplier) =>
+                    setModalState({ visible: true, supplier })
+                  }
+                  onDelete={setDeleteItem}
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                  totalPages={totalPages}
+                  itemsPerPage={itemsPerPage}
+                  setItemsPerPage={setItemsPerPage}
+                />
+              )
             )}
           </div>
         </main>

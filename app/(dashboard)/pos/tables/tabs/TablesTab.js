@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Edit2, Trash2, QrCode, Search, Hash } from "lucide-react";
-import api from "../../../../lib/api";
 
 export default function TablesTab({
   tables,
@@ -18,7 +17,9 @@ export default function TablesTab({
   const filteredTables = tables.filter(
     (table) =>
       table.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      getZoneName(table.zone_id)?.toLowerCase().includes(searchQuery.toLowerCase())
+      getZoneName(table.zone_id)
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase()),
   );
 
   return (
@@ -54,15 +55,28 @@ export default function TablesTab({
             <tbody className="divide-y divide-brand-border text-sm">
               {filteredTables.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-12 text-center text-brand-muted/70">
-                    <Hash size={36} className="mx-auto mb-2 text-brand-placeholder" />
-                    <p className="font-bold text-brand-muted">No tables found</p>
-                    <p className="text-xs mt-1">Try adjusting your search criteria</p>
+                  <td
+                    colSpan={5}
+                    className="py-12 text-center text-brand-muted/70"
+                  >
+                    <Hash
+                      size={36}
+                      className="mx-auto mb-2 text-brand-placeholder"
+                    />
+                    <p className="font-bold text-brand-muted">
+                      No tables found
+                    </p>
+                    <p className="text-xs mt-1">
+                      Try adjusting your search criteria
+                    </p>
                   </td>
                 </tr>
               ) : (
                 filteredTables.map((table) => (
-                  <tr key={table.id} className="hover:bg-brand-bg/50 transition-colors">
+                  <tr
+                    key={table.id}
+                    className="hover:bg-brand-bg/50 transition-colors"
+                  >
                     <td className="py-3 px-6 font-semibold text-brand-dark">
                       {table.name}
                     </td>
@@ -78,10 +92,10 @@ export default function TablesTab({
                           table.status === "Available"
                             ? "bg-brand-successLight/80 text-brand-success"
                             : table.status === "Occupied"
-                            ? "bg-brand-warningLight/80 text-brand-warning"
-                            : table.status === "Reserved"
-                            ? "bg-brand-primaryLight/80 text-brand-primary"
-                            : "bg-brand-light/80 text-brand-muted"
+                              ? "bg-brand-warningLight/80 text-brand-warning"
+                              : table.status === "Reserved"
+                                ? "bg-brand-primaryLight/80 text-brand-primary"
+                                : "bg-brand-light/80 text-brand-muted"
                         }`}
                       >
                         {table.status || "Available"}
@@ -95,7 +109,7 @@ export default function TablesTab({
                             const customerUrl = `${window.location.origin}/order/${table.id}`;
                             // Generate QR code using a public API
                             const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(customerUrl)}`;
-                            
+
                             // Open QR code image in a new tab
                             window.open(qrCodeUrl, "_blank");
                           }}

@@ -10,7 +10,6 @@ import ExpenseModal from "../../../components/Accounting/ExpenseModal";
 import WithdrawalModal from "../../../components/Accounting/WithdrawalModal";
 import UtilityModal from "../../../components/Accounting/UtilityModal";
 import {
-  Plus,
   Wallet,
   Zap,
   ArrowDownToLine,
@@ -216,10 +215,7 @@ export default function ExpensePage() {
                   <tbody className="divide-y divide-brand-border text-xs">
                     {loading ? (
                       <tr>
-                        <td
-                          colSpan={5}
-                          className="py-12 text-center"
-                        >
+                        <td colSpan={5} className="py-12 text-center">
                           <div className="flex justify-center min-h-[200px]">
                             <LottieLoader text="Loading expense data..." />
                           </div>

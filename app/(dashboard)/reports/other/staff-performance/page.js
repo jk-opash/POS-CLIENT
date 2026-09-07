@@ -4,22 +4,20 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchStaffPerformance } from "@/app/store/slices/analyticsSlice";
 import { fetchBranches } from "@/app/store/slices/branchSlice";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import {
   Users,
   Search,
   Download,
-  Calendar,
   Building2,
   Wallet,
   TrendingUp,
   Receipt,
   UtensilsCrossed,
   ChevronLeft,
-  ArrowUpDown
+  ArrowUpDown,
 } from "lucide-react";
-import PosAdminPagination from "@/app/(dashboard)/menu/components/PosAdminPagination";
+import PosAdminPagination from "../../../../components/ui/PosAdminPagination";
 import StatCard from "../../../../components/ui/StatCard";
 import DateRangePicker from "../../../../components/ui/DateRangePicker";
 import * as XLSX from "xlsx";
@@ -42,7 +40,8 @@ export default function StaffPerformanceReport() {
   const { branches } = useSelector((state) => state.branch);
 
   const { user } = useSelector((state) => state.auth);
-  const businessId = user?.businesses?.[0]?.id || user?.businessId || user?.business_id;
+  const businessId =
+    user?.businesses?.[0]?.id || user?.businessId || user?.business_id;
 
   const [branchFilter, setBranchFilter] = useState("");
   const [search, setSearch] = useState("");
@@ -78,8 +77,22 @@ export default function StaffPerformanceReport() {
       dispatch(
         fetchStaffPerformance({
           timeRange: dateValue.startDate && dateValue.endDate ? null : "today",
-          startDate: dateValue.startDate ? new Date(dateValue.startDate.getTime() - dateValue.startDate.getTimezoneOffset() * 60000).toISOString().split("T")[0] : null,
-          endDate: dateValue.endDate ? new Date(dateValue.endDate.getTime() - dateValue.endDate.getTimezoneOffset() * 60000).toISOString().split("T")[0] : null,
+          startDate: dateValue.startDate
+            ? new Date(
+                dateValue.startDate.getTime() -
+                  dateValue.startDate.getTimezoneOffset() * 60000,
+              )
+                .toISOString()
+                .split("T")[0]
+            : null,
+          endDate: dateValue.endDate
+            ? new Date(
+                dateValue.endDate.getTime() -
+                  dateValue.endDate.getTimezoneOffset() * 60000,
+              )
+                .toISOString()
+                .split("T")[0]
+            : null,
           branchId: branchFilter,
         }),
       );
@@ -227,7 +240,7 @@ export default function StaffPerformanceReport() {
                   </select>
                 </div>
 
-                <button 
+                <button
                   onClick={handleExport}
                   className="px-4 py-2 text-xs font-bold rounded-xl bg-brand-dark text-white hover:bg-brand-light/60 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2"
                 >
@@ -261,7 +274,9 @@ export default function StaffPerformanceReport() {
                   label="Avg Orders / Staff"
                   value={
                     stats.totalStaffActive > 0
-                      ? Math.round(stats.totalOrdersHandled / stats.totalStaffActive)
+                      ? Math.round(
+                          stats.totalOrdersHandled / stats.totalStaffActive,
+                        )
                       : 0
                   }
                   subtext="Efficiency metric"
@@ -366,7 +381,9 @@ export default function StaffPerformanceReport() {
                         <td colSpan="5" className="py-12">
                           <div className="flex flex-col items-center justify-center text-brand-muted">
                             <Users className="w-12 h-12 text-brand-muted/70 mb-3" />
-                            <p className="text-sm font-semibold">No staff records found</p>
+                            <p className="text-sm font-semibold">
+                              No staff records found
+                            </p>
                             <p className="text-xs text-brand-muted/70 mt-1">
                               Try adjusting your date range or filters
                             </p>
