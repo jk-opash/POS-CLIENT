@@ -14,12 +14,11 @@ import {
   Download,
   Search,
   ArrowUpDown,
-  UtensilsCrossed,
   ChevronLeft,
   Percent,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import PosAdminPagination from "../../../menu/components/PosAdminPagination";
+import PosAdminPagination from "../../../../components/ui/PosAdminPagination";
 import DateRangePicker from "../../../../components/ui/DateRangePicker";
 
 function fmt(value) {

@@ -9,11 +9,7 @@ import {
   updateBranch,
   deleteBranch,
 } from "../../../store/slices/branchSlice";
-import Card, {
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "../../../components/ui/Card";
+import Card from "../../../components/ui/Card";
 import Badge from "../../../components/ui/Badge";
 import Button from "../../../components/ui/Button";
 import Modal from "../../../components/ui/Modal";
@@ -33,20 +29,11 @@ import {
   Phone,
   Mail,
   ChevronLeft,
-  Store,
   Settings,
-  Clock,
   Users,
-  CheckCircle2,
   Edit,
   AlertCircle,
-  FileText,
-  CalendarDays,
-  Globe,
-  Landmark,
   FileCheck,
-  Maximize,
-  Plus,
 } from "lucide-react";
 
 // Edit Modal Component
@@ -136,7 +123,9 @@ function EditBranchModal({ branch, onClose, onSave }) {
             )}
           </div>
           <div>
-            <label className="text-xs text-brand-muted block mb-1">Status</label>
+            <label className="text-xs text-brand-muted block mb-1">
+              Status
+            </label>
             <select
               className="input select"
               value={form.status}
@@ -190,7 +179,9 @@ function EditBranchModal({ branch, onClose, onSave }) {
             )}
           </div>
           <div className="md:col-span-2">
-            <label className="text-xs text-brand-muted block mb-1">Address</label>
+            <label className="text-xs text-brand-muted block mb-1">
+              Address
+            </label>
             <textarea
               className="input min-h-[80px]"
               value={form.address}
@@ -370,7 +361,9 @@ export default function BranchDetailsPage() {
       <div className="flex h-screen bg-brand-bg items-center justify-center font-sans">
         <div className="text-center space-y-4">
           <AlertCircle className="w-12 h-12 text-brand-danger mx-auto" />
-          <h2 className="text-lg font-bold text-brand-dark">Branch Not Found</h2>
+          <h2 className="text-lg font-bold text-brand-dark">
+            Branch Not Found
+          </h2>
           <p className="text-brand-muted text-sm max-w-sm">{error}</p>
           <Button variant="primary" onClick={() => router.push("/outlet")}>
             Back to Branches

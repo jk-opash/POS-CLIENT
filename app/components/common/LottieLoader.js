@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import SpoonLoaderData from "../../assets/animation/Spoon_Loader.json";
 

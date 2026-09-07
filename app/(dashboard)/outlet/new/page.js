@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import { OnboardingWizard } from "./components/OnboardingWizard";
+import { OnboardingWizard } from "../../../components/outlet/OnboardingWizard";
 
 export default function NewBranchOnboardingPage() {
   return (

@@ -11,16 +11,14 @@ import {
 import { fetchCategories } from "../../store/slices/categorySlice";
 import { fetchBranches } from "../../store/slices/branchSlice";
 import MenuItemModal from "../../components/MenuItemModal";
-import DeleteConfirmModal from "../inventory/components/DeleteConfirmModal";
+import DeleteConfirmModal from "../../components/inventory/DeleteConfirmModal";
 import { Plus, Building2 } from "lucide-react";
 
-import ItemsTabFilters from "./components/ItemsTabFilters";
-import ItemsTabTable from "./components/ItemsTabTable";
+import ItemsTabFilters from "../../components/menu/ItemsTabFilters";
+import ItemsTabTable from "../../components/menu/ItemsTabTable";
 import CategoriesTab from "./tabs/CategoriesTab";
 
 export default function MenuPage() {
-  const [collapsed, setCollapsed] = useState(false);
-
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const businessId = user?.businesses?.[0]?.id;

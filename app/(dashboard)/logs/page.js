@@ -3,15 +3,10 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAuditLogs } from "../../store/slices/auditLogSlice";
-import PosAdminPagination from "../menu/components/PosAdminPagination";
-
-import { cn } from "../../lib/utils";
+import PosAdminPagination from "@/app/components/ui/PosAdminPagination";
 
 import {
   Search,
-  Filter,
-  Download,
-  Calendar,
   ChevronDown,
   ShieldAlert,
   Trash2,

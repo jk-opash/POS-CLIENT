@@ -8,7 +8,6 @@ import { fetchBranches } from "../../../../store/slices/branchSlice";
 import StatCard from "../../../../components/ui/StatCard";
 import {
   DollarSign,
-  FileText,
   Building2,
   Download,
   Search,
@@ -16,10 +15,10 @@ import {
   ChevronLeft,
   PackageMinus,
   Hash,
-  AlertCircle
+  AlertCircle,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import PosAdminPagination from "../../../menu/components/PosAdminPagination";
+import PosAdminPagination from "../../../../components/ui/PosAdminPagination";
 import DateRangePicker from "../../../../components/ui/DateRangePicker";
 
 function fmt(value) {
@@ -47,7 +46,8 @@ export default function StockVarianceReport() {
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
-  const businessId = user?.businesses?.[0]?.id || user?.businessId || user?.business_id;
+  const businessId =
+    user?.businesses?.[0]?.id || user?.businessId || user?.business_id;
 
   const { branches } = useSelector((state) => state.branch);
   const { stockVarianceData, stockVarianceLoading } = useSelector(
@@ -74,8 +74,22 @@ export default function StockVarianceReport() {
       dispatch(
         fetchStockVariance({
           timeRange: dateValue.startDate && dateValue.endDate ? null : "month",
-          startDate: dateValue.startDate ? new Date(dateValue.startDate.getTime() - dateValue.startDate.getTimezoneOffset() * 60000).toISOString().split("T")[0] : null,
-          endDate: dateValue.endDate ? new Date(dateValue.endDate.getTime() - dateValue.endDate.getTimezoneOffset() * 60000).toISOString().split("T")[0] : null,
+          startDate: dateValue.startDate
+            ? new Date(
+                dateValue.startDate.getTime() -
+                  dateValue.startDate.getTimezoneOffset() * 60000,
+              )
+                .toISOString()
+                .split("T")[0]
+            : null,
+          endDate: dateValue.endDate
+            ? new Date(
+                dateValue.endDate.getTime() -
+                  dateValue.endDate.getTimezoneOffset() * 60000,
+              )
+                .toISOString()
+                .split("T")[0]
+            : null,
           branchId: branchFilter,
         }),
       );
@@ -166,7 +180,7 @@ export default function StockVarianceReport() {
         </span>
       );
     } else {
-       return (
+      return (
         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase bg-brand-light text-brand-muted border border-brand-border/60">
           0
         </span>
@@ -193,7 +207,8 @@ export default function StockVarianceReport() {
                   Stock Variance
                 </h2>
                 <p className="mt-1 text-sm text-brand-muted">
-                  Audit discrepancies between physical inventory and system stock.
+                  Audit discrepancies between physical inventory and system
+                  stock.
                 </p>
               </div>
 
@@ -253,7 +268,13 @@ export default function StockVarianceReport() {
                 <StatCard
                   label="Net Value Impact"
                   value={`₹${fmt(Math.abs(netValueImpact))}`}
-                  subtext={netValueImpact < 0 ? "Total Value Lost" : netValueImpact > 0 ? "Total Value Gained" : "No Impact"}
+                  subtext={
+                    netValueImpact < 0
+                      ? "Total Value Lost"
+                      : netValueImpact > 0
+                        ? "Total Value Gained"
+                        : "No Impact"
+                  }
                   icon={<DollarSign size={16} />}
                 />
               </div>
@@ -361,7 +382,9 @@ export default function StockVarianceReport() {
                             <span className="font-bold text-brand-dark text-sm block">
                               {rec.itemName}
                             </span>
-                            <span className="text-[10px] text-brand-muted/70 block mt-0.5">{rec.movementType} - {rec.reason}</span>
+                            <span className="text-[10px] text-brand-muted/70 block mt-0.5">
+                              {rec.movementType} - {rec.reason}
+                            </span>
                           </td>
                           <td className="py-3 px-4 text-brand-muted">
                             {rec.sku}
@@ -375,8 +398,11 @@ export default function StockVarianceReport() {
                           <td className="py-3 px-4 text-right">
                             {getVarianceBadge(rec.variance)}
                           </td>
-                          <td className={`py-3 px-6 text-right font-bold text-sm ${rec.valueImpact < 0 ? 'text-brand-danger' : rec.valueImpact > 0 ? 'text-brand-success' : 'text-brand-muted'}`}>
-                            {rec.valueImpact < 0 ? '-' : ''}₹{fmt(Math.abs(rec.valueImpact))}
+                          <td
+                            className={`py-3 px-6 text-right font-bold text-sm ${rec.valueImpact < 0 ? "text-brand-danger" : rec.valueImpact > 0 ? "text-brand-success" : "text-brand-muted"}`}
+                          >
+                            {rec.valueImpact < 0 ? "-" : ""}₹
+                            {fmt(Math.abs(rec.valueImpact))}
                           </td>
                         </motion.tr>
                       ))

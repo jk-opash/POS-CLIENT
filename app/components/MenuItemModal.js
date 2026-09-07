@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   X,
   Check,
@@ -149,12 +149,11 @@ export default function MenuItemModal({ item, onClose, onSave }) {
   const selectedCategory = categories.find((c) => c.id === formData.categoryId);
   const subCategories = selectedCategory?.sub_categories || [];
 
-
   const validateForm = () => {
     const newErrors = {};
     if (!formData.name?.trim()) newErrors.name = "Item name is required";
     if (!formData.categoryId) newErrors.categoryId = "Category is required";
-    
+
     const parsedPrice = parseFloat(formData.price);
     if (isNaN(parsedPrice) || parsedPrice < 0) {
       newErrors.price = "Valid price is required";
@@ -163,9 +162,12 @@ export default function MenuItemModal({ item, onClose, onSave }) {
     // Check variant categories
     if (formData.variantCategories) {
       formData.variantCategories.forEach((cat, idx) => {
-        if (!cat.name?.trim()) newErrors[`variant_${idx}_name`] = "Category name required";
-        if (cat.minSelection > cat.maxSelection) newErrors[`variant_${idx}_min`] = "Min cannot be > Max";
-        if (cat.minSelection < 0 || cat.maxSelection < 0) newErrors[`variant_${idx}_min`] = "Selection limits must be ≥ 0";
+        if (!cat.name?.trim())
+          newErrors[`variant_${idx}_name`] = "Category name required";
+        if (cat.minSelection > cat.maxSelection)
+          newErrors[`variant_${idx}_min`] = "Min cannot be > Max";
+        if (cat.minSelection < 0 || cat.maxSelection < 0)
+          newErrors[`variant_${idx}_min`] = "Selection limits must be ≥ 0";
       });
     }
 
@@ -174,8 +176,8 @@ export default function MenuItemModal({ item, onClose, onSave }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-brand-dark/40 backdrop-blur-sm flex justify-center items-start pt-[5vh] z-50 overflow-y-auto">
-      <div className="bg-white w-[880px] max-w-[95vw] rounded-2xl shadow-2xl flex flex-col mb-[5vh] relative shrink-0">
+    <div className="fixed inset-0 bg-brand-dark/40 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+      <div className="bg-white w-[880px] max-w-full max-h-[90vh] rounded-2xl shadow-2xl flex flex-col relative shrink-0 overflow-hidden">
         {/* Header */}
         <div className="px-6 py-5 flex justify-between items-start border-b border-brand-light">
           <div>
@@ -201,31 +203,37 @@ export default function MenuItemModal({ item, onClose, onSave }) {
               const isCompleted = step > s.num;
               const isCurrent = step === s.num;
 
-            
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.name?.trim()) newErrors.name = "Item name is required";
-    if (!formData.categoryId) newErrors.categoryId = "Category is required";
-    
-    const parsedPrice = parseFloat(formData.price);
-    if (isNaN(parsedPrice) || parsedPrice < 0) {
-      newErrors.price = "Valid price is required";
-    }
+              const validateForm = () => {
+                const newErrors = {};
+                if (!formData.name?.trim())
+                  newErrors.name = "Item name is required";
+                if (!formData.categoryId)
+                  newErrors.categoryId = "Category is required";
 
-    // Check variant categories
-    if (formData.variantCategories) {
-      formData.variantCategories.forEach((cat, idx) => {
-        if (!cat.name?.trim()) newErrors[`variant_${idx}_name`] = "Category name required";
-        if (cat.minSelection > cat.maxSelection) newErrors[`variant_${idx}_min`] = "Min cannot be > Max";
-        if (cat.minSelection < 0 || cat.maxSelection < 0) newErrors[`variant_${idx}_min`] = "Selection limits must be ≥ 0";
-      });
-    }
+                const parsedPrice = parseFloat(formData.price);
+                if (isNaN(parsedPrice) || parsedPrice < 0) {
+                  newErrors.price = "Valid price is required";
+                }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+                // Check variant categories
+                if (formData.variantCategories) {
+                  formData.variantCategories.forEach((cat, idx) => {
+                    if (!cat.name?.trim())
+                      newErrors[`variant_${idx}_name`] =
+                        "Category name required";
+                    if (cat.minSelection > cat.maxSelection)
+                      newErrors[`variant_${idx}_min`] = "Min cannot be > Max";
+                    if (cat.minSelection < 0 || cat.maxSelection < 0)
+                      newErrors[`variant_${idx}_min`] =
+                        "Selection limits must be ≥ 0";
+                  });
+                }
 
-  return (
+                setErrors(newErrors);
+                return Object.keys(newErrors).length === 0;
+              };
+
+              return (
                 <button
                   key={s.num}
                   onClick={() => setStep(s.num)}
@@ -269,380 +277,394 @@ export default function MenuItemModal({ item, onClose, onSave }) {
 
           {/* Content Area */}
           <div className="flex-1 overflow-y-auto max-h-[60vh] p-8">
-              {step === 1 && (
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-bold text-brand-dark mb-1.5">
-                      Menu Item Name *
-                    </label>
-                    <input
-                      className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
-                      placeholder="e.g. Masala Dosa"
-                      value={formData.name}
-                      onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
-                    />
-                      {errors.name && <span className="text-brand-danger text-xs mt-1 block">{errors.name}</span>}
-                  </div>
-
-                  <div className="flex gap-4">
-                    <div className="flex-1">
-                      <label className="block text-sm font-bold text-brand-dark mb-1.5">
-                        Category
-                      </label>
-                      <select
-                        className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark font-medium appearance-none bg-white transition-colors cursor-pointer"
-                        value={formData.categoryId}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            categoryId: e.target.value,
-                          })
-                        }
-                      >
-                        <option value="" disabled>
-                          Select Category
-                        </option>
-                        {categories.map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {c.name}
-                          </option>
-                        ))}
-                      </select>
-            {errors.categoryId && <span className="text-brand-danger text-xs mt-1 block">{errors.categoryId}</span>}
-                    </div>
-                    <div className="flex-1">
-                      <label className="block text-sm font-bold text-brand-dark mb-1.5">
-                        Sub Category
-                      </label>
-                      <select
-                        className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark font-medium appearance-none bg-white transition-colors cursor-pointer"
-                        value={formData.subCategoryId}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            subCategoryId: e.target.value,
-                          })
-                        }
-                      >
-                        <option value="" disabled>
-                          Select Sub Category
-                        </option>
-                        {[{ name: "NA" }, ...subCategories].map((sub, idx) => (
-                          <option key={sub.id || idx} value={sub.id}>
-                            {sub.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-bold text-brand-dark mb-1.5">
-                      Food Type
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {foodTypes.map((type) => (
-                        <button
-                          key={type}
-                          onClick={() =>
-                            setFormData({ ...formData, foodType: type })
-                          }
-                          className={`px-5 py-2 rounded-xl text-sm font-bold transition-colors ${
-                            formData.foodType === type
-                              ? "bg-brand-successLight text-brand-success border border-brand-success"
-                              : "bg-white text-brand-dark border border-brand-light hover:bg-brand-light"
-                          }`}
-                        >
-                          {type}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-bold text-brand-dark mb-1.5">
-                      Item Image
-                    </label>
-                    <div className="border-2 border-dashed border-brand-light rounded-xl p-8 flex flex-col items-center justify-center text-brand-muted cursor-pointer hover:bg-brand-light transition-colors bg-[#F8FAFC]">
-                      <Upload size={24} className="mb-2 text-brand-dark" />
-                      <span className="text-sm font-bold text-brand-dark">
-                        Click to upload image
-                      </span>
-                    </div>
-                  </div>
+            {step === 1 && (
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-bold text-brand-dark mb-1.5">
+                    Menu Item Name *
+                  </label>
+                  <input
+                    className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
+                    placeholder="e.g. Masala Dosa"
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                  />
+                  {errors.name && (
+                    <span className="text-brand-danger text-xs mt-1 block">
+                      {errors.name}
+                    </span>
+                  )}
                 </div>
-              )}
 
-              {step === 2 && (
-                <div className="space-y-6">
-                  <div>
+                <div className="flex gap-4">
+                  <div className="flex-1">
                     <label className="block text-sm font-bold text-brand-dark mb-1.5">
-                      Base Selling Price (₹) *
+                      Category
                     </label>
-                    <input
-                      type="number"
-                      className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
-                      placeholder="0.00"
-                      value={formData.price}
+                    <select
+                      className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark font-medium appearance-none bg-white transition-colors cursor-pointer"
+                      value={formData.categoryId}
                       onChange={(e) =>
-                        setFormData({ ...formData, price: e.target.value })
-                      }
-                    />
-                      {errors.price && <span className="text-brand-danger text-xs mt-1 block">{errors.price}</span>}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-bold text-brand-dark mb-0.5">
-                      Variants (Optional)
-                    </label>
-                    <p className="text-xs font-medium text-brand-muted mb-4">
-                      E.g., Half/Full, Small/Large. Variant prices will override
-                      the base price in the POS.
-                    </p>
-
-                    <div className="space-y-3">
-                      {formData.variants.map((variant, index) => (
-                        <div key={index} className="flex items-center gap-3">
-                          <input
-                            className="flex-1 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
-                            placeholder="Variant Name"
-                            value={variant.name}
-                            onChange={(e) =>
-                              updateVariant(index, "name", e.target.value)
-                            }
-                          />
-                          <input
-                            type="number"
-                            className="flex-1 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
-                            placeholder="Price (₹)"
-                            value={variant.price}
-                            onChange={(e) =>
-                              updateVariant(index, "price", e.target.value)
-                            }
-                          />
-                          <button
-                            onClick={() => removeVariant(index)}
-                            className="p-2.5 text-brand-danger hover:bg-brand-dangerLight rounded-xl transition-colors shrink-0"
-                          >
-                            <XIcon size={18} strokeWidth={2.5} />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-
-                    <button
-                      onClick={addVariant}
-                      className="mt-4 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-brand-light rounded-full text-sm font-bold text-brand-dark hover:bg-brand-light transition-colors"
-                    >
-                      <Plus size={16} strokeWidth={3} /> Add Variant
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {step === 3 && (
-                <div className="space-y-6">
-                  {/* Enable Spice Level Toggle */}
-                  <div className="bg-[#F8FAFC] border border-brand-light rounded-xl p-4 flex items-center justify-between">
-                    <div>
-                      <h4 className="text-sm font-bold text-brand-dark">
-                        Enable Spice Level?
-                      </h4>
-                      <p className="text-xs font-medium text-brand-muted mt-0.5">
-                        Allows the customer to choose spice level (Mild, Medium,
-                        Spicy, etc.)
-                      </p>
-                    </div>
-                    <button
-                      className={`relative w-12 h-6 rounded-full transition-colors ${formData.spiceLevelEnabled ? "bg-[#10B981]" : "bg-brand-light"}`}
-                      onClick={() =>
                         setFormData({
                           ...formData,
-                          spiceLevelEnabled: !formData.spiceLevelEnabled,
+                          categoryId: e.target.value,
                         })
                       }
                     >
-                      <span
-                        className={`absolute top-0.5 left-0.5 bg-white w-5 h-5 rounded-full transition-transform shadow-sm ${formData.spiceLevelEnabled ? "translate-x-6" : "translate-x-0"}`}
-                      />
-                    </button>
+                      <option value="" disabled>
+                        Select Category
+                      </option>
+                      {categories.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.categoryId && (
+                      <span className="text-brand-danger text-xs mt-1 block">
+                        {errors.categoryId}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-sm font-bold text-brand-dark mb-1.5">
+                      Sub Category
+                    </label>
+                    <select
+                      className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark font-medium appearance-none bg-white transition-colors cursor-pointer"
+                      value={formData.subCategoryId}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          subCategoryId: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="" disabled>
+                        Select Sub Category
+                      </option>
+                      {[{ name: "NA" }, ...subCategories].map((sub, idx) => (
+                        <option key={sub.id || idx} value={sub.id}>
+                          {sub.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-brand-dark mb-1.5">
+                    Food Type
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {foodTypes.map((type) => (
+                      <button
+                        key={type}
+                        onClick={() =>
+                          setFormData({ ...formData, foodType: type })
+                        }
+                        className={`px-5 py-2 rounded-xl text-sm font-bold transition-colors ${
+                          formData.foodType === type
+                            ? "bg-brand-successLight text-brand-success border border-brand-success"
+                            : "bg-white text-brand-dark border border-brand-light hover:bg-brand-light"
+                        }`}
+                      >
+                        {type}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-brand-dark mb-1.5">
+                    Item Image
+                  </label>
+                  <div className="border-2 border-dashed border-brand-light rounded-xl p-8 flex flex-col items-center justify-center text-brand-muted cursor-pointer hover:bg-brand-light transition-colors bg-[#F8FAFC]">
+                    <Upload size={24} className="mb-2 text-brand-dark" />
+                    <span className="text-sm font-bold text-brand-dark">
+                      Click to upload image
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {step === 2 && (
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-bold text-brand-dark mb-1.5">
+                    Base Selling Price (₹) *
+                  </label>
+                  <input
+                    type="number"
+                    className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
+                    placeholder="0.00"
+                    value={formData.price}
+                    onChange={(e) =>
+                      setFormData({ ...formData, price: e.target.value })
+                    }
+                  />
+                  {errors.price && (
+                    <span className="text-brand-danger text-xs mt-1 block">
+                      {errors.price}
+                    </span>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-brand-dark mb-0.5">
+                    Variants (Optional)
+                  </label>
+                  <p className="text-xs font-medium text-brand-muted mb-4">
+                    E.g., Half/Full, Small/Large. Variant prices will override
+                    the base price in the POS.
+                  </p>
+
+                  <div className="space-y-3">
+                    {formData.variants.map((variant, index) => (
+                      <div key={index} className="flex items-center gap-3">
+                        <input
+                          className="flex-1 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
+                          placeholder="Variant Name"
+                          value={variant.name}
+                          onChange={(e) =>
+                            updateVariant(index, "name", e.target.value)
+                          }
+                        />
+                        <input
+                          type="number"
+                          className="flex-1 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
+                          placeholder="Price (₹)"
+                          value={variant.price}
+                          onChange={(e) =>
+                            updateVariant(index, "price", e.target.value)
+                          }
+                        />
+                        <button
+                          onClick={() => removeVariant(index)}
+                          className="p-2.5 text-brand-danger hover:bg-brand-dangerLight rounded-xl transition-colors shrink-0"
+                        >
+                          <XIcon size={18} strokeWidth={2.5} />
+                        </button>
+                      </div>
+                    ))}
                   </div>
 
-                  {/* Custom Add-on Categories */}
+                  <button
+                    onClick={addVariant}
+                    className="mt-4 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-brand-light rounded-full text-sm font-bold text-brand-dark hover:bg-brand-light transition-colors"
+                  >
+                    <Plus size={16} strokeWidth={3} /> Add Variant
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {step === 3 && (
+              <div className="space-y-6">
+                {/* Enable Spice Level Toggle */}
+                <div className="bg-[#F8FAFC] border border-brand-light rounded-xl p-4 flex items-center justify-between">
                   <div>
                     <h4 className="text-sm font-bold text-brand-dark">
-                      Custom Add-on Categories
+                      Enable Spice Level?
                     </h4>
-                    <p className="text-xs font-medium text-brand-muted mt-0.5 mb-4">
-                      Build specific add-on groups for this item (e.g. "Choice
-                      of Bread", "Extra Toppings").
+                    <p className="text-xs font-medium text-brand-muted mt-0.5">
+                      Allows the customer to choose spice level (Mild, Medium,
+                      Spicy, etc.)
                     </p>
+                  </div>
+                  <button
+                    className={`relative w-12 h-6 rounded-full transition-colors ${formData.spiceLevelEnabled ? "bg-[#10B981]" : "bg-brand-light"}`}
+                    onClick={() =>
+                      setFormData({
+                        ...formData,
+                        spiceLevelEnabled: !formData.spiceLevelEnabled,
+                      })
+                    }
+                  >
+                    <span
+                      className={`absolute top-0.5 left-0.5 bg-white w-5 h-5 rounded-full transition-transform shadow-sm ${formData.spiceLevelEnabled ? "translate-x-6" : "translate-x-0"}`}
+                    />
+                  </button>
+                </div>
 
-                    <div className="space-y-4">
-                      {formData.addonCategories.map((cat, catIdx) => (
-                        <div
-                          key={catIdx}
-                          className="bg-[#F8FAFC] border border-brand-light rounded-xl p-4"
-                        >
-                          {/* Category Header */}
-                          <div className="flex items-center gap-3 mb-4">
+                {/* Custom Add-on Categories */}
+                <div>
+                  <h4 className="text-sm font-bold text-brand-dark">
+                    Custom Add-on Categories
+                  </h4>
+                  <p className="text-xs font-medium text-brand-muted mt-0.5 mb-4">
+                    Build specific add-on groups for this item (e.g. "Choice of
+                    Bread", "Extra Toppings").
+                  </p>
+
+                  <div className="space-y-4">
+                    {formData.addonCategories.map((cat, catIdx) => (
+                      <div
+                        key={catIdx}
+                        className="bg-[#F8FAFC] border border-brand-light rounded-xl p-4"
+                      >
+                        {/* Category Header */}
+                        <div className="flex items-center gap-3 mb-4">
+                          <input
+                            className="flex-1 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
+                            placeholder="Category Name (e.g. Extra Toppings)"
+                            value={cat.name}
+                            onChange={(e) =>
+                              updateAddonCategory(
+                                catIdx,
+                                "name",
+                                e.target.value,
+                              )
+                            }
+                          />
+                          <button
+                            onClick={() => removeAddonCategory(catIdx)}
+                            className="p-2.5 text-brand-danger bg-brand-dangerLight/50 hover:bg-brand-dangerLight rounded-xl transition-colors shrink-0"
+                          >
+                            <Trash2 size={18} strokeWidth={2.5} />
+                          </button>
+                        </div>
+
+                        {/* Min/Max Selection */}
+                        <div className="flex gap-4 mb-4">
+                          <div className="flex-1">
+                            <label className="block text-xs font-semibold text-brand-dark mb-1.5">
+                              Min Selection
+                            </label>
                             <input
-                              className="flex-1 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
-                              placeholder="Category Name (e.g. Extra Toppings)"
-                              value={cat.name}
+                              type="number"
+                              className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark font-medium transition-colors bg-white"
+                              value={cat.minSelection}
                               onChange={(e) =>
                                 updateAddonCategory(
                                   catIdx,
-                                  "name",
-                                  e.target.value,
+                                  "minSelection",
+                                  Number(e.target.value),
                                 )
                               }
                             />
-                            <button
-                              onClick={() => removeAddonCategory(catIdx)}
-                              className="p-2.5 text-brand-danger bg-brand-dangerLight/50 hover:bg-brand-dangerLight rounded-xl transition-colors shrink-0"
-                            >
-                              <Trash2 size={18} strokeWidth={2.5} />
-                            </button>
                           </div>
-
-                          {/* Min/Max Selection */}
-                          <div className="flex gap-4 mb-4">
-                            <div className="flex-1">
-                              <label className="block text-xs font-semibold text-brand-dark mb-1.5">
-                                Min Selection
-                              </label>
-                              <input
-                                type="number"
-                                className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark font-medium transition-colors bg-white"
-                                value={cat.minSelection}
-                                onChange={(e) =>
-                                  updateAddonCategory(
-                                    catIdx,
-                                    "minSelection",
-                                    Number(e.target.value),
-                                  )
-                                }
-                              />
-                            </div>
-                            <div className="flex-1">
-                              <label className="block text-xs font-semibold text-brand-dark mb-1.5">
-                                Max Selection
-                              </label>
-                              <input
-                                type="number"
-                                className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark font-medium transition-colors bg-white"
-                                value={cat.maxSelection}
-                                onChange={(e) =>
-                                  updateAddonCategory(
-                                    catIdx,
-                                    "maxSelection",
-                                    Number(e.target.value),
-                                  )
-                                }
-                              />
-                            </div>
+                          <div className="flex-1">
+                            <label className="block text-xs font-semibold text-brand-dark mb-1.5">
+                              Max Selection
+                            </label>
+                            <input
+                              type="number"
+                              className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark font-medium transition-colors bg-white"
+                              value={cat.maxSelection}
+                              onChange={(e) =>
+                                updateAddonCategory(
+                                  catIdx,
+                                  "maxSelection",
+                                  Number(e.target.value),
+                                )
+                              }
+                            />
                           </div>
-
-                          {/* Options */}
-                          <div className="space-y-3">
-                            {cat.options.map((opt, optIdx) => (
-                              <div
-                                key={optIdx}
-                                className="flex items-center gap-3"
-                              >
-                                <input
-                                  className="flex-1 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
-                                  placeholder="Add-on Name"
-                                  value={opt.name}
-                                  onChange={(e) =>
-                                    updateAddonOption(
-                                      catIdx,
-                                      optIdx,
-                                      "name",
-                                      e.target.value,
-                                    )
-                                  }
-                                />
-                                <input
-                                  type="number"
-                                  className="w-1/3 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
-                                  placeholder="Price (₹)"
-                                  value={opt.price}
-                                  onChange={(e) =>
-                                    updateAddonOption(
-                                      catIdx,
-                                      optIdx,
-                                      "price",
-                                      e.target.value,
-                                    )
-                                  }
-                                />
-                                <button
-                                  onClick={() =>
-                                    removeAddonOption(catIdx, optIdx)
-                                  }
-                                  className="p-2.5 text-brand-danger hover:bg-brand-dangerLight rounded-xl transition-colors shrink-0"
-                                >
-                                  <XIcon size={18} strokeWidth={2.5} />
-                                </button>
-                              </div>
-                            ))}
-                          </div>
-
-                          <button
-                            onClick={() => addAddonOption(catIdx)}
-                            className="mt-4 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-brand-light rounded-full text-sm font-bold text-brand-dark hover:bg-brand-light transition-colors shadow-sm"
-                          >
-                            <Plus size={16} strokeWidth={3} /> Add Option
-                          </button>
                         </div>
-                      ))}
-                    </div>
 
-                    <button
-                      onClick={addAddonCategory}
-                      className="mt-4 flex items-center justify-center gap-2 px-5 py-2.5 bg-white border border-brand-light rounded-full text-sm font-bold text-brand-dark hover:bg-brand-light transition-colors shadow-sm"
-                    >
-                      <Plus size={16} strokeWidth={3} /> Create Add-on Category
-                    </button>
+                        {/* Options */}
+                        <div className="space-y-3">
+                          {cat.options.map((opt, optIdx) => (
+                            <div
+                              key={optIdx}
+                              className="flex items-center gap-3"
+                            >
+                              <input
+                                className="flex-1 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
+                                placeholder="Add-on Name"
+                                value={opt.name}
+                                onChange={(e) =>
+                                  updateAddonOption(
+                                    catIdx,
+                                    optIdx,
+                                    "name",
+                                    e.target.value,
+                                  )
+                                }
+                              />
+                              <input
+                                type="number"
+                                className="w-1/3 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
+                                placeholder="Price (₹)"
+                                value={opt.price}
+                                onChange={(e) =>
+                                  updateAddonOption(
+                                    catIdx,
+                                    optIdx,
+                                    "price",
+                                    e.target.value,
+                                  )
+                                }
+                              />
+                              <button
+                                onClick={() =>
+                                  removeAddonOption(catIdx, optIdx)
+                                }
+                                className="p-2.5 text-brand-danger hover:bg-brand-dangerLight rounded-xl transition-colors shrink-0"
+                              >
+                                <XIcon size={18} strokeWidth={2.5} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+
+                        <button
+                          onClick={() => addAddonOption(catIdx)}
+                          className="mt-4 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-brand-light rounded-full text-sm font-bold text-brand-dark hover:bg-brand-light transition-colors shadow-sm"
+                        >
+                          <Plus size={16} strokeWidth={3} /> Add Option
+                        </button>
+                      </div>
+                    ))}
                   </div>
+
+                  <button
+                    onClick={addAddonCategory}
+                    className="mt-4 flex items-center justify-center gap-2 px-5 py-2.5 bg-white border border-brand-light rounded-full text-sm font-bold text-brand-dark hover:bg-brand-light transition-colors shadow-sm"
+                  >
+                    <Plus size={16} strokeWidth={3} /> Create Add-on Category
+                  </button>
                 </div>
-              )}
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div
-            className={`px-6 py-5 flex items-center ${step === 1 ? "justify-end" : "justify-between"} bg-white rounded-b-2xl`}
-          >
-            {step > 1 && (
-              <button
-                onClick={handleBack}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-brand-light text-sm font-bold text-brand-dark hover:bg-brand-light transition-colors"
-              >
-                <ChevronLeft size={16} strokeWidth={2.5} /> Back
-              </button>
-            )}
-
-            {step < 3 ? (
-              <button
-                onClick={handleNext}
-                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#1e293b] text-white text-sm font-bold hover:bg-brand-dark shadow-sm transition-colors ml-auto"
-              >
-                Next Step <ChevronRight size={16} strokeWidth={2.5} />
-              </button>
-            ) : (
-              <button
-                onClick={() => { if (validateForm()) handleSubmit(); }}
-                className="px-6 py-3 rounded-xl bg-[#1e293b] text-white text-sm font-bold hover:bg-brand-dark shadow-sm transition-colors ml-auto"
-              >
-                Create Menu Item
-              </button>
+              </div>
             )}
           </div>
+        </div>
+
+        {/* Footer */}
+        <div
+          className={`px-6 py-5 flex items-center ${step === 1 ? "justify-end" : "justify-between"} bg-white rounded-b-2xl`}
+        >
+          {step > 1 && (
+            <button
+              onClick={handleBack}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-brand-light text-sm font-bold text-brand-dark hover:bg-brand-light transition-colors"
+            >
+              <ChevronLeft size={16} strokeWidth={2.5} /> Back
+            </button>
+          )}
+
+          {step < 3 ? (
+            <button
+              onClick={handleNext}
+              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#1e293b] text-white text-sm font-bold hover:bg-brand-dark shadow-sm transition-colors ml-auto"
+            >
+              Next Step <ChevronRight size={16} strokeWidth={2.5} />
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                if (validateForm()) handleSubmit();
+              }}
+              className="px-6 py-3 rounded-xl bg-[#1e293b] text-white text-sm font-bold hover:bg-brand-dark shadow-sm transition-colors ml-auto"
+            >
+              Create Menu Item
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

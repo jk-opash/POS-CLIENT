@@ -1,14 +1,16 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../store/slices/authSlice';
-import socketService from '../../services/socketService';
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../store/slices/authSlice";
+import socketService from "../../services/socketService";
 
 export default function SessionConflictModal() {
-  const { sessionConflict, sessionConflictMessage } = useSelector((state) => state.auth);
+  const { sessionConflict, sessionConflictMessage } = useSelector(
+    (state) => state.auth,
+  );
   const dispatch = useDispatch();
-  const [pin, setPin] = useState('');
+  const [pin, setPin] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!sessionConflict) return null;
@@ -31,7 +33,9 @@ export default function SessionConflictModal() {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden flex flex-col p-6 animate-fade-in-up">
-        <h2 className="text-xl font-bold text-brand-dark text-center mb-2">Session Conflict</h2>
+        <h2 className="text-xl font-bold text-brand-dark text-center mb-2">
+          Session Conflict
+        </h2>
         <p className="text-sm text-brand-secondary text-center mb-6 leading-relaxed">
           {sessionConflictMessage}
         </p>
@@ -56,7 +60,7 @@ export default function SessionConflictModal() {
             {isSubmitting ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" />
             ) : (
-              'Take Over Session'
+              "Take Over Session"
             )}
           </button>
 

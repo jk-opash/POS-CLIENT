@@ -7,18 +7,26 @@ import { fetchExpenses } from "../../../store/slices/expenseSlice";
 import { fetchUtilityBills } from "../../../store/slices/utilityBillSlice";
 import { fetchWithdrawals } from "../../../store/slices/withdrawalSlice";
 import { fetchAllOrders } from "../../../store/slices/orderSlice";
-import { Building2, CreditCard, ArrowDownToLine, CheckCircle2, Clock } from "lucide-react";
+import { Building2, CreditCard, CheckCircle2, Clock } from "lucide-react";
 import LottieLoader from "../../../components/common/LottieLoader";
 
 export default function PaymentsPage() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const businessId = user?.businesses?.[0]?.id;
-  
-  const { expenses, loading: expensesLoading } = useSelector((state) => state.expense);
-  const { bills: utilityBills, loading: utilityLoading } = useSelector((state) => state.utilityBill);
-  const { withdrawals, loading: withdrawalsLoading } = useSelector((state) => state.withdrawal);
-  const { allOrders, loading: ordersLoading } = useSelector((state) => state.order);
+
+  const { expenses, loading: expensesLoading } = useSelector(
+    (state) => state.expense,
+  );
+  const { bills: utilityBills, loading: utilityLoading } = useSelector(
+    (state) => state.utilityBill,
+  );
+  const { withdrawals, loading: withdrawalsLoading } = useSelector(
+    (state) => state.withdrawal,
+  );
+  const { allOrders, loading: ordersLoading } = useSelector(
+    (state) => state.order,
+  );
   const { branches } = useSelector((state) => state.branch);
 
   const [branchFilter, setBranchFilter] = useState("");
@@ -45,76 +53,90 @@ export default function PaymentsPage() {
     }
   }, [branchFilter, dispatch]);
 
-  const loading = expensesLoading || utilityLoading || withdrawalsLoading || ordersLoading;
+  const loading =
+    expensesLoading || utilityLoading || withdrawalsLoading || ordersLoading;
 
   const combinedData = useMemo(() => {
     const arr = [];
-    
+
     // Vendor Payouts from Expenses
-    const expensesArray = Array.isArray(expenses) ? expenses : expenses?.data || [];
-    expensesArray.forEach(e => {
+    const expensesArray = Array.isArray(expenses)
+      ? expenses
+      : expenses?.data || [];
+    expensesArray.forEach((e) => {
       arr.push({
         id: `exp-${e.id}`,
-        reference_id: `EXP-${e.id.slice(0,6).toUpperCase()}`,
+        reference_id: `EXP-${e.id.slice(0, 6).toUpperCase()}`,
         type: "Vendor Payout",
         entity_name: e.category,
         amount: e.amount,
         date: e.expense_date,
-        status: "Cleared"
+        status: "Cleared",
       });
     });
 
     // Vendor Payouts from Utility Bills
-    const billsArray = Array.isArray(utilityBills) ? utilityBills : utilityBills?.data || [];
-    billsArray.forEach(u => {
+    const billsArray = Array.isArray(utilityBills)
+      ? utilityBills
+      : utilityBills?.data || [];
+    billsArray.forEach((u) => {
       arr.push({
         id: `util-${u.id}`,
-        reference_id: `UTL-${u.id.slice(0,6).toUpperCase()}`,
+        reference_id: `UTL-${u.id.slice(0, 6).toUpperCase()}`,
         type: "Vendor Payout",
         entity_name: `${u.utility_type} - ${u.vendor}`,
         amount: u.amount,
         date: u.created_at,
-        status: "Cleared"
+        status: "Cleared",
       });
     });
 
     // Accounts Receivable from unpaid Orders
-    const ordersArray = Array.isArray(allOrders) ? allOrders : allOrders?.data || [];
-    ordersArray.filter(o => o.payment_status !== "Paid").forEach(o => {
-      arr.push({
-        id: `ord-${o.id}`,
-        reference_id: o.order_number,
-        type: "Accounts Receivable",
-        entity_name: o.customer_info?.name || "Walk-in Customer",
-        amount: o.total_amount,
-        date: o.created_at,
-        status: "Pending"
+    const ordersArray = Array.isArray(allOrders)
+      ? allOrders
+      : allOrders?.data || [];
+    ordersArray
+      .filter((o) => o.payment_status !== "Paid")
+      .forEach((o) => {
+        arr.push({
+          id: `ord-${o.id}`,
+          reference_id: o.order_number,
+          type: "Accounts Receivable",
+          entity_name: o.customer_info?.name || "Walk-in Customer",
+          amount: o.total_amount,
+          date: o.created_at,
+          status: "Pending",
+        });
       });
-    });
 
     // Bank Deposits from Withdrawals (assuming Bank Transfers are deposits/transfers)
-    const withdrawalsArray = Array.isArray(withdrawals) ? withdrawals : withdrawals?.data || [];
-    withdrawalsArray.forEach(w => {
-      if(w.payment_method === "Bank Transfer") {
+    const withdrawalsArray = Array.isArray(withdrawals)
+      ? withdrawals
+      : withdrawals?.data || [];
+    withdrawalsArray.forEach((w) => {
+      if (w.payment_method === "Bank Transfer") {
         arr.push({
           id: `wth-${w.id}`,
-          reference_id: `DEP-${w.id.slice(0,6).toUpperCase()}`,
+          reference_id: `DEP-${w.id.slice(0, 6).toUpperCase()}`,
           type: "Bank Deposit",
           entity_name: w.description || "Bank Deposit",
           amount: w.amount,
           date: w.withdrawal_date,
-          status: "Cleared"
+          status: "Cleared",
         });
       }
     });
 
-    return arr.sort((a, b) => new Date(b.date) - new Date(a.date)).filter(item => {
-      if (activeTab === "all") return true;
-      if (activeTab === "vendor") return item.type === "Vendor Payout";
-      if (activeTab === "customer") return item.type === "Accounts Receivable";
-      if (activeTab === "deposit") return item.type === "Bank Deposit";
-      return true;
-    });
+    return arr
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .filter((item) => {
+        if (activeTab === "all") return true;
+        if (activeTab === "vendor") return item.type === "Vendor Payout";
+        if (activeTab === "customer")
+          return item.type === "Accounts Receivable";
+        if (activeTab === "deposit") return item.type === "Bank Deposit";
+        return true;
+      });
   }, [expenses, utilityBills, allOrders, withdrawals, activeTab]);
 
   const tabs = [
@@ -216,7 +238,10 @@ export default function PaymentsPage() {
                       </tr>
                     ) : combinedData.length === 0 ? (
                       <tr>
-                        <td colSpan={6} className="py-12 text-center text-brand-muted/70">
+                        <td
+                          colSpan={6}
+                          className="py-12 text-center text-brand-muted/70"
+                        >
                           <CreditCard
                             size={36}
                             className="mx-auto mb-2 text-brand-muted/70"
@@ -225,7 +250,8 @@ export default function PaymentsPage() {
                             No Payments Found
                           </p>
                           <p className="text-xs text-brand-muted/70 mt-0.5">
-                            Once payouts or deposits are logged, they will appear here.
+                            Once payouts or deposits are logged, they will
+                            appear here.
                           </p>
                         </td>
                       </tr>
@@ -239,7 +265,9 @@ export default function PaymentsPage() {
                             {item.reference_id}
                           </td>
                           <td className="py-3 px-4">
-                            <span className={`px-2 py-1 rounded-md text-[10px] font-bold ${getBadgeStyle(item.type)}`}>
+                            <span
+                              className={`px-2 py-1 rounded-md text-[10px] font-bold ${getBadgeStyle(item.type)}`}
+                            >
                               {item.type}
                             </span>
                           </td>
@@ -247,7 +275,14 @@ export default function PaymentsPage() {
                             {item.entity_name}
                           </td>
                           <td className="py-3 px-4 font-bold text-brand-dark text-sm">
-                            ₹{Number(item.amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            ₹
+                            {Number(item.amount || 0).toLocaleString(
+                              undefined,
+                              {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              },
+                            )}
                           </td>
                           <td className="py-3 px-4 text-brand-muted">
                             {new Date(item.date).toLocaleDateString("en-US", {
@@ -257,7 +292,8 @@ export default function PaymentsPage() {
                             })}
                           </td>
                           <td className="py-3 px-6 text-right">
-                            {item.status === "Cleared" || item.status === "Completed" ? (
+                            {item.status === "Cleared" ||
+                            item.status === "Completed" ? (
                               <span className="inline-flex items-center gap-1 text-brand-success font-medium text-xs">
                                 <CheckCircle2 size={14} /> {item.status}
                               </span>

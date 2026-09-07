@@ -17,7 +17,7 @@ import { fetchBranches } from "../../../store/slices/branchSlice";
 import { Plus, Building2 } from "lucide-react";
 import ZoneModal from "../../../components/ZoneModal";
 import TableModal from "../../../components/TableModal";
-import DeleteConfirmModal from "../../inventory/components/DeleteConfirmModal";
+import DeleteConfirmModal from "../../../components/inventory/DeleteConfirmModal";
 
 import TablesTab from "./tabs/TablesTab";
 import ZonesTab from "./tabs/ZonesTab";
