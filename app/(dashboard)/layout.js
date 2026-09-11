@@ -29,7 +29,9 @@ export default function DashboardLayout({ children }) {
       <div className="flex flex-1 flex-col overflow-hidden w-full md:pl-64">
         <Header onMenuClick={() => setIsSidebarOpen(true)} />
         <main className="flex-1 overflow-y-auto scroll-smooth">
-          <div className="">{children}</div>
+          {/* <div> */}
+          {children}
+          {/* </div> */}
         </main>
       </div>
     </div>

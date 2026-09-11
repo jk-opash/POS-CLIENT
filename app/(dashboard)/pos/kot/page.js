@@ -51,6 +51,9 @@ export default function KOTPage() {
 
   useEffect(() => {
     fetchKOTs();
+    if (activeBranch?.id) {
+      dispatch({ type: "socket/reconnect", payload: activeBranch.id });
+    }
     // Auto refresh every 15 seconds
     const interval = setInterval(fetchKOTs, 15000);
     return () => clearInterval(interval);
@@ -63,13 +66,11 @@ export default function KOTPage() {
     fetchKOTs();
   };
 
-  const markAllReady = (orderId, kotNumber, itemIds) => {
-    dispatch(
-      updateKDSOrderStatus({ orderId, kotNumber, itemIds, status: "Ready" }),
-    )
+  const updateOrderStatus = (orderId, kotNumber, itemIds, status) => {
+    dispatch(updateKDSOrderStatus({ orderId, kotNumber, itemIds, status }))
       .unwrap()
       .then(() => fetchKOTs())
-      .catch((err) => alert("Failed to mark ready: " + err));
+      .catch((err) => alert("Failed to update status: " + err));
   };
 
   return (
@@ -151,9 +152,9 @@ export default function KOTPage() {
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="border-b border-brand-border bg-brand-light text-[11px] font-black text-brand-muted/70 uppercase tracking-wider">
-                      <th className="py-3.5 px-6">Order ID / Type</th>
-                      <th className="py-3.5 px-4">KOT Number</th>
-                      <th className="py-3.5 px-4">Items Summary</th>
+                      <th className="py-3.5 px-6 w-1/4">Order ID / Type</th>
+                      <th className="py-3.5 px-4 w-1/4">Order Items</th>
+                      <th className="py-3.5 px-4 w-1/6">Status</th>
                       <th className="py-3.5 px-4 text-center">Time Elapsed</th>
                       <th className="py-3.5 px-6 text-right">Action</th>
                     </tr>
@@ -223,7 +224,7 @@ export default function KOTPage() {
                                 )}
                               </div>
                               <div>
-                                <div className="font-bold text-brand-dark">
+                                <div className="text-lg font-bold text-brand-dark">
                                   {orderLabel}
                                 </div>
                                 <div className="text-xs font-medium text-brand-muted uppercase tracking-wider">
@@ -233,75 +234,81 @@ export default function KOTPage() {
                             </div>
                           </td>
 
-                          <td className="py-4 px-4 font-semibold text-brand-dark">
-                            <span className="px-2.5 py-1 bg-brand-light border border-brand-border text-brand-dark text-xs font-bold rounded-lg">
-                              {currentKot}
-                            </span>
+                          <td className="py-4 px-4 align-top">
+                            <div className="flex flex-col gap-3">
+                              {pendingItems.map((item, idx) => {
+                                const qty = item.quantity || item.qty || 1;
+                                const name =
+                                  item.product?.name ||
+                                  item.name ||
+                                  item.item_name ||
+                                  "Unknown";
+                                let variantText = "";
+
+                                if (item.variant) {
+                                  const vName =
+                                    typeof item.variant === "string"
+                                      ? item.variant
+                                      : item.variant.name || "";
+                                  if (vName) variantText = `(${vName})`;
+                                } else if (
+                                  item.variants &&
+                                  Array.isArray(item.variants) &&
+                                  item.variants.length > 0
+                                ) {
+                                  variantText = `(${item.variants.map((v) => v.name || v).join(", ")})`;
+                                }
+
+                                const addons =
+                                  item.addons &&
+                                  Array.isArray(item.addons) &&
+                                  item.addons.length > 0
+                                    ? item.addons
+                                        .map((a) => a.name)
+                                        .filter(Boolean)
+                                        .join(", ")
+                                    : null;
+
+                                const note = item.note || item.notes;
+
+                                return (
+                                  <div
+                                    key={idx}
+                                    className="flex flex-col gap-0.5"
+                                  >
+                                    <div className="text-sm font-semibold text-brand-dark flex items-start gap-2 leading-tight">
+                                      <span className="bg-brand-primary/10 text-brand-primary px-1.5 py-0.5 rounded text-[11px] mt-0.5 shrink-0">
+                                        {qty}x
+                                      </span>
+                                      <span>
+                                        {name}{" "}
+                                        {variantText && (
+                                          <span className="text-brand-muted font-normal">
+                                            {variantText}
+                                          </span>
+                                        )}
+                                      </span>
+                                    </div>
+                                    {addons && (
+                                      <div className="text-xs text-brand-muted pl-8">
+                                        + {addons}
+                                      </div>
+                                    )}
+                                    {note && (
+                                      <div className="text-xs text-brand-warning pl-8">
+                                        * Note: {note}
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
                           </td>
 
-                          <td className="py-4 px-4">
-                            <div className="group relative flex items-center cursor-default">
-                              <PosAdminBadge variant="purple">
-                                {pendingItems.reduce(
-                                  (acc, item) =>
-                                    acc + (item.quantity || item.qty || 1),
-                                  0,
-                                )}{" "}
-                                Items
-                              </PosAdminBadge>
-
-                              {/* Tooltip Matching MenuPage Style */}
-                              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-50 pointer-events-none opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 ease-out">
-                                <div className="bg-gradient-to-br from-brand-primary/90 to-brand-primary text-white text-[11px] font-medium p-3 rounded-xl shadow-[0_10px_25px_-5px_rgba(139,92,246,0.5)] border border-brand-primary/50 w-max max-w-[260px] whitespace-pre-wrap text-left leading-relaxed relative">
-                                  {pendingItems
-                                    .map((item) => {
-                                      const qty =
-                                        item.quantity || item.qty || 1;
-                                      const name =
-                                        item.product?.name ||
-                                        item.name ||
-                                        item.item_name ||
-                                        "Unknown";
-                                      let text = `${qty}x ${name}`;
-
-                                      if (item.variant) {
-                                        const vName =
-                                          typeof item.variant === "string"
-                                            ? item.variant
-                                            : item.variant.name || "";
-                                        if (vName) text += ` (${vName})`;
-                                      } else if (
-                                        item.variants &&
-                                        Array.isArray(item.variants) &&
-                                        item.variants.length > 0
-                                      ) {
-                                        text += ` (${item.variants.map((v) => v.name || v).join(", ")})`;
-                                      }
-
-                                      if (
-                                        item.addons &&
-                                        Array.isArray(item.addons) &&
-                                        item.addons.length > 0
-                                      ) {
-                                        const addonText = item.addons
-                                          .map((a) => a.name)
-                                          .filter(Boolean)
-                                          .join(", ");
-                                        if (addonText)
-                                          text += `\n  + ${addonText}`;
-                                      }
-
-                                      const note = item.note || item.notes;
-                                      if (note) {
-                                        text += `\n  * Note: ${note}`;
-                                      }
-                                      return text;
-                                    })
-                                    .join("\n")}
-                                  <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-brand-primary border-b border-r border-brand-primary/50 rotate-45"></div>
-                                </div>
-                              </div>
-                            </div>
+                          <td className="py-4 px-4 align-middle">
+                            <span className="px-2.5 py-1 bg-brand-warning/10 border border-brand-warning/20 text-brand-warning text-xs font-bold rounded-lg capitalize inline-block mt-1">
+                              {order.order_status || order.status || "Pending"}
+                            </span>
                           </td>
 
                           <td className="py-4 px-4 text-center">
@@ -314,16 +321,42 @@ export default function KOTPage() {
                           </td>
 
                           <td className="py-4 px-6 text-right">
-                            <button
-                              onClick={() => {
-                                const itemIds = pendingItems.map((i) => i.id);
-                                markAllReady(order.id, currentKot, itemIds);
-                              }}
-                              className="px-4 py-2 bg-brand-primary hover:bg-brand-primary/90 text-white font-bold rounded-xl transition-all shadow-sm active:scale-95 flex items-center gap-2 ml-auto text-xs"
-                            >
-                              <CheckCircle size={14} />
-                              Mark Ready
-                            </button>
+                            {pendingItems.some(i => i.status === "Preparing" || i.kds_status === "Preparing") ||
+                            order.order_status === "Preparing" ||
+                            order.status === "Preparing" ||
+                            order.kds_status === "Preparing" ? (
+                              <button
+                                onClick={() => {
+                                  const itemIds = pendingItems.map((i) => i.id);
+                                  updateOrderStatus(
+                                    order.id,
+                                    currentKot,
+                                    itemIds,
+                                    "Ready",
+                                  );
+                                }}
+                                className="px-4 py-2 bg-brand-success hover:bg-brand-success/90 text-white font-bold rounded-xl transition-all shadow-sm active:scale-95 flex items-center gap-2 ml-auto text-xs"
+                              >
+                                <CheckCircle size={14} />
+                                Mark Ready
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => {
+                                  const itemIds = pendingItems.map((i) => i.id);
+                                  updateOrderStatus(
+                                    order.id,
+                                    currentKot,
+                                    itemIds,
+                                    "Preparing",
+                                  );
+                                }}
+                                className="px-4 py-2 bg-brand-primary hover:bg-brand-primary/90 text-white font-bold rounded-xl transition-all shadow-sm active:scale-95 flex items-center gap-2 ml-auto text-xs"
+                              >
+                                <UtensilsCrossed size={14} />
+                                Start Prep
+                              </button>
+                            )}
                           </td>
                         </tr>
                       );

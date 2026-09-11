@@ -6,6 +6,7 @@ import { fetchDashboardAnalytics } from "../../store/slices/analyticsSlice";
 import LottieLoader from "../../components/common/LottieLoader";
 
 import StatCard from "../../components/ui/StatCard";
+import DateRangePicker from "../../components/ui/DateRangePicker";
 
 import ExpensesWidget from "../../components/dashboard/ExpensesWidget";
 import OrderStatisticsWidget from "../../components/dashboard/OrderStatisticsWidget";
@@ -40,18 +41,34 @@ function fmt(value) {
 export default function DashboardPage() {
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("overview");
-  const [timeRange, setTimeRange] = useState("today");
+  const [dateRange, setDateRange] = useState(() => {
+    const now = new Date();
+    return {
+      startDate: new Date(now.getFullYear(), now.getMonth(), 1),
+      endDate: now,
+    };
+  });
 
   const { stats, loading, error } = useSelector((state) => state.analytics);
 
-  const handleFilterChange = (e) => {
-    const newRange = e.target.value;
-    setTimeRange(newRange);
-    dispatch(fetchDashboardAnalytics({ timeRange: newRange }));
+  const handleFilterChange = (range) => {
+    setDateRange(range);
+    dispatch(
+      fetchDashboardAnalytics({
+        startDate: range.startDate,
+        endDate: range.endDate,
+      }),
+    );
   };
 
   useEffect(() => {
-    dispatch(fetchDashboardAnalytics({ timeRange: "today" }));
+    dispatch(
+      fetchDashboardAnalytics({
+        startDate: dateRange.startDate,
+        endDate: dateRange.endDate,
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   if (loading) {
@@ -84,25 +101,20 @@ export default function DashboardPage() {
                 </p>
               </div>
               <div className="flex items-center gap-3 mt-4 lg:mt-0">
-                <div className="relative group">
-                  <select
-                    value={timeRange}
+                <div className="relative group z-50">
+                  <DateRangePicker
+                    value={dateRange}
                     onChange={handleFilterChange}
-                    className="appearance-none bg-white border border-brand-border text-brand-dark text-sm font-semibold rounded-lg px-4 py-2 pr-10 outline-none hover:bg-brand-light cursor-pointer shadow-sm transition-colors"
-                  >
-                    <option value="today">Today</option>
-                    <option value="week">This Week</option>
-                    <option value="month">This Month</option>
-                    <option value="year">This Year</option>
-                  </select>
-                  <ChevronDown
-                    size={14}
-                    className="absolute right-3 top-2.5 text-brand-muted pointer-events-none"
                   />
                 </div>
                 <button
                   onClick={() =>
-                    dispatch(fetchDashboardAnalytics({ timeRange }))
+                    dispatch(
+                      fetchDashboardAnalytics({
+                        startDate: dateRange.startDate,
+                        endDate: dateRange.endDate,
+                      }),
+                    )
                   }
                   className="p-2 bg-white border border-brand-border rounded-lg text-brand-muted hover:bg-brand-light hover:text-brand-dark transition-colors shadow-sm"
                 >
@@ -201,7 +213,6 @@ export default function DashboardPage() {
                       value={fmt(expenses)}
                       subtext="Expenses recorded"
                       icon={<Wallet size={16} />}
-                      isGrey
                     />
 
                     <StatCard
@@ -209,7 +220,6 @@ export default function DashboardPage() {
                       value={fmt(taxes)}
                       subtext="Taxes recorded"
                       icon={<ScrollText size={16} />}
-                      isGrey
                     />
 
                     <StatCard
@@ -217,7 +227,6 @@ export default function DashboardPage() {
                       value={fmt(discounts)}
                       subtext="Discounts given"
                       icon={<Tag size={16} />}
-                      isGrey
                     />
                   </div>
                 </section>

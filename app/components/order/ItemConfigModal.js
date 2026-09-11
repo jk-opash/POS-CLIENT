@@ -46,31 +46,32 @@ export default function ItemConfigModal({ item, currency, onClose, onAdd }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col justify-end">
+    <div className="fixed inset-0 bg-brand-dark/40 backdrop-blur-md flex justify-center items-end md:items-center z-50 p-0 md:p-6 animate-in fade-in duration-300">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-brand-dark/40 backdrop-blur-sm transition-opacity"
+        className="absolute inset-0"
         onClick={onClose}
       />
 
       {/* Modal Content */}
-      <div className="bg-white w-full max-h-[85vh] rounded-t-[2rem] shadow-2xl relative z-10 flex flex-col animate-slide-up">
+      <div className="bg-white w-full md:w-[500px] max-w-full h-[85vh] md:h-auto md:max-h-[90vh] rounded-t-3xl md:rounded-[2rem] md:rounded-b-[2rem] shadow-2xl flex flex-col relative shrink-0 overflow-hidden ring-1 ring-brand-border animate-in slide-in-from-bottom-10 md:zoom-in-95 duration-300 ease-out z-10">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 w-10 h-10 bg-brand-light rounded-full flex items-center justify-center text-brand-muted z-10 hover:bg-brand-light"
+          className="absolute top-4 right-4 w-9 h-9 md:w-10 md:h-10 rounded-full bg-surface-2/80 backdrop-blur hover:bg-surface-3 flex items-center justify-center text-brand-muted hover:text-brand-dark z-20 transition-all shadow-sm hover:shadow"
         >
-          <X size={20} />
+          <X size={18} strokeWidth={2.5} />
         </button>
 
         <div className="overflow-y-auto px-4 pt-6 pb-24">
           {item.image_url && (
-            <div className="w-full h-40 rounded-2xl overflow-hidden bg-brand-light mb-4">
+            <div className="w-full h-48 md:h-56 -mt-6 -mx-4 mb-4 relative overflow-hidden bg-brand-light shrink-0">
               <img
                 src={getImageUrl(item.image_url)}
                 alt={item.name}
                 className="w-full h-full object-cover"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
             </div>
           )}
 
@@ -206,29 +207,29 @@ export default function ItemConfigModal({ item, currency, onClose, onAdd }) {
         </div>
 
         {/* Bottom Actions */}
-        <div className="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-brand-light p-4 flex items-center gap-3">
+        <div className="bg-white/90 backdrop-blur-md border-t border-brand-border/60 p-3 md:p-5 flex items-center gap-3 md:gap-4 shrink-0 relative z-20">
           {/* Quantity Selector */}
-          <div className="flex items-center bg-brand-light rounded-xl p-1 shrink-0">
+          <div className="flex items-center bg-surface-2 rounded-xl p-1 shrink-0 border border-brand-border shadow-sm">
             <button
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="w-10 h-10 flex items-center justify-center bg-white rounded-lg shadow-sm text-brand-dark active:scale-95"
+              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-white rounded-lg shadow-sm text-brand-dark active:scale-95 transition-all hover:bg-brand-light"
             >
-              <Minus size={18} strokeWidth={3} />
+              <Minus size={16} strokeWidth={3} />
             </button>
-            <span className="w-10 text-center font-bold text-brand-dark">
+            <span className="w-8 md:w-12 text-center font-bold text-brand-dark text-sm md:text-base">
               {quantity}
             </span>
             <button
               onClick={() => setQuantity(quantity + 1)}
-              className="w-10 h-10 flex items-center justify-center bg-white rounded-lg shadow-sm text-brand-dark active:scale-95"
+              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-white rounded-lg shadow-sm text-brand-dark active:scale-95 transition-all hover:bg-brand-light"
             >
-              <Plus size={18} strokeWidth={3} />
+              <Plus size={16} strokeWidth={3} />
             </button>
           </div>
 
           <button
             onClick={handleAdd}
-            className="flex-1 bg-brand-dark text-white font-bold py-3.5 rounded-xl flex items-center justify-between px-5 hover:bg-brand-dark transition-colors active:scale-95 shadow-lg shadow-brand-dark/20"
+            className="flex-1 bg-brand-primary text-white font-bold py-3 md:py-3.5 rounded-xl flex items-center justify-between px-4 md:px-6 transition-all shadow-lg shadow-brand-primary/30 hover:bg-brand-primaryDark hover:-translate-y-0.5 active:scale-95 hover:shadow-xl hover:shadow-brand-primary/40 text-sm md:text-base"
           >
             <span>Add Item</span>
             <span>

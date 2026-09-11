@@ -617,7 +617,7 @@ export default function ZonesPage() {
       {/* ─ Left Sidebar (Zones List) ───────────────────────────────────────── */}
       <div className="w-64 flex-shrink-0 flex flex-col gap-4 p-4 border-r border-brand-border bg-white shadow-sm z-20 relative">
         <button
-          onClick={() => router.push(`/outlet/${id}`)}
+          onClick={() => router.push(`/outlet/`)}
           className="flex items-center gap-2 mb-2 group w-fit"
         >
           <ArrowLeft className="h-5 w-5 text-brand-muted" />

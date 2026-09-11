@@ -29,6 +29,7 @@ const config: Config = {
           purple: '#8B5CF6',
           pink: '#EC4899',
           teal: '#14B8A6',
+          accent: '#df5cf6',
           gray: '#94A3B8',
           bg: '#FAFAFA',
         },

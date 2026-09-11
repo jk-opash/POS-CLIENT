@@ -18,11 +18,11 @@ export const Select = forwardRef(
             ref={ref}
             id={id}
             className={cn(
-              'w-full appearance-none rounded-xl border border-brand-border bg-brand-light px-4 py-3 pr-10 text-sm text-brand-dark',
-              'transition-all duration-300 ease-in-out shadow-inset-subtle',
+              'w-full appearance-none rounded-xl border border-brand-border bg-surface-2 px-4 py-3 pr-10 text-sm text-brand-dark font-medium',
+              'transition-all duration-300 ease-in-out shadow-sm',
               'hover:bg-white hover:border-brand-borderHover',
-              'focus:outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 focus:bg-white focus:shadow-none',
-              'disabled:opacity-50 disabled:bg-brand-light disabled:cursor-not-allowed disabled:hover:border-brand-border',
+              'focus:outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 focus:bg-white',
+              'disabled:opacity-50 disabled:bg-surface-2 disabled:cursor-not-allowed disabled:hover:border-brand-border',
               error && 'border-brand-danger focus:border-brand-danger focus:ring-brand-danger/20 bg-brand-dangerLight/30',
               className
             )}

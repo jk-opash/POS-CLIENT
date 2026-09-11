@@ -7,6 +7,7 @@ export default function StatCard({
   icon,
   isGrey,
   className,
+  color,
 }) {
   return (
     <div
@@ -22,7 +23,12 @@ export default function StatCard({
         <div className="flex items-center gap-2">
           {icon && (
             <div
-              className={`flex h-8 w-8 items-center justify-center rounded-lg ${isGrey ? "bg-brand-light text-brand-muted" : "bg-brand-light text-brand-primary"}`}
+              className={cn(
+                "flex h-8 w-8 items-center justify-center rounded-lg",
+                isGrey
+                  ? `bg-brand-light ${color}`
+                  : "bg-brand-light text-brand-primary",
+              )}
             >
               {icon}
             </div>
@@ -32,7 +38,14 @@ export default function StatCard({
       </div>
 
       <div className="flex items-end justify-between mt-auto">
-        <p className="text-2xl font-bold text-brand-dark">{value}</p>
+        <p
+          className={cn(
+            "text-2xl font-bold",
+            color ? color : "text-brand-dark",
+          )}
+        >
+          {value}
+        </p>
       </div>
 
       {subtext && (

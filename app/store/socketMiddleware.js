@@ -18,7 +18,8 @@ export const socketMiddleware = (store) => (next) => (action) => {
 
   if (
     action.type === "auth/loginOwner/fulfilled" ||
-    action.type === "socket/init"
+    action.type === "socket/init" ||
+    action.type === "socket/reconnect"
   ) {
     const state = store.getState();
     const currentUser = state.auth?.user;
@@ -27,10 +28,14 @@ export const socketMiddleware = (store) => (next) => (action) => {
     // Use restaurant_id or branch_id for the socket connection based on the user's role
     // Since this is an admin POS-CLIENT, they might monitor the entire restaurant or a specific branch.
     // For now, let's use the active branch ID if available, otherwise fallback to their primary branch or restaurant ID
-    const branchId =
+    let branchId =
       state.branch?.activeBranch?.id ||
       currentUser?.branch_id ||
       currentUser?.restaurant_id;
+
+    if (action.type === "socket/reconnect" && action.payload) {
+      branchId = action.payload;
+    }
 
     if (currentToken) {
       socketService.connect(branchId, currentToken);

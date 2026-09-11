@@ -13,15 +13,20 @@ export default function ExpensesWidget() {
       ? rawCategories
       : [
           { label: "Gas", color: "bg-brand-success", val: 0 },
-          { label: "Electricity", color: "bg-brand-info", val: 0 },
-          { label: "Water", color: "bg-brand-primary", val: 0 },
+          { label: "Electricity", color: "bg-brand-teal", val: 0 },
+          { label: "Water", color: "bg-brand-info", val: 0 },
           { label: "Petty Cash", color: "bg-brand-warning", val: 0 },
         ];
 
   const chartData = categories.map((cat, i) => ({
     name: cat.label,
     value: cat.val,
-    color: ["#059669", "#14B8A6", "#2563EB", "#D97706"][i % 4],
+    color: [
+      "var(--color-brand-success)",
+      "var(--color-brand-teal)",
+      "var(--color-brand-info)",
+      "var(--color-brand-warning)"
+    ][i % 4],
   }));
 
   return (
@@ -33,9 +38,8 @@ export default function ExpensesWidget() {
         <span className="text-sm text-brand-muted font-medium">
           Total Expenses:{" "}
         </span>
-        <span className="text-xl text-brand-dark font-bold ml-1">
-          ₹{" "}
-          {totalExpenses.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
+        <span className="text-xl text-brand-teal font-bold ml-1">
+          ₹{totalExpenses.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
         </span>
       </div>
       <div className="flex items-center gap-2">
@@ -76,7 +80,7 @@ export default function ExpensesWidget() {
             <div key={e.label} className="flex justify-between items-center">
               <div className="flex items-center gap-2">
                 <span
-                  className={`w-2.5 h-2.5 rounded-full ${["bg-brand-success", "bg-brand-info", "bg-brand-primary", "bg-brand-warning"][i % 4]}`}
+                  className={`w-2.5 h-2.5 rounded-full ${["bg-brand-success", "bg-brand-teal", "bg-brand-info", "bg-brand-warning"][i % 4]}`}
                 ></span>
                 <span className="text-xs text-brand-muted font-medium">
                   {e.label}

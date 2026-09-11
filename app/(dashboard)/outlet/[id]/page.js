@@ -1,310 +1,26 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-
 import { useParams, useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
+
 import {
   fetchBranchById,
   updateBranch,
   deleteBranch,
 } from "../../../store/slices/branchSlice";
-import Card from "../../../components/ui/Card";
+import { fetchDashboardAnalytics } from "../../../store/slices/analyticsSlice";
 import Badge from "../../../components/ui/Badge";
 import Button from "../../../components/ui/Button";
-import Modal from "../../../components/ui/Modal";
+import DateRangePicker from "../../../components/ui/DateRangePicker";
 import LottieLoader from "../../../components/common/LottieLoader";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
-} from "../../../components/ui/Table";
 import { cn } from "../../../lib/utils";
-import {
-  Building2,
-  MapPin,
-  Phone,
-  Mail,
-  ChevronLeft,
-  Settings,
-  Users,
-  Edit,
-  AlertCircle,
-  FileCheck,
-} from "lucide-react";
+import { Building2, ChevronLeft, Edit, AlertCircle } from "lucide-react";
 
-// Edit Modal Component
-function EditBranchModal({ branch, onClose, onSave }) {
-  const [errors, setErrors] = useState({});
-  const [form, setForm] = useState({
-    name: branch?.name || "",
-    code: branch?.code || "",
-    branch_type: branch?.branch_type || "",
-    contact: branch?.contact || "",
-    email: branch?.email || "",
-    address: branch?.address || "",
-    city: branch?.city || "",
-    state: branch?.state || "",
-    status: branch?.status || "Operational",
-    capacity: branch?.capacity || "",
-    tables_count: branch?.tables_count || "",
-    tax_jurisdiction: branch?.tax_jurisdiction || "",
-    tax_registration: branch?.tax_registration || "",
-    tax_percentage: branch?.tax_percentage || "",
-  });
-
-  const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
-
-  const validateForm = () => {
-    const newErrors = {};
-    if (!form.name?.trim()) newErrors.name = "Branch Name is required";
-    if (!form.code?.trim()) newErrors.code = "Branch Code is required";
-    else if (form.code.length < 2)
-      newErrors.code = "Must be at least 2 characters";
-
-    if (!form.contact?.trim()) newErrors.contact = "Contact is required";
-    else if (!/^\d{10}$/.test(form.contact.replace(/\D/g, "")))
-      newErrors.contact = "Must be 10 digits";
-
-    if (form.email && !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(form.email))
-      newErrors.email = "Invalid email";
-
-    if (!form.address?.trim()) newErrors.address = "Address is required";
-    if (!form.city?.trim()) newErrors.city = "City is required";
-    if (!form.state?.trim()) newErrors.state = "State is required";
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-    onSave(form);
-  };
-
-  return (
-    <Modal isOpen={true} onClose={onClose} title="Edit Branch Profile">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="text-xs text-brand-muted block mb-1">
-              Branch Name *
-            </label>
-            <input
-              className="input"
-              value={form.name}
-              onChange={(e) => set("name", e.target.value)}
-              required
-            />
-            {errors.name && (
-              <span className="text-brand-danger text-xs mt-1 block">
-                {errors.name}
-              </span>
-            )}
-          </div>
-          <div>
-            <label className="text-xs text-brand-muted block mb-1">
-              Branch Code *
-            </label>
-            <input
-              className="input"
-              value={form.code}
-              required
-              onChange={(e) => set("code", e.target.value)}
-            />
-            {errors.code && (
-              <span className="text-brand-danger text-xs mt-1 block">
-                {errors.code}
-              </span>
-            )}
-          </div>
-          <div>
-            <label className="text-xs text-brand-muted block mb-1">
-              Status
-            </label>
-            <select
-              className="input select"
-              value={form.status}
-              onChange={(e) => set("status", e.target.value)}
-            >
-              <option value="Operational">Operational</option>
-              <option value="Closed">Closed</option>
-              <option value="Maintenance">Maintenance</option>
-            </select>
-          </div>
-          <div>
-            <label className="text-xs text-brand-muted block mb-1">
-              Branch Type
-            </label>
-            <input
-              className="input"
-              value={form.branch_type}
-              onChange={(e) => set("branch_type", e.target.value)}
-              placeholder="Dine-in, Takeaway, etc."
-            />
-          </div>
-          <div>
-            <label className="text-xs text-brand-muted block mb-1">
-              Contact Phone
-            </label>
-            <input
-              className="input"
-              value={form.contact}
-              onChange={(e) => set("contact", e.target.value)}
-            />
-            {errors.contact && (
-              <span className="text-brand-danger text-xs mt-1 block">
-                {errors.contact}
-              </span>
-            )}
-          </div>
-          <div>
-            <label className="text-xs text-brand-muted block mb-1">
-              Email Address
-            </label>
-            <input
-              className="input"
-              type="email"
-              value={form.email}
-              onChange={(e) => set("email", e.target.value)}
-            />
-            {errors.email && (
-              <span className="text-brand-danger text-xs mt-1 block">
-                {errors.email}
-              </span>
-            )}
-          </div>
-          <div className="md:col-span-2">
-            <label className="text-xs text-brand-muted block mb-1">
-              Address
-            </label>
-            <textarea
-              className="input min-h-[80px]"
-              value={form.address}
-              onChange={(e) => set("address", e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="text-xs text-brand-muted block mb-1">City</label>
-            <input
-              className="input"
-              value={form.city}
-              onChange={(e) => set("city", e.target.value)}
-            />
-            {errors.city && (
-              <span className="text-brand-danger text-xs mt-1 block">
-                {errors.city}
-              </span>
-            )}
-          </div>
-          <div>
-            <label className="text-xs text-brand-muted block mb-1">State</label>
-            <input
-              className="input"
-              value={form.state}
-              onChange={(e) => set("state", e.target.value)}
-            />
-            {errors.state && (
-              <span className="text-brand-danger text-xs mt-1 block">
-                {errors.state}
-              </span>
-            )}
-          </div>
-          <div>
-            <label className="text-xs text-brand-muted block mb-1">
-              Capacity (Persons)
-            </label>
-            <input
-              className="input"
-              type="number"
-              value={form.capacity}
-              onChange={(e) => set("capacity", parseInt(e.target.value) || "")}
-            />
-          </div>
-          <div>
-            <label className="text-xs text-brand-muted block mb-1">
-              Tables Count
-            </label>
-            <input
-              className="input"
-              type="number"
-              value={form.tables_count}
-              onChange={(e) =>
-                set("tables_count", parseInt(e.target.value) || "")
-              }
-            />
-          </div>
-          <div>
-            <label className="text-xs text-brand-muted block mb-1">
-              Tax Jurisdiction
-            </label>
-            <input
-              className="input"
-              value={form.tax_jurisdiction}
-              onChange={(e) => set("tax_jurisdiction", e.target.value)}
-              placeholder="e.g. State / National"
-            />
-          </div>
-          <div>
-            <label className="text-xs text-brand-muted block mb-1">
-              Tax Registration No.
-            </label>
-            <input
-              className="input"
-              value={form.tax_registration}
-              onChange={(e) => set("tax_registration", e.target.value)}
-              placeholder="e.g. GSTIN/VAT"
-            />
-          </div>
-          <div>
-            <label className="text-xs text-brand-muted block mb-1">
-              Tax Rate (%)
-            </label>
-            <input
-              className="input"
-              type="number"
-              step="0.01"
-              value={form.tax_percentage}
-              onChange={(e) =>
-                set("tax_percentage", parseFloat(e.target.value) || "")
-              }
-              placeholder="e.g. 5.00"
-            />
-          </div>
-        </div>
-        <div className="flex gap-3 justify-end mt-4 pt-4 border-t border-brand-border">
-          <Button type="button" variant="surface" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit" variant="primary">
-            Save Changes
-          </Button>
-        </div>
-      </form>
-    </Modal>
-  );
-}
-
-// Info Item Component
-function InfoItem({ icon: Icon, label, value }) {
-  return (
-    <div className="flex gap-3 items-start p-4 rounded-lg bg-brand-bg/50 border border-brand-border">
-      <div className="p-2 bg-white rounded border border-brand-border text-brand-muted/70 mt-0.5">
-        <Icon className="w-4 h-4" />
-      </div>
-      <div>
-        <p className="text-xs font-medium text-brand-muted mb-0.5">{label}</p>
-        <p className="text-sm font-semibold text-brand-dark">
-          {value || "Not specified"}
-        </p>
-      </div>
-    </div>
-  );
-}
+import EditBranchModal from "../../../components/outlet/EditBranchModal";
+import OverviewTab from "../../../components/outlet/tabs/OverviewTab";
+import AnalyticsTab from "../../../components/outlet/tabs/AnalyticsTab";
+import SettingsTab from "../../../components/outlet/tabs/SettingsTab";
 
 export default function BranchDetailsPage() {
   const [collapsed, setCollapsed] = useState(false);
@@ -315,6 +31,10 @@ export default function BranchDetailsPage() {
 
   const [activeTab, setActiveTab] = useState("overview");
   const [showEditModal, setShowEditModal] = useState(false);
+  const [dateRange, setDateRange] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+  });
 
   const { currentBranch, loading, error } = useSelector(
     (state) => state.branch,
@@ -327,6 +47,18 @@ export default function BranchDetailsPage() {
       dispatch(fetchBranchById(id));
     }
   }, [id, dispatch]);
+
+  useEffect(() => {
+    if (id && dateRange?.startDate && dateRange?.endDate) {
+      dispatch(
+        fetchDashboardAnalytics({
+          branchId: id,
+          startDate: dateRange.startDate.toISOString(),
+          endDate: dateRange.endDate.toISOString(),
+        }),
+      );
+    }
+  }, [id, dispatch, dateRange]);
 
   const handleSaveBranch = async (data) => {
     try {
@@ -382,7 +114,6 @@ export default function BranchDetailsPage() {
         <main className="flex-1 px-6 py-6">
           <div className="space-y-6 pb-12">
             {/* Back Button */}
-
             <div>
               <button
                 onClick={() => router.push("/outlet")}
@@ -444,14 +175,14 @@ export default function BranchDetailsPage() {
             </div>
 
             {/* Tabs */}
-            <div className="border-b border-brand-border">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-brand-border">
               <nav
                 className="-mb-px flex space-x-6 overflow-x-auto"
                 aria-label="Tabs"
               >
                 {[
                   { id: "overview", label: "Overview" },
-                  { id: "staff", label: "Staff & Permissions" },
+                  { id: "analytics", label: "Analytics" },
                   { id: "settings", label: "Settings" },
                 ].map((tab) => (
                   <button
@@ -468,307 +199,22 @@ export default function BranchDetailsPage() {
                   </button>
                 ))}
               </nav>
+              {activeTab === "analytics" && (
+                <div className="pb-2 pt-2 sm:pt-0">
+                  <DateRangePicker
+                    value={dateRange}
+                    onChange={setDateRange}
+                    placeholder="Filter by Date"
+                  />
+                </div>
+              )}
             </div>
 
             {/* Tab Content */}
             <div className="mt-6">
-              {activeTab === "overview" && (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-300 ease-spring">
-                  <div className="md:col-span-1 space-y-6">
-                    <Card>
-                      <h3 className="text-sm font-bold text-brand-dark mb-4">
-                        Contact Information
-                      </h3>
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-3 text-sm">
-                          <div className="h-8 w-8 rounded-full bg-brand-light flex items-center justify-center text-brand-muted">
-                            <span className="font-bold">
-                              {b.name.charAt(0)}
-                            </span>
-                          </div>
-                          <div>
-                            <p className="font-medium text-brand-dark">
-                              {b.name}
-                            </p>
-                            <p className="text-xs text-brand-muted/70">
-                              Primary Outlet
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3 text-sm text-brand-muted">
-                          <Mail className="h-4 w-4 text-brand-placeholder" />
-                          {b.email || "Not Provided"}
-                        </div>
-                        <div className="flex items-center gap-3 text-sm text-brand-muted">
-                          <Phone className="h-4 w-4 text-brand-placeholder" />
-                          {b.contact || "Not Provided"}
-                        </div>
-                      </div>
-                    </Card>
-
-                    <Card>
-                      <h3 className="text-sm font-bold text-brand-dark mb-4">
-                        Location Details
-                      </h3>
-                      <div className="space-y-3">
-                        <div className="flex items-start gap-3 text-sm text-brand-muted">
-                          <MapPin className="h-4 w-4 text-brand-placeholder mt-0.5 shrink-0" />
-                          <span>
-                            {b.address || "No Address"}
-                            <br />
-                            {b.city}, {b.state}
-                            <br />
-                            {b.country}
-                          </span>
-                        </div>
-                        <div className="pt-3 mt-3 border-t border-brand-border space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-brand-muted">
-                              Tax Jurisdiction
-                            </span>
-                            <span className="font-medium text-brand-dark">
-                              {b.tax_jurisdiction || "Not Provided"}
-                            </span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-brand-muted">
-                              Tax Registration
-                            </span>
-                            <span className="font-medium text-brand-dark">
-                              {b.tax_registration || "Not Provided"}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </Card>
-
-                    <Card>
-                      <h3 className="text-sm font-bold text-brand-dark mb-4 flex items-center gap-2">
-                        <FileCheck className="h-4 w-4 text-brand-placeholder" />{" "}
-                        Operational Info
-                      </h3>
-                      <div className="space-y-3">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-sm">
-                          <span className="text-brand-muted">Store Size</span>
-                          <span className="font-medium">
-                            {b.store_size || "N/A"}
-                          </span>
-                        </div>
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-sm">
-                          <span className="text-brand-muted">Capacity</span>
-                          <span className="font-medium">
-                            {b.capacity ? `${b.capacity} Persons` : "N/A"}
-                          </span>
-                        </div>
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-sm">
-                          <span className="text-brand-muted">Tables Count</span>
-                          <span className="font-medium">
-                            {b.tables_count || "N/A"}
-                          </span>
-                        </div>
-                      </div>
-                    </Card>
-                  </div>
-
-                  <div className="md:col-span-2 space-y-6">
-                    <Card className="h-full">
-                      <h3 className="text-sm font-bold text-brand-dark mb-4">
-                        Activity Overview
-                      </h3>
-                      <div className="flex h-64 items-center justify-center rounded-lg border border-dashed border-brand-border bg-brand-bg">
-                        <p className="text-sm text-brand-muted">
-                          Activity charts will be implemented here
-                        </p>
-                      </div>
-                    </Card>
-                  </div>
-                </div>
-              )}
-
-              {activeTab === "staff" && (
-                <Card padding="none">
-                  <div className="p-5 border-b border-brand-border flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Users className="h-5 w-5 text-brand-primary" />
-                      <h3 className="text-lg font-bold text-brand-dark">
-                        Staff & Permissions
-                      </h3>
-                    </div>
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      onClick={() => router.push("/staff")}
-                    >
-                      Manage Staff
-                    </Button>
-                  </div>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Role</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Status</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {(() => {
-                        const staffList = b.team_members || b.teamMembers || [];
-                        return staffList.length > 0 ? (
-                          staffList.map((staff, i) => (
-                            <TableRow
-                              key={staff.id || i}
-                              className="hover:bg-brand-bg/50 transition-colors"
-                            >
-                              <TableCell className="font-medium text-brand-dark">
-                                {staff.name ||
-                                  (staff.first_name
-                                    ? `${staff.first_name} ${staff.last_name || ""}`
-                                    : "Unnamed Staff")}
-                              </TableCell>
-                              <TableCell>
-                                <div className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-md bg-brand-light text-brand-muted border border-brand-border">
-                                  {staff.role?.name || staff.role || "Staff"}
-                                </div>
-                              </TableCell>
-                              <TableCell className="text-brand-muted">
-                                {staff.email || "N/A"}
-                              </TableCell>
-                              <TableCell>
-                                <Badge
-                                  variant={
-                                    staff.status === "active" ||
-                                    staff.status === "Operational"
-                                      ? "success"
-                                      : "secondary"
-                                  }
-                                >
-                                  {staff.status || "Active"}
-                                </Badge>
-                              </TableCell>
-                            </TableRow>
-                          ))
-                        ) : (
-                          <TableRow>
-                            <TableCell colSpan={4} className="text-center py-8">
-                              <div className="flex flex-col items-center justify-center text-brand-muted/70">
-                                <Users className="h-8 w-8 text-brand-placeholder mb-2" />
-                                <p>No staff members assigned to this branch</p>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })()}
-                    </TableBody>
-                  </Table>
-                </Card>
-              )}
-
-              {activeTab === "settings" && (
-                <Card>
-                  <h3 className="text-lg font-bold text-brand-dark mb-6 flex items-center gap-2">
-                    <Settings className="w-5 h-5 text-brand-primary" />
-                    Branch Settings
-                  </h3>
-
-                  <div className="space-y-6">
-                    <div>
-                      <h4 className="text-sm font-semibold text-brand-dark mb-3">
-                        General Settings
-                      </h4>
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between p-4 bg-brand-bg/50 rounded-lg border border-brand-border">
-                          <div>
-                            <p className="font-medium text-brand-dark">
-                              Accept Online Orders
-                            </p>
-                            <p className="text-xs text-brand-muted mt-1">
-                              Allow customers to place orders online for this
-                              branch
-                            </p>
-                          </div>
-                          <label className="relative inline-flex items-center cursor-pointer">
-                            <input
-                              type="checkbox"
-                              className="sr-only peer"
-                              checked={b.settings?.acceptOnlineOrders ?? true}
-                              onChange={(e) =>
-                                handleSaveBranch({
-                                  settings: {
-                                    ...(b.settings || {}),
-                                    acceptOnlineOrders: e.target.checked,
-                                  },
-                                })
-                              }
-                            />
-                            <div className="w-11 h-6 bg-brand-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-brand-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-primary"></div>
-                          </label>
-                        </div>
-                        <div className="flex items-center justify-between p-4 bg-brand-bg/50 rounded-lg border border-brand-border">
-                          <div>
-                            <p className="font-medium text-brand-dark">
-                              Enable Table Booking
-                            </p>
-                            <p className="text-xs text-brand-muted mt-1">
-                              Allow customers to reserve tables in advance
-                            </p>
-                          </div>
-                          <label className="relative inline-flex items-center cursor-pointer">
-                            <input
-                              type="checkbox"
-                              className="sr-only peer"
-                              checked={b.settings?.enableTableBooking ?? false}
-                              onChange={(e) =>
-                                handleSaveBranch({
-                                  settings: {
-                                    ...(b.settings || {}),
-                                    enableTableBooking: e.target.checked,
-                                  },
-                                })
-                              }
-                            />
-                            <div className="w-11 h-6 bg-brand-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-brand-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-primary"></div>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h4 className="text-sm font-semibold text-brand-dark mb-3">
-                        Notification Preferences
-                      </h4>
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between p-4 bg-brand-bg/50 rounded-lg border border-brand-border">
-                          <div>
-                            <p className="font-medium text-brand-dark">
-                              Daily Sales Summary
-                            </p>
-                            <p className="text-xs text-brand-muted mt-1">
-                              Receive daily email summaries for this branch
-                            </p>
-                          </div>
-                          <label className="relative inline-flex items-center cursor-pointer">
-                            <input
-                              type="checkbox"
-                              className="sr-only peer"
-                              checked={b.settings?.dailySalesSummary ?? true}
-                              onChange={(e) =>
-                                handleSaveBranch({
-                                  settings: {
-                                    ...(b.settings || {}),
-                                    dailySalesSummary: e.target.checked,
-                                  },
-                                })
-                              }
-                            />
-                            <div className="w-11 h-6 bg-brand-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-brand-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-primary"></div>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              )}
+              {activeTab === "overview" && <OverviewTab branch={b} />}
+              {activeTab === "analytics" && <AnalyticsTab />}
+              {activeTab === "settings" && <SettingsTab />}
             </div>
           </div>
         </main>
