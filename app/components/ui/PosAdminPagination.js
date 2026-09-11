@@ -16,7 +16,7 @@ export default function PosAdminPagination({
   itemsPerPageOptions = [10, 20, 30, 40, 50],
 }) {
   const getPageNumbers = () => {
-    if (totalPages <= 7) {
+    if (totalPages <= 5) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 

@@ -25,8 +25,8 @@ export default function TaxesWidget() {
         <span className="text-sm text-brand-muted font-medium">
           Total Taxes:{" "}
         </span>
-        <span className="text-xl text-brand-dark font-bold ml-1">
-          ₹ {taxes.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
+        <span className="text-xl text-brand-purple font-bold ml-1">
+          ₹{taxes.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
         </span>
       </div>
       <div className="h-64 pt-2 pb-2 mt-4">
@@ -37,8 +37,8 @@ export default function TaxesWidget() {
           >
             <defs>
               <linearGradient id="colorTax" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0} />
+                <stop offset="5%" stopColor="var(--color-brand-purple)" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="var(--color-brand-purple)" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid
@@ -73,12 +73,12 @@ export default function TaxesWidget() {
                       <div className="flex flex-col gap-2">
                         <div className="flex items-center justify-between gap-6">
                           <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-[#8B5CF6]"></div>
+                            <div className="w-2 h-2 rounded-full bg-brand-purple"></div>
                             <span className="text-sm font-semibold text-brand-dark">
                               Tax
                             </span>
                           </div>
-                          <span className="font-bold text-[#8B5CF6]">
+                          <span className="font-bold text-brand-purple">
                             ₹
                             {val.toLocaleString(undefined, {
                               maximumFractionDigits: 0,
@@ -95,7 +95,7 @@ export default function TaxesWidget() {
             <Area
               type="monotone"
               dataKey="tax"
-              stroke="#8B5CF6"
+              stroke="var(--color-brand-purple)"
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#colorTax)"

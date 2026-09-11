@@ -3,7 +3,14 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "../lib/utils";
-import { Settings, X, LogOut, ChevronDown, AlertTriangle } from "lucide-react";
+import {
+  Settings,
+  X,
+  LogOut,
+  ChevronDown,
+  AlertTriangle,
+  Sparkles,
+} from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { NAV_ITEMS } from "../lib/navigation";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +18,7 @@ import { logout } from "../store/slices/authSlice";
 
 function getSubscriptionDaysLeft(user) {
   try {
-    const end = user?.businesses?.[0]?.subscription_plan?.current_period_end;
+    const end = user?.businesses?.[0]?.subscription_ends_at;
     if (!end) return null;
     const diff = new Date(end) - new Date();
     return Math.ceil(diff / (1000 * 60 * 60 * 24));
@@ -28,14 +35,10 @@ export function Sidebar({ isOpen, onClose }) {
   const daysLeft = getSubscriptionDaysLeft(user);
   const showWarning = daysLeft !== null && daysLeft <= 10;
 
-  // Decide which nav items to show
   const navItems = NAV_ITEMS;
-
-  // Track expanded submenus
   const [expandedMenus, setExpandedMenus] = useState({});
-
-  // Close sidebar on route change on mobile
   const onCloseRef = useRef(onClose);
+
   useEffect(() => {
     onCloseRef.current = onClose;
   }, [onClose]);
@@ -58,78 +61,88 @@ export function Sidebar({ isOpen, onClose }) {
 
   return (
     <>
-      {/* Mobile Overlay */}
+      {/* Mobile Backdrop */}
       {isOpen && (
         <div
-          className="fixed z-[35] inset-0 bg-brand-dark/40 backdrop-blur-sm md:hidden"
+          className="z-[100] inset-0 bg-black/60 backdrop-blur-sm md:hidden transition-opacity duration-300"
           onClick={onClose}
         />
       )}
 
       <aside
         className={cn(
-          "fixed z-40 left-0 top-0 h-screen w-64 border-r border-brand-dark bg-brand-dark flex flex-col transition-transform duration-300 ease-spring ease-in-out md:translate-x-0",
-          isOpen ? "translate-x-0" : "-translate-x-full",
+          "fixed inset-y-0 left-0 md:relative z-[50] h-screen w-64 shrink-0 bg-[#0A0D14] flex flex-col transition-transform duration-400 cubic-bezier(0.4, 0, 0.2, 1) border-r border-white/5 shadow-2xl",
+          isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
         )}
       >
-        <div className="flex h-16 items-center justify-between px-6 border-b border-brand-dark bg-brand-dark shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-brand-primary to-brand-primaryDark flex items-center justify-center shadow-float shadow-brand-primary/20">
-              <span className="text-white font-black text-lg">P</span>
+        {/* Brand Header */}
+        <div className="flex h-[88px] items-center justify-between px-6 shrink-0 relative overflow-hidden">
+          {/* Subtle glow behind logo */}
+          <div className="absolute top-0 left-1/4 w-1/2 h-1/2 bg-brand-primary/20 blur-[30px] rounded-full pointer-events-none" />
+
+          <div className="flex items-center gap-3.5 z-10">
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-brand-primary via-[#6D28D9] to-brand-primaryDark flex items-center justify-center shadow-[0_0_20px_rgba(var(--brand-primary-rgb),0.3)] border border-white/10">
+              <Sparkles className="h-5 w-5 text-white" />
             </div>
-            <span className="font-bold text-lg tracking-tight text-white">
-              POS Owner
-            </span>
+            <div className="flex flex-col">
+              <span className="font-extrabold text-[17px] tracking-tight text-white leading-none">
+                POS Owner
+              </span>
+              <span className="text-[11px] font-medium text-brand-muted/70 mt-1 uppercase tracking-widest">
+                Workspace
+              </span>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="md:hidden text-brand-muted hover:text-white"
+            className="md:hidden text-white/50 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/5"
           >
-            <X className="h-6 w-6" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-1 custom-scrollbar">
-          <p className="px-2 text-[10px] font-bold text-brand-muted uppercase tracking-widest mb-3">
-            Restaurant Management
-          </p>
-
+        {/* Navigation Area */}
+        <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-1.5 custom-scrollbar scrollbar-none">
           {navItems.map((item) => {
             const hasSubmenu = !!item.submenu;
             const isMainActive =
               pathname === item.href ||
               (item.href !== "/" && pathname.startsWith(item.href));
-            const isExpanded = expandedMenus[item.label];
+            const isExpanded = expandedMenus[item.label] || isMainActive;
 
             return (
-              <div key={item.label}>
+              <div key={item.label} className="flex flex-col">
                 {hasSubmenu ? (
                   <button
                     onClick={() => toggleSubmenu(item.label)}
                     className={cn(
-                      "w-full flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-bold transition-all duration-300 ease-spring group",
-                      isMainActive || isExpanded
-                        ? "text-white bg-brand-surface"
-                        : "text-brand-muted hover:text-white hover:bg-brand-surface",
+                      "w-full flex items-center justify-between rounded-[14px] px-2.5 py-2 text-[14px] font-semibold transition-all duration-300 ease-out group relative overflow-hidden",
+                      isMainActive
+                        ? "text-white bg-white/[0.06] border border-white/[0.05]"
+                        : "text-white/60 hover:text-white hover:bg-white/[0.04]",
                     )}
                   >
-                    <div className="flex items-center gap-3">
+                    {isMainActive && (
+                      <div className="absolute left-0 top-1/4 bottom-1/4 w-[3px] rounded-r-full bg-brand-primary shadow-[0_0_10px_rgba(var(--brand-primary-rgb),0.6)]" />
+                    )}
+                    <div className="flex items-center gap-3.5 relative z-10">
                       <item.icon
                         className={cn(
-                          "h-5 w-5 transition-transform duration-300 ease-spring group-hover:scale-110",
-                          isMainActive || isExpanded
-                            ? "text-white"
-                            : "text-brand-muted group-hover:text-white",
+                          "h-5 w-5 transition-all duration-300",
+                          isMainActive
+                            ? "text-brand-primary"
+                            : "text-white/40 group-hover:text-white/80",
                         )}
+                        strokeWidth={isMainActive ? 2.5 : 2}
                       />
                       {item.label}
                     </div>
                     <ChevronDown
                       className={cn(
-                        "h-4 w-4 transition-transform duration-300",
+                        "h-4 w-4 transition-transform duration-300 relative z-10",
                         isExpanded
-                          ? "rotate-180 text-white"
-                          : "text-brand-muted group-hover:text-white",
+                          ? "rotate-180 text-white/80"
+                          : "text-white/30 group-hover:text-white/60",
                       )}
                     />
                   </button>
@@ -137,21 +150,25 @@ export function Sidebar({ isOpen, onClose }) {
                   <Link
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold transition-all duration-300 ease-spring group",
+                      "flex items-center gap-3.5 rounded-[14px] px-2.5 py-2 text-[14px] font-semibold transition-all duration-300 ease-out group relative overflow-hidden",
                       isMainActive
-                        ? "text-white bg-brand-primary shadow-sm shadow-brand-primary/20"
-                        : "text-brand-muted hover:text-white hover:bg-brand-surface",
+                        ? "text-white bg-white/[0.06] border border-white/[0.05]"
+                        : "text-white/60 hover:text-white hover:bg-white/[0.04]",
                     )}
                   >
+                    {isMainActive && (
+                      <div className="absolute left-0 top-1/4 bottom-1/4 w-[3px] rounded-r-full bg-brand-primary shadow-[0_0_10px_rgba(var(--brand-primary-rgb),0.6)]" />
+                    )}
                     <item.icon
                       className={cn(
-                        "h-5 w-5 transition-transform duration-300 ease-spring group-hover:scale-110",
+                        "h-5 w-5 transition-all duration-300 relative z-10",
                         isMainActive
-                          ? "text-white"
-                          : "text-brand-muted group-hover:text-white",
+                          ? "text-brand-primary"
+                          : "text-white/40 group-hover:text-white/80",
                       )}
+                      strokeWidth={isMainActive ? 2.5 : 2}
                     />
-                    {item.label}
+                    <span className="relative z-10">{item.label}</span>
                   </Link>
                 )}
 
@@ -159,13 +176,16 @@ export function Sidebar({ isOpen, onClose }) {
                 {hasSubmenu && (
                   <div
                     className={cn(
-                      "grid transition-all duration-300 ease-spring overflow-hidden",
+                      "grid transition-all duration-300 ease-in-out overflow-hidden",
                       isExpanded
-                        ? "grid-rows-[1fr] opacity-100 mt-1"
+                        ? "grid-rows-[1fr] opacity-100 mt-1 mb-2"
                         : "grid-rows-[0fr] opacity-0",
                     )}
                   >
-                    <div className="min-h-0 flex flex-col gap-1 pl-11 pr-2">
+                    <div className="min-h-0 flex flex-col gap-1 pl-8 pr-2 relative">
+                      {/* Decorative Line */}
+                      <div className="absolute left-[26px] top-2 bottom-2 w-[1px] bg-white/5 rounded-full" />
+
                       {item.submenu.map((subItem) => {
                         const isSubActive = pathname === subItem.href;
                         return (
@@ -173,12 +193,15 @@ export function Sidebar({ isOpen, onClose }) {
                             key={subItem.label}
                             href={subItem.href}
                             className={cn(
-                              "text-xs py-2.5 px-3 rounded-lg font-bold transition-all duration-200",
+                              "relative text-[13px] py-2.5 px-4 rounded-xl font-medium transition-all duration-200",
                               isSubActive
-                                ? "text-white bg-brand-primary shadow-sm shadow-brand-primary/20"
-                                : "text-brand-muted hover:text-white hover:bg-brand-surface",
+                                ? "text-white bg-white/[0.04]"
+                                : "text-white/50 hover:text-white hover:bg-white/[0.02]",
                             )}
                           >
+                            {isSubActive && (
+                              <div className="absolute left-[-11px] top-1/2 -translate-y-1/2 w-[5px] h-[5px] rounded-full bg-brand-primary shadow-[0_0_8px_rgba(var(--brand-primary-rgb),0.8)]" />
+                            )}
                             {subItem.label}
                           </Link>
                         );
@@ -191,58 +214,91 @@ export function Sidebar({ isOpen, onClose }) {
           })}
         </div>
 
-        {showWarning && (
-          <div
-            className={cn(
-              "mx-3 mb-3 rounded-xl px-3 py-2.5 flex items-start gap-2.5 border shrink-0",
-              daysLeft <= 3
-                ? "bg-brand-danger/10 border-brand-danger/30 text-brand-dangerLight"
-                : "bg-brand-warning/10 border-brand-warning/30 text-brand-warningLight",
-            )}
-          >
-            <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
-            <div className="min-w-0">
-              <p className="text-[11px] font-bold leading-tight">
-                {daysLeft <= 0
-                  ? "Subscription Expired"
-                  : `${daysLeft} day${daysLeft === 1 ? "" : "s"} left`}
-              </p>
-              <p className="text-[10px] opacity-70 mt-0.5 leading-tight">
-                {daysLeft <= 0
-                  ? "Renew now to restore access"
-                  : "Renew to avoid service interruption"}
-              </p>
-            </div>
-          </div>
-        )}
+        {/* Subscription Warning */}
 
-        <div className="p-4 border-t border-brand-dark bg-brand-dark space-y-1 shrink-0">
-          <Link
-            href="/settings"
-            className={cn(
-              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold transition-all duration-300 ease-spring group",
-              pathname === "/settings"
-                ? "text-white bg-brand-primary shadow-sm shadow-brand-primary/20"
-                : "text-brand-muted hover:text-white hover:bg-brand-surface",
-            )}
-          >
-            <Settings
+        {/* Footer Area */}
+        <div className="p-4 bg-[#0A0D14] border-t border-white/5 shrink-0">
+          {showWarning && (
+            <div className="pb-4 shrink-0">
+              <div
+                className={cn(
+                  "rounded-2xl p-4 flex flex-col gap-2 relative overflow-hidden backdrop-blur-md border",
+                  daysLeft <= 3
+                    ? "bg-red-500/10 border-red-500/20"
+                    : "bg-orange-500/10 border-orange-500/20",
+                )}
+              >
+                {/* Subtle background icon */}
+                <AlertTriangle
+                  className={cn(
+                    "absolute -right-2 -top-2 w-16 h-16 opacity-[0.03]",
+                    daysLeft <= 3 ? "text-red-500" : "text-orange-500",
+                  )}
+                />
+
+                <div className="flex items-center gap-2 relative z-10">
+                  <AlertTriangle
+                    className={cn(
+                      "h-4 w-4 shrink-0",
+                      daysLeft <= 3 ? "text-red-400" : "text-orange-400",
+                    )}
+                  />
+                  <p
+                    className={cn(
+                      "text-[12px] font-bold tracking-wide uppercase",
+                      daysLeft <= 3 ? "text-red-400" : "text-orange-400",
+                    )}
+                  >
+                    {daysLeft <= 0 ? "Expired" : "Expiring Soon"}
+                  </p>
+                </div>
+                <div className="relative z-10">
+                  <p className="text-white font-semibold text-sm">
+                    {daysLeft <= 0
+                      ? "Service interrupted"
+                      : `${daysLeft} day${daysLeft === 1 ? "" : "s"} remaining`}
+                  </p>
+                  <p className="text-white/50 text-[11px] mt-0.5 leading-tight">
+                    Renew your plan to maintain access to your workspace.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-col gap-1">
+            <Link
+              href="/settings"
               className={cn(
-                "h-5 w-5 transition-transform duration-300 ease-spring",
+                "flex items-center gap-3.5 rounded-[14px] px-2.5 py-2 text-[14px] font-semibold transition-all duration-300 ease-out group",
                 pathname === "/settings"
-                  ? "text-white rotate-90"
-                  : "text-brand-muted group-hover:text-white group-hover:rotate-90",
+                  ? "text-white bg-white/[0.06] border border-white/[0.05]"
+                  : "text-white/60 hover:text-white hover:bg-white/[0.04]",
               )}
-            />
-            Settings
-          </Link>
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold text-brand-danger hover:text-white hover:bg-brand-danger transition-all duration-300 ease-spring group"
-          >
-            <LogOut className="h-5 w-5 transition-transform duration-300 ease-spring group-hover:-translate-x-1" />
-            Log Out
-          </button>
+            >
+              <Settings
+                className={cn(
+                  "h-5 w-5 transition-all duration-500",
+                  pathname === "/settings"
+                    ? "text-brand-primary rotate-90"
+                    : "text-white/40 group-hover:text-white/80 group-hover:rotate-45",
+                )}
+                strokeWidth={pathname === "/settings" ? 2.5 : 2}
+              />
+              Settings
+            </Link>
+
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3.5 rounded-[14px] px-3.5 py-3 text-[14px] font-semibold text-red-400/80 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300 ease-out group"
+            >
+              <LogOut
+                className="h-5 w-5 text-red-400/60 group-hover:text-red-400 transition-transform duration-300 group-hover:-translate-x-1"
+                strokeWidth={2}
+              />
+              Log Out
+            </button>
+          </div>
         </div>
       </aside>
     </>

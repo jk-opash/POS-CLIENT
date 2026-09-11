@@ -1,4 +1,4 @@
-import Card from "../ui/Card";
+import Card from "../../ui/Card";
 import { Clock, TrendingUp, ConciergeBell, ShoppingBag } from "lucide-react";
 import {
   AreaChart,
@@ -9,10 +9,10 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import StatCard from "../ui/StatCard";
+import StatCard from "../../ui/StatCard";
 import { useSelector } from "react-redux";
 
-export default function OnlineOrdersWidget() {
+export default function BranchRevenueChart() {
   const { stats } = useSelector((state) => state.analytics);
   const chartData = stats?.chartData || [];
 
@@ -36,32 +36,6 @@ export default function OnlineOrdersWidget() {
         </div>
       </div>
 
-      {/* KPI Cards Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
-        <StatCard
-          label="Total Sales"
-          value={`₹ ${totalSales.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`}
-          // subtext={`${numOrders} Orders`}
-          icon={<TrendingUp size={16} />}
-        />
-        <StatCard
-          label="Dine in"
-          value={`₹ ${offlineSales.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`}
-          // subtext={`Offline Orders`}
-          icon={<ConciergeBell size={16} />}
-          isGrey="text-brand-warning"
-          color="text-brand-warning"
-        />
-        <StatCard
-          label="Take Away / Online"
-          value={`₹ ${onlineSales.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`}
-          // subtext={`Online Orders`}
-          icon={<ShoppingBag size={16} />}
-          isGrey="text-brand-info"
-          color="text-brand-info"
-        />
-      </div>
-
       {/* Chart Section */}
       <div className="px-6 pb-6 pt-2 h-[350px]">
         <ResponsiveContainer width="100%" height="100%">
@@ -71,12 +45,12 @@ export default function OnlineOrdersWidget() {
           >
             <defs>
               <linearGradient id="colorDineIn" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--color-brand-warning)" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="var(--color-brand-warning)" stopOpacity={0} />
+                <stop offset="5%" stopColor="#D97706" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#D97706" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="colorTakeAway" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--color-brand-info)" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="var(--color-brand-info)" stopOpacity={0} />
+                <stop offset="5%" stopColor="#2563EB" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#2563EB" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid
@@ -127,12 +101,12 @@ export default function OnlineOrdersWidget() {
                         </div>
                         <div className="flex items-center justify-between gap-6">
                           <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-brand-info"></div>
+                            <div className="w-2 h-2 rounded-full bg-brand-primary"></div>
                             <span className="text-sm font-semibold text-brand-dark">
                               Take Away
                             </span>
                           </div>
-                          <span className="font-bold text-brand-info">
+                          <span className="font-bold text-brand-primary">
                             ₹
                             {takeAway.toLocaleString(undefined, {
                               maximumFractionDigits: 0,
@@ -149,7 +123,7 @@ export default function OnlineOrdersWidget() {
             <Area
               type="monotone"
               dataKey="val3"
-              stroke="var(--color-brand-warning)"
+              stroke="#D97706"
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#colorDineIn)"
@@ -158,7 +132,7 @@ export default function OnlineOrdersWidget() {
             <Area
               type="monotone"
               dataKey="val2"
-              stroke="var(--color-brand-info)"
+              stroke="#2563EB"
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#colorTakeAway)"

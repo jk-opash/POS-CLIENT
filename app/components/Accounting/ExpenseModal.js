@@ -36,7 +36,7 @@ export default function ExpenseModal({ isOpen, onClose, branchId }) {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Add General Expense">
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5 mt-4">
         <Input
           label="Category"
           name="category"
@@ -68,7 +68,7 @@ export default function ExpenseModal({ isOpen, onClose, branchId }) {
           onChange={handleChange}
         />
 
-        <div className="flex justify-end gap-2 mt-4">
+        <div className="flex justify-end gap-3 mt-8">
           <Button variant="surface" type="button" onClick={onClose}>
             Cancel
           </Button>

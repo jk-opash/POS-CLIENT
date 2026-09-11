@@ -25,8 +25,8 @@ export default function DiscountWidget() {
         <span className="text-sm text-brand-muted font-medium">
           Total Discount:{" "}
         </span>
-        <span className="text-xl text-brand-dark font-bold ml-1">
-          ₹ {discounts.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
+        <span className="text-xl text-brand-warning font-bold ml-1">
+          ₹{discounts.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
         </span>
       </div>
       <div className="h-64 pt-2 pb-2 mt-4">
@@ -37,8 +37,8 @@ export default function DiscountWidget() {
           >
             <defs>
               <linearGradient id="colorDiscount" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#D97706" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#D97706" stopOpacity={0} />
+                <stop offset="5%" stopColor="var(--color-brand-warning)" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="var(--color-brand-warning)" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid
@@ -73,12 +73,12 @@ export default function DiscountWidget() {
                       <div className="flex flex-col gap-2">
                         <div className="flex items-center justify-between gap-6">
                           <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-[#D97706]"></div>
+                            <div className="w-2 h-2 rounded-full bg-brand-warning"></div>
                             <span className="text-sm font-semibold text-brand-dark">
                               Discount
                             </span>
                           </div>
-                          <span className="font-bold text-[#D97706]">
+                          <span className="font-bold text-brand-warning">
                             ₹
                             {val.toLocaleString(undefined, {
                               maximumFractionDigits: 0,
@@ -95,7 +95,7 @@ export default function DiscountWidget() {
             <Area
               type="monotone"
               dataKey="discount"
-              stroke="#D97706"
+              stroke="var(--color-brand-warning)"
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#colorDiscount)"
