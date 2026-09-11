@@ -37,7 +37,7 @@ export default function UtilityModal({ isOpen, onClose, branchId }) {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Add Utility Bill">
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5 mt-4">
         <Input
           label="Vendor"
           name="vendor"
@@ -74,7 +74,7 @@ export default function UtilityModal({ isOpen, onClose, branchId }) {
           value={formData.payment_method}
           onChange={handleChange}
         />
-        <div className="flex justify-end gap-2 mt-4">
+        <div className="flex justify-end gap-3 mt-8">
           <Button variant="surface" type="button" onClick={onClose}>
             Cancel
           </Button>

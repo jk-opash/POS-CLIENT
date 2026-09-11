@@ -38,34 +38,34 @@ export function Modal({ isOpen, onClose, title, description, children, className
   if (!isOpen) return null;
 
   const content = (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
+    <div className="fixed inset-0 bg-brand-dark/40 backdrop-blur-md flex justify-center items-end md:items-center z-50 p-0 md:p-6 animate-in fade-in duration-300">
+      {/* Backdrop Catch */}
       <div
         ref={overlayRef}
-        className="absolute inset-0 bg-brand-dark/40 backdrop-blur-sm transition-opacity"
+        className="absolute inset-0"
         onClick={onClose}
       />
       
       {/* Modal Container */}
       <div
         className={cn(
-          `relative z-10 w-full ${sizeClasses} scale-100 transform rounded-3xl border border-brand-border bg-white p-0 shadow-lg transition-all overflow-hidden flex flex-col`,
+          `bg-white w-full ${sizeClasses} h-[95vh] md:h-auto md:max-h-[90vh] rounded-t-3xl md:rounded-[2rem] md:rounded-b-[2rem] shadow-2xl flex flex-col relative shrink-0 overflow-hidden ring-1 ring-brand-border animate-in slide-in-from-bottom-10 md:zoom-in-95 duration-300 ease-out`,
           className
         )}
       >
-        <div className="flex items-start justify-between p-6 pb-4 border-b border-brand-border">
-          <div>
-            {title && <h2 className="text-xl font-bold text-brand-dark">{title}</h2>}
-            {description && <p className="mt-1 text-sm text-brand-muted">{description}</p>}
+        <div className="flex items-start justify-between px-6 md:px-8 py-5 md:py-6 border-b border-brand-border/60 bg-gradient-to-b from-brand-bg to-white relative overflow-hidden shrink-0">
+          <div className="relative z-10 flex-1">
+            {title && <h2 className="text-xl md:text-2xl font-extrabold text-brand-dark tracking-tight">{title}</h2>}
+            {description && <p className="text-xs md:text-sm text-brand-muted font-medium mt-1.5">{description}</p>}
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-brand-placeholder transition-colors hover:bg-white hover:text-brand-dark shadow-sm"
+            className="relative z-10 w-9 h-9 md:w-10 md:h-10 rounded-full bg-surface-2 hover:bg-brand-border/70 flex items-center justify-center text-brand-muted hover:text-brand-dark transition-all shadow-sm hover:shadow"
           >
-            <X className="h-5 w-5" />
+            <X size={18} strokeWidth={2.5} />
           </button>
         </div>
-        <div className="p-6 pt-4">
+        <div className="flex-1 overflow-y-auto p-5 md:p-8 custom-scrollbar">
           {children}
         </div>
       </div>

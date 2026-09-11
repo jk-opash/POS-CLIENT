@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
-import { X } from "lucide-react";
+import Modal from "./ui/Modal";
+import Input from "./ui/Input";
+import Select from "./ui/Select";
+import Button from "./ui/Button";
 
 export default function TableModal({ table, zones, onSave, onClose }) {
   const [formData, setFormData] = useState({
@@ -29,116 +32,81 @@ export default function TableModal({ table, zones, onSave, onClose }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(formData);
+    onSave({
+      ...formData,
+      capacity: formData.capacity ? parseInt(formData.capacity, 10) : 4,
+    });
   };
 
+  const zoneOptions = zones.map(zone => ({
+    value: zone.id,
+    label: zone.name
+  }));
+
+  const statusOptions = [
+    { value: "Available", label: "Available" },
+    { value: "Occupied", label: "Occupied" },
+    { value: "Reserved", label: "Reserved" },
+  ];
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-dark/50 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
-        <div className="flex items-center justify-between p-6 border-b border-brand-light">
-          <h2 className="text-xl font-bold text-brand-dark">
-            {table ? "Edit Table" : "Add New Table"}
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-2 text-brand-muted hover:text-brand-dark hover:bg-brand-light rounded-xl transition-colors"
-          >
-            <X size={20} />
-          </button>
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      title={table ? "Edit Table" : "Add New Table"}
+    >
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <Input
+          label="Table Name / Number"
+          required
+          value={formData.name}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          placeholder="e.g. Table 12, Window Seat"
+        />
+
+        <div className="space-y-1.5">
+          <Select
+            label="Zone"
+            required
+            value={formData.zone_id}
+            onChange={(e) => setFormData({ ...formData, zone_id: e.target.value })}
+            options={[{ value: "", label: "Select Zone", disabled: true }, ...zoneOptions]}
+          />
+          {zones.length === 0 && (
+            <p className="text-xs text-brand-danger mt-1">Please create a zone first.</p>
+          )}
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-brand-dark">
-              Table Name / Number
-            </label>
-            <input
-              type="text"
-              required
-              value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-              className="w-full px-4 py-2.5 bg-brand-light border border-brand-light rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
-              placeholder="e.g. Table 12, Window Seat"
-            />
-          </div>
+        <Input
+          label="Capacity"
+          type="number"
+          min="1"
+          value={formData.capacity}
+          onChange={(e) => setFormData({ ...formData, capacity: e.target.value })}
+          placeholder="Number of seats"
+        />
 
-          <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-brand-dark">
-              Zone
-            </label>
-            <select
-              required
-              value={formData.zone_id}
-              onChange={(e) =>
-                setFormData({ ...formData, zone_id: e.target.value })
-              }
-              className="w-full px-4 py-2.5 bg-brand-light border border-brand-light rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all cursor-pointer"
-            >
-              <option value="" disabled>Select Zone</option>
-              {zones.map((zone) => (
-                <option key={zone.id} value={zone.id}>
-                  {zone.name}
-                </option>
-              ))}
-            </select>
-            {zones.length === 0 && (
-              <p className="text-xs text-brand-danger mt-1">Please create a zone first.</p>
-            )}
-          </div>
+        <Select
+          label="Status"
+          value={formData.status}
+          onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+          options={statusOptions}
+        />
 
-          <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-brand-dark">
-              Capacity
-            </label>
-            <input
-              type="number"
-              min="1"
-              value={formData.capacity}
-              onChange={(e) =>
-                setFormData({ ...formData, capacity: e.target.value })
-              }
-              className="w-full px-4 py-2.5 bg-brand-light border border-brand-light rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
-              placeholder="Number of seats"
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-brand-dark">
-              Status
-            </label>
-            <select
-              value={formData.status}
-              onChange={(e) =>
-                setFormData({ ...formData, status: e.target.value })
-              }
-              className="w-full px-4 py-2.5 bg-brand-light border border-brand-light rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all cursor-pointer"
-            >
-              <option value="Available">Available</option>
-              <option value="Occupied">Occupied</option>
-              <option value="Reserved">Reserved</option>
-            </select>
-          </div>
-
-          <div className="pt-4 flex items-center justify-end gap-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-5 py-2.5 text-sm font-bold text-brand-dark hover:bg-brand-light rounded-xl transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={!formData.zone_id}
-              className="px-5 py-2.5 text-sm font-bold text-white bg-brand-dark hover:bg-brand-dark disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition-all shadow-sm active:scale-95"
-            >
-              {table ? "Save Changes" : "Add Table"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <div className="flex flex-col md:flex-row gap-3 justify-end pt-4 mt-6 border-t border-brand-border">
+          <Button type="button" variant="surface" onClick={onClose} className="w-full md:w-auto">
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={!formData.zone_id}
+            className="w-full md:w-auto"
+          >
+            {table ? "Save Changes" : "Add Table"}
+          </Button>
+        </div>
+      </form>
+    </Modal>
   );
 }

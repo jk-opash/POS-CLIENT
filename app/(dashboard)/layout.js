@@ -26,10 +26,12 @@ export default function DashboardLayout({ children }) {
   return (
     <div className="flex h-screen overflow-hidden bg-brand-bg text-brand-dark">
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <div className="flex flex-1 flex-col overflow-hidden w-full md:pl-64">
+      <div className="flex flex-1 flex-col overflow-hidden w-full">
         <Header onMenuClick={() => setIsSidebarOpen(true)} />
         <main className="flex-1 overflow-y-auto scroll-smooth">
-          <div className="">{children}</div>
+          {/* <div> */}
+          {children}
+          {/* </div> */}
         </main>
       </div>
     </div>

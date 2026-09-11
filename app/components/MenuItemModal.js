@@ -175,84 +175,96 @@ export default function MenuItemModal({ item, onClose, onSave }) {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Helper styles
+  const inputBaseStyle =
+    "w-full bg-surface-2 border border-brand-border rounded-xl px-4 py-3 text-sm outline-none focus:bg-white focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 text-brand-dark placeholder:text-brand-placeholder font-medium transition-all shadow-sm";
+
   return (
-    <div className="fixed inset-0 bg-brand-dark/40 backdrop-blur-sm flex justify-center items-center z-50 p-4">
-      <div className="bg-white w-[880px] max-w-full max-h-[90vh] rounded-2xl shadow-2xl flex flex-col relative shrink-0 overflow-hidden">
+    <div className="fixed inset-0 bg-brand-dark/40 backdrop-blur-md flex justify-center items-end md:items-center z-50 p-0 md:p-6 animate-in fade-in duration-300">
+      <div className="bg-white w-full md:w-[920px] max-w-full h-[95vh] md:h-auto md:max-h-[90vh] rounded-t-3xl md:rounded-[2rem] md:rounded-b-[2rem] shadow-2xl flex flex-col relative shrink-0 overflow-hidden ring-1 ring-brand-border animate-in slide-in-from-bottom-10 md:zoom-in-95 duration-300 ease-out">
         {/* Header */}
-        <div className="px-6 py-5 flex justify-between items-start border-b border-brand-light">
-          <div>
-            <h2 className="text-2xl font-bold text-brand-dark">
-              {item ? "Edit Menu Item" : "Create New Menu Item"}
+        <div className="px-6 md:px-8 py-5 md:py-6 flex justify-between items-start border-b border-brand-border/60 bg-gradient-to-b from-brand-bg to-white relative overflow-hidden shrink-0">
+          {/* Decorative subtle blob */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+
+          <div className="relative z-10 flex-1">
+            <h2 className="text-xl md:text-2xl font-extrabold text-brand-dark tracking-tight">
+              {item ? "Edit Menu Item" : "Create Menu Item"}
             </h2>
-            <p className="text-sm text-brand-dark font-medium mt-1">
+            <p className="text-xs md:text-sm text-brand-muted font-medium mt-1.5 flex items-center gap-2">
+              <span className="inline-flex items-center justify-center w-5 h-5 md:w-6 md:h-6 rounded-full bg-brand-primary/10 text-brand-primary text-[10px] md:text-xs font-bold border border-brand-primary/20">
+                {step}
+              </span>
               Step {step} of 3: {steps[step - 1].title}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-brand-light flex items-center justify-center text-brand-muted hover:bg-brand-light transition-colors"
+            className="relative z-10 w-9 h-9 md:w-10 md:h-10 rounded-full bg-surface-2 hover:bg-brand-border/70 flex items-center justify-center text-brand-muted hover:text-brand-dark transition-all shadow-sm hover:shadow"
           >
-            <X size={18} />
+            <X size={18} strokeWidth={2.5} />
           </button>
         </div>
 
-        <div className="flex flex-1 overflow-hidden border-b border-brand-light">
+        {/* Mobile Horizontal Stepper */}
+        <div className="flex md:hidden items-center justify-center px-6 py-4 border-b border-brand-border/50 bg-brand-bg shrink-0">
+          {steps.map((s, i) => {
+            const isCompleted = step > s.num;
+            const isCurrent = step === s.num;
+            return (
+              <div key={s.num} className={`flex items-center ${i < steps.length - 1 ? 'flex-1' : ''}`}>
+                <div
+                  className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 shadow-sm ${
+                    isCompleted
+                      ? "bg-brand-success text-white ring-2 ring-brand-success/20"
+                      : isCurrent
+                        ? "bg-brand-primary text-white ring-4 ring-brand-primary/20"
+                        : "bg-surface-2 text-brand-muted border border-brand-border"
+                  }`}
+                >
+                  {isCompleted ? <Check size={14} strokeWidth={3} /> : s.num}
+                </div>
+                {i < steps.length - 1 && (
+                  <div
+                    className={`h-0.5 w-full mx-2 rounded-full transition-colors ${
+                      step > s.num ? "bg-brand-success" : "bg-brand-border"
+                    }`}
+                  />
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="flex flex-1 overflow-hidden flex-col md:flex-row">
           {/* Side Stepper */}
-          <div className="w-[240px] bg-brand-light border-r border-brand-light p-6 flex flex-col gap-2 shrink-0">
+          <div className="w-[260px] bg-brand-bg border-r border-brand-border/60 p-6 flex flex-col gap-3 shrink-0 hidden md:flex overflow-y-auto">
             {steps.map((s, i) => {
               const isCompleted = step > s.num;
               const isCurrent = step === s.num;
-
-              const validateForm = () => {
-                const newErrors = {};
-                if (!formData.name?.trim())
-                  newErrors.name = "Item name is required";
-                if (!formData.categoryId)
-                  newErrors.categoryId = "Category is required";
-
-                const parsedPrice = parseFloat(formData.price);
-                if (isNaN(parsedPrice) || parsedPrice < 0) {
-                  newErrors.price = "Valid price is required";
-                }
-
-                // Check variant categories
-                if (formData.variantCategories) {
-                  formData.variantCategories.forEach((cat, idx) => {
-                    if (!cat.name?.trim())
-                      newErrors[`variant_${idx}_name`] =
-                        "Category name required";
-                    if (cat.minSelection > cat.maxSelection)
-                      newErrors[`variant_${idx}_min`] = "Min cannot be > Max";
-                    if (cat.minSelection < 0 || cat.maxSelection < 0)
-                      newErrors[`variant_${idx}_min`] =
-                        "Selection limits must be ≥ 0";
-                  });
-                }
-
-                setErrors(newErrors);
-                return Object.keys(newErrors).length === 0;
-              };
 
               return (
                 <button
                   key={s.num}
                   onClick={() => setStep(s.num)}
-                  className={`w-full text-left flex items-start gap-3 p-3 rounded-xl transition-all duration-200 ${
+                  className={`w-full text-left flex items-start gap-3.5 p-4 rounded-2xl transition-all duration-300 ${
                     isCurrent
-                      ? "bg-white shadow-sm border border-brand-light/60"
-                      : "hover:bg-brand-light/50 border border-transparent"
+                      ? "bg-white shadow-md shadow-brand-dark/5 border border-brand-border/80 scale-[1.02]"
+                      : "hover:bg-brand-light border border-transparent"
                   }`}
                 >
                   <div
-                    className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold transition-colors mt-0.5 ${
-                      isCompleted || isCurrent
-                        ? "bg-[#10B981] text-white shadow-sm"
-                        : "bg-brand-light text-brand-muted"
+                    className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-bold transition-all duration-300 shadow-sm ${
+                      isCompleted
+                        ? "bg-brand-success text-white ring-2 ring-brand-success/20"
+                        : isCurrent
+                          ? "bg-brand-primary text-white ring-4 ring-brand-primary/20"
+                          : "bg-surface-2 text-brand-muted border border-brand-border"
                     }`}
                   >
-                    {isCompleted ? <Check size={14} strokeWidth={3} /> : s.num}
+                    {isCompleted ? <Check size={16} strokeWidth={3} /> : s.num}
                   </div>
-                  <div className="flex flex-col">
+                  <div className="flex flex-col mt-0.5">
                     <span
                       className={`text-sm font-bold transition-colors ${
                         isCompleted || isCurrent
@@ -262,7 +274,15 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                     >
                       {s.title}
                     </span>
-                    <span className="text-[10px] font-medium text-brand-muted mt-0.5">
+                    <span
+                      className={`text-[11px] font-semibold mt-1 ${
+                        isCompleted
+                          ? "text-brand-success"
+                          : isCurrent
+                            ? "text-brand-primary"
+                            : "text-brand-placeholder"
+                      }`}
+                    >
                       {isCompleted
                         ? "Completed"
                         : isCurrent
@@ -276,15 +296,15 @@ export default function MenuItemModal({ item, onClose, onSave }) {
           </div>
 
           {/* Content Area */}
-          <div className="flex-1 overflow-y-auto max-h-[60vh] p-8">
+          <div className="flex-1 overflow-y-auto p-5 md:p-8 custom-scrollbar">
             {step === 1 && (
-              <div className="space-y-6">
+              <div className="space-y-6 md:space-y-7 animate-in slide-in-from-right-4 duration-300 ease-out">
                 <div>
-                  <label className="block text-sm font-bold text-brand-dark mb-1.5">
-                    Menu Item Name *
+                  <label className="block text-sm font-bold text-brand-dark mb-2">
+                    Menu Item Name <span className="text-brand-danger">*</span>
                   </label>
                   <input
-                    className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
+                    className={inputBaseStyle}
                     placeholder="e.g. Masala Dosa"
                     value={formData.name}
                     onChange={(e) =>
@@ -292,19 +312,19 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                     }
                   />
                   {errors.name && (
-                    <span className="text-brand-danger text-xs mt-1 block">
+                    <span className="text-brand-danger text-xs font-semibold mt-1.5 block">
                       {errors.name}
                     </span>
                   )}
                 </div>
 
-                <div className="flex gap-4">
+                <div className="flex flex-col sm:flex-row gap-5">
                   <div className="flex-1">
-                    <label className="block text-sm font-bold text-brand-dark mb-1.5">
-                      Category
+                    <label className="block text-sm font-bold text-brand-dark mb-2">
+                      Category <span className="text-brand-danger">*</span>
                     </label>
                     <select
-                      className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark font-medium appearance-none bg-white transition-colors cursor-pointer"
+                      className={`${inputBaseStyle} appearance-none cursor-pointer`}
                       value={formData.categoryId}
                       onChange={(e) =>
                         setFormData({
@@ -323,17 +343,17 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                       ))}
                     </select>
                     {errors.categoryId && (
-                      <span className="text-brand-danger text-xs mt-1 block">
+                      <span className="text-brand-danger text-xs font-semibold mt-1.5 block">
                         {errors.categoryId}
                       </span>
                     )}
                   </div>
                   <div className="flex-1">
-                    <label className="block text-sm font-bold text-brand-dark mb-1.5">
+                    <label className="block text-sm font-bold text-brand-dark mb-2">
                       Sub Category
                     </label>
                     <select
-                      className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark font-medium appearance-none bg-white transition-colors cursor-pointer"
+                      className={`${inputBaseStyle} appearance-none cursor-pointer`}
                       value={formData.subCategoryId}
                       onChange={(e) =>
                         setFormData({
@@ -355,36 +375,44 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-brand-dark mb-1.5">
-                    Food Type
+                  <label className="block text-sm font-bold text-brand-dark mb-3">
+                    Dietary Classification
                   </label>
-                  <div className="flex flex-wrap gap-2">
-                    {foodTypes.map((type) => (
-                      <button
-                        key={type}
-                        onClick={() =>
-                          setFormData({ ...formData, foodType: type })
-                        }
-                        className={`px-5 py-2 rounded-xl text-sm font-bold transition-colors ${
-                          formData.foodType === type
-                            ? "bg-brand-successLight text-brand-success border border-brand-success"
-                            : "bg-white text-brand-dark border border-brand-light hover:bg-brand-light"
-                        }`}
-                      >
-                        {type}
-                      </button>
-                    ))}
+                  <div className="flex flex-wrap gap-2.5">
+                    {foodTypes.map((type) => {
+                      const isSelected = formData.foodType === type;
+                      return (
+                        <button
+                          key={type}
+                          onClick={() =>
+                            setFormData({ ...formData, foodType: type })
+                          }
+                          className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-sm ${
+                            isSelected
+                              ? "bg-brand-success text-white ring-2 ring-brand-success/30 shadow-brand-success/20"
+                              : "bg-surface-2 text-brand-muted border border-brand-border hover:bg-brand-light hover:text-brand-dark"
+                          }`}
+                        >
+                          {type}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-brand-dark mb-1.5">
+                  <label className="block text-sm font-bold text-brand-dark mb-2">
                     Item Image
                   </label>
-                  <div className="border-2 border-dashed border-brand-light rounded-xl p-8 flex flex-col items-center justify-center text-brand-muted cursor-pointer hover:bg-brand-light transition-colors bg-[#F8FAFC]">
-                    <Upload size={24} className="mb-2 text-brand-dark" />
+                  <div className="border-2 border-dashed border-brand-borderHover rounded-2xl p-10 flex flex-col items-center justify-center text-brand-muted cursor-pointer hover:bg-brand-primary/5 hover:border-brand-primary/40 transition-all bg-surface-2 group">
+                    <div className="w-14 h-14 rounded-full bg-white shadow-sm border border-brand-light flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                      <Upload size={24} className="text-brand-primary" />
+                    </div>
                     <span className="text-sm font-bold text-brand-dark">
-                      Click to upload image
+                      Click to upload or drag & drop
+                    </span>
+                    <span className="text-xs font-medium text-brand-placeholder mt-1">
+                      SVG, PNG, JPG or GIF (max. 5MB)
                     </span>
                   </div>
                 </div>
@@ -392,69 +420,85 @@ export default function MenuItemModal({ item, onClose, onSave }) {
             )}
 
             {step === 2 && (
-              <div className="space-y-6">
+              <div className="space-y-6 md:space-y-7 animate-in slide-in-from-right-4 duration-300 ease-out">
                 <div>
-                  <label className="block text-sm font-bold text-brand-dark mb-1.5">
-                    Base Selling Price (₹) *
+                  <label className="block text-sm font-bold text-brand-dark mb-2">
+                    Base Selling Price (₹) <span className="text-brand-danger">*</span>
                   </label>
-                  <input
-                    type="number"
-                    className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
-                    placeholder="0.00"
-                    value={formData.price}
-                    onChange={(e) =>
-                      setFormData({ ...formData, price: e.target.value })
-                    }
-                  />
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted font-bold">
+                      ₹
+                    </span>
+                    <input
+                      type="number"
+                      className={`${inputBaseStyle} pl-9`}
+                      placeholder="0.00"
+                      value={formData.price}
+                      onChange={(e) =>
+                        setFormData({ ...formData, price: e.target.value })
+                      }
+                    />
+                  </div>
                   {errors.price && (
-                    <span className="text-brand-danger text-xs mt-1 block">
+                    <span className="text-brand-danger text-xs font-semibold mt-1.5 block">
                       {errors.price}
                     </span>
                   )}
                 </div>
 
-                <div>
-                  <label className="block text-sm font-bold text-brand-dark mb-0.5">
-                    Variants (Optional)
-                  </label>
-                  <p className="text-xs font-medium text-brand-muted mb-4">
-                    E.g., Half/Full, Small/Large. Variant prices will override
-                    the base price in the POS.
-                  </p>
-
-                  <div className="space-y-3">
-                    {formData.variants.map((variant, index) => (
-                      <div key={index} className="flex items-center gap-3">
-                        <input
-                          className="flex-1 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
-                          placeholder="Variant Name"
-                          value={variant.name}
-                          onChange={(e) =>
-                            updateVariant(index, "name", e.target.value)
-                          }
-                        />
-                        <input
-                          type="number"
-                          className="flex-1 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
-                          placeholder="Price (₹)"
-                          value={variant.price}
-                          onChange={(e) =>
-                            updateVariant(index, "price", e.target.value)
-                          }
-                        />
-                        <button
-                          onClick={() => removeVariant(index)}
-                          className="p-2.5 text-brand-danger hover:bg-brand-dangerLight rounded-xl transition-colors shrink-0"
-                        >
-                          <XIcon size={18} strokeWidth={2.5} />
-                        </button>
-                      </div>
-                    ))}
+                <div className="pt-2">
+                  <div className="mb-4">
+                    <h3 className="text-sm font-bold text-brand-dark">
+                      Variants (Optional)
+                    </h3>
+                    <p className="text-xs font-medium text-brand-placeholder mt-1">
+                      E.g., Half/Full, Small/Large. Variant prices override the
+                      base price.
+                    </p>
                   </div>
+
+                  {formData.variants.length > 0 && (
+                    <div className="space-y-3 mb-4 bg-brand-bg p-3 md:p-4 rounded-2xl border border-brand-border/60">
+                      {formData.variants.map((variant, index) => (
+                        <div key={index} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-white sm:bg-transparent p-3 sm:p-0 rounded-xl border border-brand-border sm:border-transparent">
+                          <input
+                            className={inputBaseStyle}
+                            placeholder="Variant Name"
+                            value={variant.name}
+                            onChange={(e) =>
+                              updateVariant(index, "name", e.target.value)
+                            }
+                          />
+                          <div className="flex gap-2">
+                            <div className="relative flex-1">
+                              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted font-bold text-sm">
+                                ₹
+                              </span>
+                              <input
+                                type="number"
+                                className={`${inputBaseStyle} pl-8`}
+                                placeholder="Price"
+                                value={variant.price}
+                                onChange={(e) =>
+                                  updateVariant(index, "price", e.target.value)
+                                }
+                              />
+                            </div>
+                            <button
+                              onClick={() => removeVariant(index)}
+                              className="p-3 text-brand-danger hover:bg-brand-dangerLight bg-surface-2 sm:bg-transparent rounded-xl transition-all shrink-0 hover:shadow-sm flex items-center justify-center"
+                            >
+                              <XIcon size={18} strokeWidth={2.5} />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
                   <button
                     onClick={addVariant}
-                    className="mt-4 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-brand-light rounded-full text-sm font-bold text-brand-dark hover:bg-brand-light transition-colors"
+                    className="flex items-center justify-center gap-2 px-5 py-2.5 bg-white border border-brand-border rounded-xl text-sm font-bold text-brand-primary hover:border-brand-primary hover:bg-brand-primary/5 transition-all shadow-sm"
                   >
                     <Plus size={16} strokeWidth={3} /> Add Variant
                   </button>
@@ -463,20 +507,23 @@ export default function MenuItemModal({ item, onClose, onSave }) {
             )}
 
             {step === 3 && (
-              <div className="space-y-6">
+              <div className="space-y-6 md:space-y-7 animate-in slide-in-from-right-4 duration-300 ease-out">
                 {/* Enable Spice Level Toggle */}
-                <div className="bg-[#F8FAFC] border border-brand-light rounded-xl p-4 flex items-center justify-between">
+                <div className="bg-white border border-brand-border rounded-2xl p-4 md:p-5 flex items-center justify-between shadow-sm hover:border-brand-primary/30 transition-colors">
                   <div>
-                    <h4 className="text-sm font-bold text-brand-dark">
-                      Enable Spice Level?
+                    <h4 className="text-base font-bold text-brand-dark">
+                      Enable Spice Level Options?
                     </h4>
-                    <p className="text-xs font-medium text-brand-muted mt-0.5">
-                      Allows the customer to choose spice level (Mild, Medium,
-                      Spicy, etc.)
+                    <p className="text-xs font-medium text-brand-muted mt-1">
+                      Prompts the customer to choose spice level (Mild, Medium, Spicy)
                     </p>
                   </div>
                   <button
-                    className={`relative w-12 h-6 rounded-full transition-colors ${formData.spiceLevelEnabled ? "bg-[#10B981]" : "bg-brand-light"}`}
+                    className={`relative w-14 h-7 rounded-full transition-colors focus:outline-none focus:ring-4 focus:ring-brand-success/20 ${
+                      formData.spiceLevelEnabled
+                        ? "bg-brand-success"
+                        : "bg-surface-3"
+                    }`}
                     onClick={() =>
                       setFormData({
                         ...formData,
@@ -485,32 +532,47 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                     }
                   >
                     <span
-                      className={`absolute top-0.5 left-0.5 bg-white w-5 h-5 rounded-full transition-transform shadow-sm ${formData.spiceLevelEnabled ? "translate-x-6" : "translate-x-0"}`}
+                      className={`absolute top-1 left-1 bg-white w-5 h-5 rounded-full transition-transform shadow-md ${
+                        formData.spiceLevelEnabled
+                          ? "translate-x-7"
+                          : "translate-x-0"
+                      }`}
                     />
                   </button>
                 </div>
 
                 {/* Custom Add-on Categories */}
-                <div>
-                  <h4 className="text-sm font-bold text-brand-dark">
-                    Custom Add-on Categories
-                  </h4>
-                  <p className="text-xs font-medium text-brand-muted mt-0.5 mb-4">
-                    Build specific add-on groups for this item (e.g. "Choice of
-                    Bread", "Extra Toppings").
-                  </p>
+                <div className="pt-2">
+                  <div className="mb-5">
+                    <h4 className="text-base font-bold text-brand-dark">
+                      Custom Add-on Categories
+                    </h4>
+                    <p className="text-xs font-medium text-brand-placeholder mt-1">
+                      Build specific add-on groups (e.g. "Choice of Bread", "Extra Toppings").
+                    </p>
+                  </div>
 
-                  <div className="space-y-4">
+                  <div className="space-y-5">
                     {formData.addonCategories.map((cat, catIdx) => (
                       <div
                         key={catIdx}
-                        className="bg-[#F8FAFC] border border-brand-light rounded-xl p-4"
+                        className="bg-brand-bg border border-brand-border/80 rounded-2xl p-5 relative group"
                       >
+                        <button
+                          onClick={() => removeAddonCategory(catIdx)}
+                          className="absolute -top-3 -right-3 p-2 bg-brand-danger text-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all hover:scale-110"
+                        >
+                          <XIcon size={14} strokeWidth={3} />
+                        </button>
+
                         {/* Category Header */}
-                        <div className="flex items-center gap-3 mb-4">
+                        <div className="mb-5">
+                          <label className="block text-xs font-bold text-brand-dark mb-1.5 uppercase tracking-wider">
+                            Category Name
+                          </label>
                           <input
-                            className="flex-1 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
-                            placeholder="Category Name (e.g. Extra Toppings)"
+                            className={inputBaseStyle}
+                            placeholder="e.g. Extra Toppings"
                             value={cat.name}
                             onChange={(e) =>
                               updateAddonCategory(
@@ -520,23 +582,17 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                               )
                             }
                           />
-                          <button
-                            onClick={() => removeAddonCategory(catIdx)}
-                            className="p-2.5 text-brand-danger bg-brand-dangerLight/50 hover:bg-brand-dangerLight rounded-xl transition-colors shrink-0"
-                          >
-                            <Trash2 size={18} strokeWidth={2.5} />
-                          </button>
                         </div>
 
                         {/* Min/Max Selection */}
-                        <div className="flex gap-4 mb-4">
+                        <div className="flex flex-col sm:flex-row gap-4 mb-6">
                           <div className="flex-1">
-                            <label className="block text-xs font-semibold text-brand-dark mb-1.5">
+                            <label className="block text-xs font-bold text-brand-muted mb-1.5">
                               Min Selection
                             </label>
                             <input
                               type="number"
-                              className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark font-medium transition-colors bg-white"
+                              className={inputBaseStyle}
                               value={cat.minSelection}
                               onChange={(e) =>
                                 updateAddonCategory(
@@ -548,12 +604,12 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                             />
                           </div>
                           <div className="flex-1">
-                            <label className="block text-xs font-semibold text-brand-dark mb-1.5">
+                            <label className="block text-xs font-bold text-brand-muted mb-1.5">
                               Max Selection
                             </label>
                             <input
                               type="number"
-                              className="w-full border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark font-medium transition-colors bg-white"
+                              className={inputBaseStyle}
                               value={cat.maxSelection}
                               onChange={(e) =>
                                 updateAddonCategory(
@@ -567,66 +623,78 @@ export default function MenuItemModal({ item, onClose, onSave }) {
                         </div>
 
                         {/* Options */}
-                        <div className="space-y-3">
-                          {cat.options.map((opt, optIdx) => (
-                            <div
-                              key={optIdx}
-                              className="flex items-center gap-3"
-                            >
-                              <input
-                                className="flex-1 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
-                                placeholder="Add-on Name"
-                                value={opt.name}
-                                onChange={(e) =>
-                                  updateAddonOption(
-                                    catIdx,
-                                    optIdx,
-                                    "name",
-                                    e.target.value,
-                                  )
-                                }
-                              />
-                              <input
-                                type="number"
-                                className="w-1/3 border border-brand-light rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#10B981] text-brand-dark placeholder:text-brand-muted font-medium transition-colors bg-white"
-                                placeholder="Price (₹)"
-                                value={opt.price}
-                                onChange={(e) =>
-                                  updateAddonOption(
-                                    catIdx,
-                                    optIdx,
-                                    "price",
-                                    e.target.value,
-                                  )
-                                }
-                              />
-                              <button
-                                onClick={() =>
-                                  removeAddonOption(catIdx, optIdx)
-                                }
-                                className="p-2.5 text-brand-danger hover:bg-brand-dangerLight rounded-xl transition-colors shrink-0"
+                        <div className="bg-white p-3 md:p-4 rounded-xl border border-brand-border/60">
+                          <label className="block text-xs font-bold text-brand-dark mb-3 uppercase tracking-wider">
+                            Options
+                          </label>
+                          <div className="space-y-3">
+                            {cat.options.map((opt, optIdx) => (
+                              <div
+                                key={optIdx}
+                                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-surface-2 sm:bg-transparent p-3 sm:p-0 rounded-xl border border-brand-border sm:border-transparent"
                               >
-                                <XIcon size={18} strokeWidth={2.5} />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
+                                <input
+                                  className={inputBaseStyle}
+                                  placeholder="Option Name"
+                                  value={opt.name}
+                                  onChange={(e) =>
+                                    updateAddonOption(
+                                      catIdx,
+                                      optIdx,
+                                      "name",
+                                      e.target.value,
+                                    )
+                                  }
+                                />
+                                <div className="flex gap-2">
+                                  <div className="relative flex-1 sm:w-1/3">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted font-bold text-sm">
+                                      ₹
+                                    </span>
+                                    <input
+                                      type="number"
+                                      className={`${inputBaseStyle} pl-7`}
+                                      placeholder="Price"
+                                      value={opt.price}
+                                      onChange={(e) =>
+                                        updateAddonOption(
+                                          catIdx,
+                                          optIdx,
+                                          "price",
+                                          e.target.value,
+                                        )
+                                      }
+                                    />
+                                  </div>
+                                  <button
+                                    onClick={() =>
+                                      removeAddonOption(catIdx, optIdx)
+                                    }
+                                    className="p-2.5 text-brand-placeholder hover:text-brand-danger hover:bg-brand-dangerLight bg-white sm:bg-transparent rounded-xl border border-brand-border sm:border-transparent transition-all shrink-0 flex items-center justify-center"
+                                  >
+                                    <Trash2 size={18} strokeWidth={2.5} />
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
 
-                        <button
-                          onClick={() => addAddonOption(catIdx)}
-                          className="mt-4 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-brand-light rounded-full text-sm font-bold text-brand-dark hover:bg-brand-light transition-colors shadow-sm"
-                        >
-                          <Plus size={16} strokeWidth={3} /> Add Option
-                        </button>
+                          <button
+                            onClick={() => addAddonOption(catIdx)}
+                            className="mt-4 flex items-center justify-center gap-2 px-4 py-2 bg-brand-light border border-transparent rounded-lg text-sm font-bold text-brand-primary hover:bg-brand-primary/10 transition-all"
+                          >
+                            <Plus size={16} strokeWidth={3} /> Add Option
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
 
                   <button
                     onClick={addAddonCategory}
-                    className="mt-4 flex items-center justify-center gap-2 px-5 py-2.5 bg-white border border-brand-light rounded-full text-sm font-bold text-brand-dark hover:bg-brand-light transition-colors shadow-sm"
+                    className="mt-5 w-full flex items-center justify-center gap-2 px-5 py-3.5 bg-white border-2 border-dashed border-brand-borderHover rounded-2xl text-sm font-bold text-brand-dark hover:border-brand-primary hover:bg-brand-primary/5 hover:text-brand-primary transition-all group"
                   >
-                    <Plus size={16} strokeWidth={3} /> Create Add-on Category
+                    <Plus size={18} strokeWidth={3} className="text-brand-muted group-hover:text-brand-primary transition-colors" /> Create Add-on Category
                   </button>
                 </div>
               </div>
@@ -636,32 +704,34 @@ export default function MenuItemModal({ item, onClose, onSave }) {
 
         {/* Footer */}
         <div
-          className={`px-6 py-5 flex items-center ${step === 1 ? "justify-end" : "justify-between"} bg-white rounded-b-2xl`}
+          className={`px-6 md:px-8 py-4 md:py-5 flex items-center border-t border-brand-border/60 bg-brand-bg/50 shrink-0 ${
+            step === 1 ? "justify-end" : "justify-between"
+          }`}
         >
           {step > 1 && (
             <button
               onClick={handleBack}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-brand-light text-sm font-bold text-brand-dark hover:bg-brand-light transition-colors"
+              className="flex items-center gap-1.5 md:gap-2 px-4 md:px-6 py-2.5 rounded-xl border border-brand-border bg-white text-xs md:text-sm font-bold text-brand-dark hover:bg-surface-2 hover:border-brand-borderHover transition-all shadow-sm"
             >
-              <ChevronLeft size={16} strokeWidth={2.5} /> Back
+              <ChevronLeft size={16} strokeWidth={3} /> Back
             </button>
           )}
 
           {step < 3 ? (
             <button
               onClick={handleNext}
-              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#1e293b] text-white text-sm font-bold hover:bg-brand-dark shadow-sm transition-colors ml-auto"
+              className="flex items-center gap-1.5 md:gap-2 px-6 md:px-8 py-3 rounded-xl bg-brand-primary text-white text-xs md:text-sm font-bold shadow-lg shadow-brand-primary/30 hover:bg-brand-primaryDark hover:shadow-xl hover:shadow-brand-primary/40 hover:-translate-y-0.5 transition-all ml-auto"
             >
-              Next Step <ChevronRight size={16} strokeWidth={2.5} />
+              Next <span className="hidden md:inline">Step</span> <ChevronRight size={18} strokeWidth={3} />
             </button>
           ) : (
             <button
               onClick={() => {
                 if (validateForm()) handleSubmit();
               }}
-              className="px-6 py-3 rounded-xl bg-[#1e293b] text-white text-sm font-bold hover:bg-brand-dark shadow-sm transition-colors ml-auto"
+              className="px-6 md:px-8 py-3 rounded-xl bg-brand-success text-white text-xs md:text-sm font-bold shadow-lg shadow-brand-success/30 hover:bg-[#047857] hover:shadow-xl hover:shadow-brand-success/40 hover:-translate-y-0.5 transition-all ml-auto"
             >
-              Create Menu Item
+              {item ? "Save" : "Create Item"}
             </button>
           )}
         </div>

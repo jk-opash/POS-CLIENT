@@ -12,14 +12,24 @@ import {
   Store,
   List,
   ShoppingBag,
+  QrCode,
+  Truck,
 } from "lucide-react";
-import PosAdminBadge from "@/app/components/ui/PosAdminBadge";
+import PosAdminBadge from "../../components/ui/PosAdminBadge";
+import PosAdminPagination from "../../components/ui/PosAdminPagination";
 import LottieLoader from "../../components/common/LottieLoader";
 
 export default function POSPage() {
   const dispatch = useDispatch();
   const [selectedBranchId, setSelectedBranchId] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeFilter, selectedBranchId]);
 
   const { user } = useSelector((state) => state.auth || {});
   const { currentBranch, branches } = useSelector(
@@ -66,27 +76,39 @@ export default function POSPage() {
 
     const mappedItems = Array.isArray(items) ? items : [];
 
+    let normalizedType = o.order_type || "Takeaway";
+    if (
+      normalizedType.toLowerCase() === "dine-in" ||
+      normalizedType.toLowerCase() === "dine in"
+    ) {
+      normalizedType = "Dine In";
+    }
+
     return {
       ...o,
-      orderType:
-        (o.order_type === "Dine-in" ? "Dine In" : o.order_type) || "Takeaway",
+      orderType: normalizedType,
       tableLabel:
-        o.table?.name ||
-        (o.table_id ? `Table ${o.table_id}` : o.order_type || "Takeaway"),
+        o.table?.name || (o.table_id ? `Table ${o.table_id}` : normalizedType),
       mappedItems,
     };
   });
 
   const filteredOrders = formattedOrders.filter((o) => {
     if (activeFilter === "All") return true;
-    if (activeFilter === "Dine In" && o.orderType === "Dine In") return true;
-    if (activeFilter === "Takeaway" && o.orderType === "Takeaway") return true;
+    if (activeFilter === o.orderType) return true;
     return false;
   });
 
+  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage) || 1;
+  const paginatedOrders = filteredOrders.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
+
   return (
-    <div className="flex flex-col bg-brand-bg font-sans">
-      <main className="flex-1 p-4 md:p-6 space-y-4 md:space-y-5">
+    <div className="flex flex-col h-[calc(100vh-64px)] bg-brand-bg font-sans">
+      <div className="flex-1 flex flex-col overflow-hidden relative min-w-0">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-5">
         {/* Header & Global Actions */}
         <div className="flex flex-col gap-4 sm:flex-row justify-between items-start sm:items-center">
           <div>
@@ -134,6 +156,7 @@ export default function POSPage() {
               { key: "All", label: "All Orders", icon: List },
               { key: "Dine In", label: "Dine In", icon: UtensilsCrossed },
               { key: "Takeaway", label: "Takeaway", icon: ShoppingBag },
+              { key: "QR Order", label: "QR Order", icon: QrCode },
             ].map((tab) => (
               <button
                 key={tab.key}
@@ -180,11 +203,11 @@ export default function POSPage() {
             </p>
           </div>
         ) : (
-          <div className="rounded-2xl border border-brand-border bg-white shadow-sm overflow-hidden mt-4">
+          <div className="rounded-2xl border border-brand-border/80 bg-white/70 backdrop-blur-lg shadow-sm mt-4 overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
+              <table className="w-full text-left border-collapse whitespace-nowrap min-w-[800px]">
                 <thead>
-                  <tr className="border-b border-brand-border bg-brand-light text-[11px] font-black text-brand-placeholder uppercase tracking-wider">
+                  <tr className="border-b border-brand-border bg-brand-bg/80 text-[11px] font-black text-brand-muted/70 uppercase tracking-wider">
                     <th className="py-3.5 px-6">Order ID / Type</th>
                     <th className="py-3.5 px-4">Customer / Table</th>
                     <th className="py-3.5 px-4">Items Summary</th>
@@ -192,15 +215,17 @@ export default function POSPage() {
                     <th className="py-3.5 px-4 text-center">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-brand-light text-sm">
-                  {filteredOrders.map((order) => {
+                <tbody className="divide-y divide-brand-border text-brand-muted text-sm">
+                  {paginatedOrders.map((order, index) => {
                     const isTable =
                       !!order.table_id || order.orderType === "Dine In";
+
+                    const isTopRow = index < 2;
 
                     return (
                       <tr
                         key={order.id}
-                        className="hover:bg-brand-light transition-colors duration-150"
+                        className="hover:bg-brand-bg/60 transition-colors duration-150"
                       >
                         <td className="py-4 px-6">
                           <div className="flex items-center gap-3">
@@ -215,10 +240,10 @@ export default function POSPage() {
                             </div>
                             <div>
                               <div className="font-bold text-brand-dark">
-                                {order.orderType}
+                                #{order.order_number}
                               </div>
                               <div className="text-xs font-medium text-brand-muted uppercase tracking-wider">
-                                #{order.order_number}
+                                {order.orderType}
                               </div>
                             </div>
                           </div>
@@ -258,7 +283,7 @@ export default function POSPage() {
                               Items
                             </PosAdminBadge>
 
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-50 pointer-events-none opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 ease-out">
+                            <div className="absolute z-[100] bottom-full left-5 -translate-x-1/2 mb-3 z-50 pointer-events-none opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 ease-out">
                               <div className="bg-gradient-to-br from-brand-purple to-brand-purple text-white text-[11px] font-medium p-3 rounded-xl shadow-[0_10px_25px_-5px_rgba(139,92,246,0.5)] border border-brand-purple/50 w-max max-w-[260px] whitespace-pre-wrap text-left leading-relaxed relative">
                                 {order.mappedItems.length > 0
                                   ? order.mappedItems
@@ -323,9 +348,23 @@ export default function POSPage() {
                 </tbody>
               </table>
             </div>
+            <div className="p-4 border-t border-brand-border">
+              <PosAdminPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                itemsPerPage={itemsPerPage}
+                onItemsPerPageChange={(size) => {
+                  setItemsPerPage(size);
+                  setCurrentPage(1);
+                }}
+                totalItems={filteredOrders.length}
+              />
+            </div>
           </div>
         )}
       </main>
+      </div>
     </div>
   );
 }

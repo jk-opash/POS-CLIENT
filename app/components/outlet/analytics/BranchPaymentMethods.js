@@ -1,6 +1,6 @@
-import Card from "../ui/Card";
+import Card from "../../ui/Card";
 import { Clock, Banknote, Smartphone, CreditCard } from "lucide-react";
-import StatCard from "../ui/StatCard";
+import StatCard from "../../ui/StatCard";
 import { useSelector } from "react-redux";
 import {
   AreaChart,
@@ -12,7 +12,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-export default function PaymentStatisticsWidget() {
+export default function BranchPaymentMethods() {
   const { stats } = useSelector((state) => state.analytics);
   const chartData = stats?.chartData || [];
 
@@ -38,33 +38,6 @@ export default function PaymentStatisticsWidget() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 pb-2">
-        <StatCard
-          label="Cash Collected"
-          value={formatCurrency(cashCollection)}
-          // subtext="Cash Payments"
-          icon={<Banknote size={16} color="var(--color-brand-success)" />}
-          isGrey="text-brand-success"
-          color="text-brand-success"
-        />
-        <StatCard
-          label="UPI Collected"
-          value={formatCurrency(upiCollection)}
-          // subtext="UPI / Online Transfers"
-          icon={<Smartphone size={16} color="var(--color-brand-accent)" />}
-          isGrey="text-brand-accent"
-          color="text-brand-accent"
-        />
-        <StatCard
-          label="Card Collected"
-          value={formatCurrency(cardCollection)}
-          // subtext="Credit / Debit Cards"
-          icon={<CreditCard size={16} color="var(--color-brand-primary)" />}
-          isGrey="text-brand-primary"
-          color="text-brand-primary"
-        />
-      </div>
-
       {/* Chart Section */}
       <div className="px-6 pb-6 pt-2 h-[350px]">
         <ResponsiveContainer width="100%" height="100%">
@@ -74,16 +47,16 @@ export default function PaymentStatisticsWidget() {
           >
             <defs>
               <linearGradient id="colorCash" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--color-brand-success)" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="var(--color-brand-success)" stopOpacity={0} />
+                <stop offset="5%" stopColor="#059669" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#059669" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="colorUpi" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--color-brand-accent)" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="var(--color-brand-accent)" stopOpacity={0} />
+                <stop offset="5%" stopColor="#df5cf6" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#df5cf6" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="colorCard" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--color-brand-primary)" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="var(--color-brand-primary)" stopOpacity={0} />
+                <stop offset="5%" stopColor="#6366F1" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#6366F1" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid
@@ -122,12 +95,18 @@ export default function PaymentStatisticsWidget() {
                       <div className="flex flex-col gap-2">
                         <div className="flex items-center justify-between gap-6">
                           <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-brand-success"></div>
+                            <div
+                              className="w-2 h-2 rounded-full"
+                              style={{ backgroundColor: "#059669" }}
+                            ></div>
                             <span className="text-sm font-semibold text-brand-dark">
                               Cash
                             </span>
                           </div>
-                          <span className="font-bold text-brand-success">
+                          <span
+                            className="font-bold"
+                            style={{ color: "#059669" }}
+                          >
                             ₹
                             {cash.toLocaleString(undefined, {
                               maximumFractionDigits: 0,
@@ -136,12 +115,18 @@ export default function PaymentStatisticsWidget() {
                         </div>
                         <div className="flex items-center justify-between gap-6">
                           <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-brand-accent"></div>
+                            <div
+                              className="w-2 h-2 rounded-full"
+                              style={{ backgroundColor: "#df5cf6" }}
+                            ></div>
                             <span className="text-sm font-semibold text-brand-dark">
                               UPI
                             </span>
                           </div>
-                          <span className="font-bold text-brand-accent">
+                          <span
+                            className="font-bold"
+                            style={{ color: "#df5cf6" }}
+                          >
                             ₹
                             {upi.toLocaleString(undefined, {
                               maximumFractionDigits: 0,
@@ -150,12 +135,18 @@ export default function PaymentStatisticsWidget() {
                         </div>
                         <div className="flex items-center justify-between gap-6">
                           <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-brand-primary"></div>
+                            <div
+                              className="w-2 h-2 rounded-full"
+                              style={{ backgroundColor: "#6366F1" }}
+                            ></div>
                             <span className="text-sm font-semibold text-brand-dark">
                               Card
                             </span>
                           </div>
-                          <span className="font-bold text-brand-primary">
+                          <span
+                            className="font-bold"
+                            style={{ color: "#6366F1" }}
+                          >
                             ₹
                             {card.toLocaleString(undefined, {
                               maximumFractionDigits: 0,
@@ -172,7 +163,7 @@ export default function PaymentStatisticsWidget() {
             <Area
               type="monotone"
               dataKey="cash"
-              stroke="var(--color-brand-success)"
+              stroke="#059669"
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#colorCash)"
@@ -181,7 +172,7 @@ export default function PaymentStatisticsWidget() {
             <Area
               type="monotone"
               dataKey="upi"
-              stroke="var(--color-brand-accent)"
+              stroke="#df5cf6"
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#colorUpi)"
@@ -190,7 +181,7 @@ export default function PaymentStatisticsWidget() {
             <Area
               type="monotone"
               dataKey="card"
-              stroke="var(--color-brand-primary)"
+              stroke="#6366F1"
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#colorCard)"

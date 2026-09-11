@@ -170,15 +170,7 @@ export default function TablesPage() {
                 </select>
               </div>
 
-              {activeTab === "tables" ? (
-                <button
-                  onClick={openAddTable}
-                  disabled={!branchFilter}
-                  className="px-4 py-2 text-xs font-bold rounded-xl bg-brand-dark text-white hover:bg-brand-dark/90 transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2 disabled:opacity-50"
-                >
-                  <Plus size={16} /> Add Table
-                </button>
-              ) : (
+              {activeTab === "zones" && (
                 <button
                   onClick={openAddZone}
                   disabled={!branchFilter}
